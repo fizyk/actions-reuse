@@ -8,6 +8,10 @@ on:
         default: 'requirements-test.txt'
         required: false
         type: string
+      cover_package:
+        description: 'Package to run coverage for (except for tests directory)'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -32,7 +36,7 @@ jobs:
         pip install -r ${{ inputs.requirements }}
     - name: Run test
       run: |
-        pytest -v --cov-report=xml
+        pytest -v --cov pyramid_basemodel tests/ --cov-report=xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
       with:
