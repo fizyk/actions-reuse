@@ -12,6 +12,11 @@ on:
         description: 'Package to run coverage for (except for tests directory)'
         required: true
         type: string
+      python-versions:
+        description: 'Supported python versions'
+        default: '["3.7", "3.8", "3.9", "3.10"]'
+        required: false
+        type: string
 
 jobs:
   pytests:
@@ -19,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9, "3.10"]
+        python-version: ${{ fromJSON(inputs.python-versions) }}
     env:
       OS: ubuntu-latest
       PYTHON: ${{ matrix.python-version }}
