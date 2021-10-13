@@ -12,6 +12,11 @@ on:
         default: "3.10"
         required: false
         type: string
+      mypy:
+        description: 'Flag to run mypy tests or not'
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   pydocstyle:
@@ -57,3 +62,22 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: psf/black@21.7b0
+
+  mypy:
+    if: ${{ inputs.mypy }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v2
+      with:
+      python-version: ${{ inputs.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ${{ inputs.requirements }}
+    - name: Run Mypy type checks
+      run: |
+        mypy src/ tests/
