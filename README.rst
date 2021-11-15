@@ -31,7 +31,7 @@ linters-python
 .. code-block:: yaml
 
     jobs:
-      build:
+      lint:
         uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@main
 
 Lints python code
@@ -62,7 +62,7 @@ tests-pytests
 .. code-block:: yaml
 
     jobs:
-      build:
+      tests:
         uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@main
 
 Run pytest tests on python code
