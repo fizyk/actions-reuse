@@ -13,7 +13,12 @@ on:
         required: false
         type: string
       mypy:
-        description: 'Flag to run mypy tests or not'
+        description: 'Flag to run mypy on code or not'
+        type: boolean
+        required: false
+        default: false
+      pylint:
+        description: 'Flag to run pylint on code or not'
         type: boolean
         required: false
         default: false
@@ -81,3 +86,19 @@ jobs:
     - name: Run Mypy type checks
       run: |
         mypy src/ tests/
+  pylint:
+    if: ${{ inputs.pylint }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ${{ inputs.requirements }}
+    - name: Run pylint
+      run: |
+        pylint src/ tests
