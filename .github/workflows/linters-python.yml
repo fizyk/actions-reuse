@@ -64,9 +64,18 @@ jobs:
   black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: psf/black@21.7b0
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ${{ inputs.requirements }}
+    - name: Run black
+      run: |
+        black --diff --check src/ tests/
 
   mypy:
     if: ${{ inputs.mypy }}
