@@ -105,6 +105,12 @@ Run pytest tests on python code
    * - cover_package
      -
      - Package name which should be covered
+   * - test_path
+     - tests/
+     - Test path
+   * - pytest_opts
+     - ""
+     - Additional pytest options
    * - python-versions
      - '["3.7", "3.8", "3.9", "3.10"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
