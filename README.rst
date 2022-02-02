@@ -49,12 +49,37 @@ Lints python code
    * - python-version
      - 3.10
      - Python version to run linters on
+   * - pydocstyle
+     - true
+     - Flag to run pydocstyle on code or not
+   * - pydocstyle
+     - true
+     - Flag to run pydocstyle on code or not
+   * - black
+     - true
+     - Flag to run black on code or not
    * - mypy
      - false
      - Flag to run mypy on code or not
    * - pylint
      - false
      - Flag to run pylint on code or not
+
+.. list-table:: linters that can be run
+    :header-rows: 1
+
+   * - linter
+     - default
+   * - pydocstyle
+     - yes
+   * - pycodestyle
+     - yes
+   * - black
+     - yes
+   * - mypy
+     - no
+   * - pylint
+     - no
 
 tests-pytests
 -------------

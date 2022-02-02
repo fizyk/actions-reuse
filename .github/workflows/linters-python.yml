@@ -12,6 +12,21 @@ on:
         default: "3.10"
         required: false
         type: string
+      pydocstyle:
+        description: 'Flag to run pydocstyle on code or not'
+        type: boolean
+        required: false
+        default: true
+      pycodestyle:
+        description: 'Flag to run pycodestyle on code or not'
+        type: boolean
+        required: false
+        default: true
+      black:
+        description: 'Flag to run black on code or not'
+        type: boolean
+        required: false
+        default: true
       mypy:
         description: 'Flag to run mypy on code or not'
         type: boolean
@@ -25,6 +40,7 @@ on:
 
 jobs:
   pydocstyle:
+    if: ${{ inputs.pydocstyle }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -44,6 +60,7 @@ jobs:
         pydocstyle src/ tests/
 
   pycodestyle:
+    if: ${{ inputs.pycodestyle }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -62,6 +79,7 @@ jobs:
       run: |
         pycodestyle src/ tests/
   black:
+    if: ${{ inputs.black }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
