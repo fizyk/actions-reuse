@@ -8,6 +8,16 @@ on:
         default: 'requirements-test.txt'
         required: false
         type: string
+      test_path:
+        description: 'Test path'
+        default: 'tests/'
+        required: false
+        type: string
+      pytest_opts:
+        description: 'Additional pytest options'
+        default: ''
+        required: false
+        type: string
       cover_package:
         description: 'Package to run coverage for (except for tests directory)'
         required: true
@@ -41,7 +51,7 @@ jobs:
         pip install -r ${{ inputs.requirements }}
     - name: Run test
       run: |
-        pytest -v --cov pyramid_basemodel tests/ --cov-report=xml
+        pytest -v --cov ${{ inputs.cover_package }} ${{ inputs.test_path }} --cov-report=xml ${{ inputs.pytest_opts }}
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
       with:
