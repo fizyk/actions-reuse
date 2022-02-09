@@ -64,6 +64,9 @@ Lints python code
    * - pylint
      - false
      - Flag to run pylint on code or not
+   * - rst
+     - false
+     - Flag to run rst on code or not
 
 .. list-table:: linters that can be run
     :header-rows: 1
