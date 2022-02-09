@@ -60,6 +60,6 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
       with:
-        flags: unittests,${{ input.os }}
+        flags: unittests
         env_vars: OS,PYTHON
         fail_ci_if_error: true
