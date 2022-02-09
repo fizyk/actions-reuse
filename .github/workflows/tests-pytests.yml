@@ -27,16 +27,21 @@ on:
         default: '["3.7", "3.8", "3.9", "3.10"]'
         required: false
         type: string
+      os:
+        description: 'Operating system to run tests on'
+        default: 'ubuntu-latest'
+        required: false
+        type: string
 
 jobs:
   pytests:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.os }}
     strategy:
       fail-fast: false
       matrix:
         python-version: ${{ fromJSON(inputs.python-versions) }}
     env:
-      OS: ubuntu-latest
+      OS: ${{ inputs.os }}
       PYTHON: ${{ matrix.python-version }}
 
     steps:
@@ -55,6 +60,6 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2.1.0
       with:
-        flags: unittests
+        flags: unittests,${{ input.os }}
         env_vars: OS,PYTHON
         fail_ci_if_error: true
