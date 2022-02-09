@@ -117,3 +117,6 @@ Run pytest tests on python code
    * - python-versions
      - '["3.7", "3.8", "3.9", "3.10"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
+   * - os:
+     - ubuntu-latest
+     - Operating system tests are running on
