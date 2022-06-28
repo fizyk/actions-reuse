@@ -52,9 +52,9 @@ Lints python code
    * - pydocstyle
      - true
      - Flag to run pydocstyle on code or not
-   * - pydocstyle
+   * - pycodestyle
      - true
-     - Flag to run pydocstyle on code or not
+     - Flag to run pycodestyle on code or not
    * - black
      - true
      - Flag to run black on code or not
