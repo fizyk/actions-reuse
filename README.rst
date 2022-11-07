@@ -47,7 +47,7 @@ Lints python code
      - requirements-lint.txt
      - Requirements file name
    * - python-version
-     - 3.10
+     - 3.11
      - Python version to run linters on
    * - pydocstyle
      - true
@@ -115,7 +115,7 @@ Run pytest tests on python code
      - ""
      - Additional pytest options
    * - python-versions
-     - '["3.7", "3.8", "3.9", "3.10"]'
+     - '["3.7", "3.8", "3.9", "3.10", "3.10"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
    * - os:
      - ubuntu-latest
