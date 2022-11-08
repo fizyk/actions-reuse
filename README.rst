@@ -11,7 +11,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.3.2
+        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.4.0
 
 Has optional parameter **publish** and optional secret **pypi_token**
 
@@ -32,7 +32,7 @@ linters-python
 
     jobs:
       lint:
-        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.3.2
+        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.4.0
 
 Lints python code
 
@@ -94,7 +94,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v1.3.2
+        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v1.4.0
 
 Run pytest tests on python code
 
