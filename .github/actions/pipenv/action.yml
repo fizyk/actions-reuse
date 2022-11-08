@@ -7,10 +7,15 @@ inputs:
   command:
     description: 'Command to run'
     required: true
+  fetch-depth:
+    description: 'How deep to fetch commits'
+    default: 1
 runs:
   using: "composite"
   steps:
   - uses: actions/checkout@v3
+    with:
+      fetch-depth: ${{ inputs.fetch-depth }}
   - name: Set up Python ${{ inputs.python-version }}
     uses: actions/setup-python@v4
     with:
