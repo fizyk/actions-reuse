@@ -11,7 +11,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@main
+        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.3.2
 
 Has optional parameter **publish** and optional secret **pypi_token**
 
@@ -32,7 +32,7 @@ linters-python
 
     jobs:
       lint:
-        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@main
+        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.3.2
 
 Lints python code
 
@@ -94,7 +94,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@main
+        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v1.3.2
 
 Run pytest tests on python code
 
@@ -126,3 +126,14 @@ Run pytest tests on python code
    * - os:
      - ubuntu-latest
      - Operating system tests are running on
+
+
+# Release
+
+Install pipenv first,
+
+Then run:
+
+.. code-block::
+
+    pipenv run tbump [NEW_VERSION]
