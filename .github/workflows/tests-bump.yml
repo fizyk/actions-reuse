@@ -1,8 +1,6 @@
 name: Run test commands
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -16,3 +14,13 @@ jobs:
         with:
           python-version: "3.11"
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
+  towncrier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/pipenv
+        with:
+          python-version: "3.11"
+          command: towncrier check --compare-with origin/main
+          fetch-depth: 0

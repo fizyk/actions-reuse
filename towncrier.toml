@@ -1,0 +1,5 @@
+[tool.towncrier]
+directory = "newsfragments"
+single_file=true
+filename="Changelog.rst"
+issue_format="`#{issue} <https://https://github.com/fizyk/actions-reuse/issues/{issue}>`_"

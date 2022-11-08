@@ -44,9 +44,9 @@ src = ".github/workflows/tests-pytests.yml"
 # run after the files have been patched
 # and before the git commit is made
 
-#  [[before_commit]]
-#  name = "check changelog"
-#  cmd = "grep -q {new_version} Changelog.rst"
+[[before_commit]]
+name = "Build changelog"
+cmd = "pipenv run towncrier build --version {new_version} --yes"
 
 # Or run some commands after the git tag and the branch
 # have been pushed:
