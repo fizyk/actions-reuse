@@ -3,6 +3,11 @@ name: Run linters
 on:
   workflow_call:
     inputs:
+      pipenv:
+        description: 'Use pipenv'
+        default: false
+        required: false
+        type: boolean
       requirements:
         description: 'Requirements file name'
         default: 'requirements-lint.txt'
@@ -49,56 +54,52 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
+    - uses: fizyk/actions-reuse/.github/actions/pip@main
+      if: ${{ inputs.pipenv == false }}
       with:
         python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run pydocstyle
-      run: |
-        pydocstyle src/ tests/
+        requirements: ${{ inputs.requirements }}
+        command: pydocstyle src/ tests/
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+      if: ${{ inputs.pipenv == true }}
+      with:
+        python-version: ${{ inputs.python-version }}
+        command: pydocstyle src/ tests/
 
   pycodestyle:
     if: ${{ inputs.pycodestyle }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
+    - uses: fizyk/actions-reuse/.github/actions/pip@main
+      if: ${{ inputs.pipenv == false }}
       with:
         python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run pydocstyle
-      run: |
-        pycodestyle src/ tests/
+        requirements: ${{ inputs.requirements }}
+        command: pycodestyle src/ tests/
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+      if: ${{ inputs.pipenv == true }}
+      with:
+        python-version: ${{ inputs.python-version }}
+        command: pycodestyle src/ tests/
+
   black:
     if: ${{ inputs.black }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
+    - uses: fizyk/actions-reuse/.github/actions/pip@main
+      if: ${{ inputs.pipenv == false }}
       with:
         python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run black
-      run: |
-        black --diff --check src/ tests/
+        requirements: ${{ inputs.requirements }}
+        command: black --diff --check src/ tests/
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+      if: ${{ inputs.pipenv == true }}
+      with:
+        python-version: ${{ inputs.python-version }}
+        command: black --diff --check src/ tests/
 
   mypy:
     if: ${{ inputs.mypy }}
@@ -106,47 +107,47 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run Mypy type checks
-      run: |
-        mypy src/ tests/
+      - uses: fizyk/actions-reuse/.github/actions/pip@main
+        if: ${{ inputs.pipenv == false }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: mypy src/ tests/
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+        if: ${{ inputs.pipenv == true }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          command: mypy src/ tests/
+
+
   pylint:
     if: ${{ inputs.pylint }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run pylint
-      run: |
-        pylint src/ tests
+      - uses: fizyk/actions-reuse/.github/actions/pip@main
+        if: ${{ inputs.pipenv == false }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: pylint src/ tests
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+        if: ${{ inputs.pipenv == true }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          command: pylint src/ tests
+
   rst:
     if: ${{ inputs.rst }}
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ inputs.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ inputs.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ${{ inputs.requirements }}
-    - name: Run rst-lint
-      run: |
-        rst-lint *.rst
+      - uses: fizyk/actions-reuse/.github/actions/pip@main
+        if: ${{ inputs.pipenv == false }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: rst-lint *.rst
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@main
+        if: ${{ inputs.pipenv == true }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          command: rst-lint *.rst
