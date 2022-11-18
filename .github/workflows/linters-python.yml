@@ -8,6 +8,11 @@ on:
         default: false
         required: false
         type: boolean
+      pipenv-install-options:
+        description: 'Pipenv installation options'
+        default: ""
+        required: false
+        type: string
       requirements:
         description: 'Requirements file name'
         default: 'requirements-lint.txt'
@@ -83,6 +88,7 @@ jobs:
       if: ${{ inputs.pipenv == true }}
       with:
         python-version: ${{ inputs.python-version }}
+        pipenv-install-options: ${{ inputs.pipenv-install-options }}
         command: pycodestyle src/ tests/
 
   black:
@@ -99,6 +105,7 @@ jobs:
       if: ${{ inputs.pipenv == true }}
       with:
         python-version: ${{ inputs.python-version }}
+        pipenv-install-options: ${{ inputs.pipenv-install-options }}
         command: black --diff --check src/ tests/
 
   mypy:
@@ -117,6 +124,7 @@ jobs:
         if: ${{ inputs.pipenv == true }}
         with:
           python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: mypy src/ tests/
 
 
@@ -134,6 +142,7 @@ jobs:
         if: ${{ inputs.pipenv == true }}
         with:
           python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pylint src/ tests
 
   rst:
@@ -150,4 +159,5 @@ jobs:
         if: ${{ inputs.pipenv == true }}
         with:
           python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: rst-lint *.rst

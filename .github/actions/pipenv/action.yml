@@ -10,6 +10,9 @@ inputs:
   fetch-depth:
     description: 'How deep to fetch commits'
     default: 1
+  pipenv-install-options:
+    description: "Pipenv install options"
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -26,7 +29,7 @@ runs:
       python -m pip install --upgrade pip pipenv
       pipenv --python $(which python)
       pipenv run python --version
-      pipenv install --dev
+      pipenv install --dev ${{ inputs.pipenv-install-options }}
   - name: Run ${{ inputs.command }}
     shell: bash
     run:  pipenv run ${{ inputs.command }}

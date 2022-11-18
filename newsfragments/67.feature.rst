@@ -1,0 +1,2 @@
+pipenv template, linters-python and tests-pytests accepts `pipenv-install-options`
+for additional pipenv install options. Might allow adding ie. `--skip-lock`.
