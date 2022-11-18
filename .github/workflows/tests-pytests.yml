@@ -8,6 +8,11 @@ on:
         default: false
         required: false
         type: boolean
+      pipenv-install-options:
+        description: 'Pipenv installation options'
+        default: ""
+        required: false
+        type: string
       requirements:
         description: 'Requirements file name'
         default: 'requirements-test.txt'
@@ -60,6 +65,7 @@ jobs:
       if: ${{ inputs.pipenv == true }}
       with:
         python-version: ${{ matrix.python-version }}
+        pipenv-install-options: ${{ inputs.pipenv-install-options }}
         command: pytest -v --cov ${{ inputs.cover_package }} ${{ inputs.test_path }} --cov-report=xml ${{ inputs.pytest_opts }}
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.1

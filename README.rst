@@ -46,6 +46,9 @@ Lints python code
    * - pipenv
      - false
      - Whether to use pipenv or not
+   * - pipenv-install-options
+     - ""
+     - Additional pipenv install options
    * - requirements
      - requirements-lint.txt
      - Requirements file name
@@ -108,6 +111,9 @@ Run pytest tests on python code
    * - pipenv
      - false
      - Whether to use pipenv or not
+   * - pipenv-install-options
+     - ""
+     - Additional pipenv install options
    * - requirements
      - requirements-lint.txt
      - Requirements file name
