@@ -1,0 +1,1 @@
+Update automerge action to watch for `Run test commands`
