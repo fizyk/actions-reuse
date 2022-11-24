@@ -135,12 +135,6 @@ Run pytest tests on python code
    * - requirements
      - requirements-lint.txt
      - Requirements file name
-   * - cover_package
-     -
-     - Package name which should be covered
-   * - test_path
-     - tests/
-     - Test path
    * - pytest_opts
      - ""
      - Additional pytest options
