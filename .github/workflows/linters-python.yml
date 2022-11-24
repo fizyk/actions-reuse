@@ -27,31 +27,61 @@ on:
         type: boolean
         required: false
         default: true
+      pydocstyle-paths:
+        description: 'Path to run pydocstyle on'
+        type: string
+        required: false
+        default: "."
       pycodestyle:
         description: 'Flag to run pycodestyle on code or not'
         type: boolean
         required: false
         default: true
+      pycodestyle-paths:
+        description: 'Path to run pycodestyle on'
+        type: string
+        required: false
+        default: "."
       black:
         description: 'Flag to run black on code or not'
         type: boolean
         required: false
         default: true
+      black-paths:
+        description: 'Path to run black on'
+        type: string
+        required: false
+        default: "."
       mypy:
         description: 'Flag to run mypy on code or not'
         type: boolean
         required: false
         default: false
+      mypy-paths:
+        description: 'Path to run mypy on'
+        type: string
+        required: false
+        default: "."
       pylint:
         description: 'Flag to run pylint on code or not'
         type: boolean
         required: false
         default: false
+      pylint-paths:
+        description: 'Path to run pylint on'
+        type: string
+        required: false
+        default: "."
       rst:
         description: 'Flag to run rst on code or not'
         type: boolean
         required: false
         default: false
+      rst-paths:
+        description: 'Path to run black on'
+        type: string
+        required: false
+        default: "*.rst"
 
 jobs:
   pydocstyle:
@@ -70,7 +100,7 @@ jobs:
       if: ${{ inputs.pipenv == true }}
       with:
         python-version: ${{ inputs.python-version }}
-        command: pydocstyle src/ tests/
+        command: pydocstyle ${{ inputs.pydocstyle-paths }}
 
   pycodestyle:
     if: ${{ inputs.pycodestyle }}
@@ -89,7 +119,7 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
-        command: pycodestyle src/ tests/
+        command: pycodestyle ${{ inputs.pycodestyle-paths }}
 
   black:
     if: ${{ inputs.black }}
@@ -106,7 +136,7 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
-        command: black --diff --check src/ tests/
+        command: black --diff --check ${{ inputs.black-paths }}
 
   mypy:
     if: ${{ inputs.mypy }}
@@ -125,7 +155,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-          command: mypy src/ tests/
+          command: mypy ${{ inputs.mypy-paths }}
 
 
   pylint:
@@ -143,7 +173,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-          command: pylint src/ tests
+          command: pylint ${{ inputs.pylint-paths }}
 
   rst:
     if: ${{ inputs.rst }}
@@ -160,4 +190,4 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-          command: rst-lint *.rst
+          command: rst-lint ${{ inputs.rst-paths }}
