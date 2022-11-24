@@ -58,21 +58,39 @@ Lints python code
    * - pydocstyle
      - true
      - Flag to run pydocstyle on code or not
+   * - pydocstyle-paths
+     - .
+     - Path to run pydocstyle on
    * - pycodestyle
      - true
      - Flag to run pycodestyle on code or not
+   * - pycodestyle-paths
+     - .
+     - Path to run pycodestyle on
    * - black
      - true
      - Flag to run black on code or not
+   * - black-paths
+     - .
+     - Path to run black on
    * - mypy
      - false
      - Flag to run mypy on code or not
+   * - mypy-paths
+     - .
+     - Path to run mypy on
    * - pylint
      - false
      - Flag to run pylint on code or not
+   * - pylint-paths
+     - .
+     - Path to run pylint on
    * - rst
      - false
      - Flag to run rst on code or not
+   * - rst-paths
+     - *.rst
+     - Path to run rst-lint on
 
 .. list-table:: linters that can be run
     :header-rows: 1
