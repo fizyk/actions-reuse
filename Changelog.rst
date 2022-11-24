@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.5.1 (2022-11-24)
+==================
+
+Bugfixes
+--------
+
+- Removed the ability to set up cover package's paths/names. use .coveragerc for that instead. (`#71 <https://https://github.com/fizyk/actions-reuse/issues/71>`_)
+
+
 1.5.0 (2022-11-24)
 ==================
 
