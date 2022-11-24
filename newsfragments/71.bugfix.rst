@@ -1,0 +1,1 @@
+Removed the ability to set up cover package's paths/names. use .coveragerc for that instead.
