@@ -173,7 +173,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-          command: pylint ${{ inputs.pylint-paths }}
+          command: pylint --recursive y .
 
   rst:
     if: ${{ inputs.rst }}
