@@ -67,11 +67,6 @@ on:
         type: boolean
         required: false
         default: false
-      pylint-paths:
-        description: 'Path to run pylint on'
-        type: string
-        required: false
-        default: "."
       rst:
         description: 'Flag to run rst on code or not'
         type: boolean
@@ -95,7 +90,7 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         requirements: ${{ inputs.requirements }}
-        command: pydocstyle src/ tests/
+        command: pydocstyle ${{ inputs.pydocstyle-paths }}
     - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
       if: ${{ inputs.pipenv == true }}
       with:
@@ -113,7 +108,7 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         requirements: ${{ inputs.requirements }}
-        command: pycodestyle src/ tests/
+        command: pycodestyle ${{ inputs.pycodestyle-paths }}
     - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
       if: ${{ inputs.pipenv == true }}
       with:
@@ -130,7 +125,7 @@ jobs:
       with:
         python-version: ${{ inputs.python-version }}
         requirements: ${{ inputs.requirements }}
-        command: black --diff --check src/ tests/
+        command: black --diff --check  ${{ inputs.black-paths }}
     - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
       if: ${{ inputs.pipenv == true }}
       with:
@@ -149,7 +144,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
-          command: mypy src/ tests/
+          command: mypy ${{ inputs.mypy-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
         if: ${{ inputs.pipenv == true }}
         with:
@@ -167,13 +162,13 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
-          command: pylint src/ tests
+          command: pylint --recursive y .
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
         if: ${{ inputs.pipenv == true }}
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-          command: pylint ${{ inputs.pylint-paths }}
+          command: pylint --recursive y .
 
   rst:
     if: ${{ inputs.rst }}
@@ -184,7 +179,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
-          command: rst-lint *.rst
+          command: rst-lint ${{ inputs.rst-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.5.1
         if: ${{ inputs.pipenv == true }}
         with:
