@@ -1,2 +1,0 @@
-Removed pylint-paths parameters and now running pylint with `pylint --recursive y .` command.
-Any ignores can be set in .pylintrc file.

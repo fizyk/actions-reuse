@@ -3,6 +3,16 @@ Changelog
 
 .. towncrier release notes start
 
+1.5.2 (2022-11-25)
+==================
+
+Features
+--------
+
+- Removed pylint-paths parameters and now running pylint with `pylint --recursive y .` command.
+  Any ignores can be set in .pylintrc file. (`#72 <https://https://github.com/fizyk/actions-reuse/issues/72>`_)
+
+
 1.5.1 (2022-11-24)
 ==================
 
