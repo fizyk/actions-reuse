@@ -82,9 +82,6 @@ Lints python code
    * - pylint
      - false
      - Flag to run pylint on code or not
-   * - pylint-paths
-     - .
-     - Path to run pylint on
    * - rst
      - false
      - Flag to run rst on code or not
