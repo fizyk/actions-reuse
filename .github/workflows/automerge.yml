@@ -6,9 +6,7 @@ on:
       - completed
     workflows:
       # List all required workflow names here.
-      - 'Run tests'
-      - 'Test build package'
-      - 'Run linters'
+      - 'Run test commands'
 
 jobs:
   merge-me:
