@@ -23,7 +23,7 @@ jobs:
       - # It is often a desired behavior to merge only when a workflow execution
         # succeeds. This can be changed as needed.
         name: Merge me!
-        uses: ridedott/merge-me-action@v2.10.32
+        uses: ridedott/merge-me-action@v2.10.34
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
