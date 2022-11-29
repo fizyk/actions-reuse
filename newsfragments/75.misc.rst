@@ -1,1 +1,0 @@
-Use github application and additional action to allow merge-me action to merge dependabot pull requests.

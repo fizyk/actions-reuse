@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+1.6.0 (2022-11-29)
+==================
+
+Features
+--------
+
+- Add `automerge-shared` shared workflow to re-usable workflows. (`#76 <https://https://github.com/fizyk/actions-reuse/issues/76>`_)
+
+
+Misc
+----
+
+- `#74 <https://https://github.com/fizyk/actions-reuse/issues/74>`_, `#75 <https://https://github.com/fizyk/actions-reuse/issues/75>`_
+
+
 1.5.2 (2022-11-25)
 ==================
 
