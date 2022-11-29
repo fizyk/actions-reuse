@@ -148,7 +148,7 @@ automerge-shared
 .. code-block:: yaml
 
     jobs:
-      tests:
+      automerge:
         uses: fizyk/actions-reuse/.github/workflows/automerge-shared.yml@v1.5.2
 
 Runs automerge for dependabot pull requests using:
