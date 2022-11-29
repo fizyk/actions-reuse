@@ -1,1 +1,0 @@
-Secrets have no type - fixed automerge-shared secrets definition.

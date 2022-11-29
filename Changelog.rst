@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+1.6.2 (2022-11-29)
+==================
+
+Bugfixes
+--------
+
+- Secrets have no type - fixed automerge-shared secrets definition. (`#79 <https://https://github.com/fizyk/actions-reuse/issues/79>`_)
+
+
+Misc
+----
+
+- `#78 <https://https://github.com/fizyk/actions-reuse/issues/78>`_
+
+
 1.6.1 (2022-11-29)
 ==================
 
