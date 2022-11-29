@@ -6,11 +6,9 @@ on:
       app_id:
         description: "Github Application ID that'll be used for merging"
         required: true
-        type: string
       private_key:
         description: "Github Application's private key"
         required: true
-        type: string
 
 jobs:
   merge-me:
