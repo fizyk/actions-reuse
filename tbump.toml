@@ -40,6 +40,9 @@ src = ".github/workflows/linters-python.yml"
 [[file]]
 src = ".github/workflows/tests-pytests.yml"
 
+[[file]]
+src = ".github/workflows/automerge.yml"
+
 # You can specify a list of commands to
 # run after the files have been patched
 # and before the git commit is made
