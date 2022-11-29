@@ -2,7 +2,7 @@ name: Merge me test dependencies!
 
 on:
   workflow_call:
-    inputs:
+    secrets:
       app_id:
         description: "Github Application ID that'll be used for merging"
         required: true
@@ -24,8 +24,8 @@ jobs:
         uses: tibdex/github-app-token@v1
         id: generate-token
         with:
-          app_id: ${{ inputs.app_id }}
-          private_key: ${{ inputs.private_key }}
+          app_id: ${{ secrets.app_id }}
+          private_key: ${{ secrets.private_key }}
       - name: Merge me!
         uses: ridedott/merge-me-action@v2.10.34
         with:

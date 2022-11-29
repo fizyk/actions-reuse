@@ -164,7 +164,7 @@ Requires Github application to run!
 .. list-table:: Configuration
    :header-rows: 1
 
-   * - parameter
+   * - secret
      - note
    * - app_id
      - Github Application ID that'll be used for merging
