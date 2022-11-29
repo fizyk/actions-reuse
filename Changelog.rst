@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.6.1 (2022-11-29)
+==================
+
+Bugfixes
+--------
+
+- Add your info here (`#77 <https://https://github.com/fizyk/actions-reuse/issues/77>`_)
+
+
 1.6.0 (2022-11-29)
 ==================
 
