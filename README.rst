@@ -142,6 +142,34 @@ Run pytest tests on python code
      - ubuntu-latest
      - Operating system tests are running on
 
+automerge-shared
+----------------
+
+.. code-block:: yaml
+
+    jobs:
+      tests:
+        uses: fizyk/actions-reuse/.github/workflows/automerge-shared.yml@v1.5.2
+
+Runs automerge for dependabot pull requests using:
+
+* `ridedott/merge-me-action <https://github.com/ridedott/merge-me-action>_` to run the merge
+* `tibdex/github-app-token <https://github.com/tibdex/github-app-token>`_ to generate short-lived github app token with enough permissions to run the merge.
+
+Mind that dependabot pull requests are treated as 3rd party pull requests, hence default GITHUB_TOKEN will only have read permissions.
+
+Requires Github application to run!
+
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - note
+   * - app_id
+     - Github Application ID that'll be used for merging
+   * - private_key
+     - Github Application's private key
 
 # Release
 
