@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.6.3 (2022-12-05)
+==================
+
+Features
+--------
+
+- Switch to build package building system (`#82 <https://https://github.com/fizyk/actions-reuse/issues/82>`_)
+
+
 1.6.2 (2022-11-29)
 ==================
 
