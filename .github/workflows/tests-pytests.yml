@@ -33,6 +33,10 @@ on:
         default: 'ubuntu-latest'
         required: false
         type: string
+    secrets:
+      codecov_token:
+        description: 'Codecov token'
+        required: false
 
 jobs:
   pytests:
@@ -61,6 +65,7 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3.1.1
       with:
+        token: ${{ secrets.codecov_token }}
         flags: unittests
         env_vars: OS,PYTHON
         fail_ci_if_error: true
