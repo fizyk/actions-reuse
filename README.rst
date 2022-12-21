@@ -142,6 +142,17 @@ Run pytest tests on python code
      - ubuntu-latest
      - Operating system tests are running on
 
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - secret
+     - required
+     - note
+   * - codecov_token
+     - no
+     - Codecov token
+
 automerge-shared
 ----------------
 
