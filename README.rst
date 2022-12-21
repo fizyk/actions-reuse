@@ -11,7 +11,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.6.3
+        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.6.4
 
 Has optional parameter **publish** and optional secret **pypi_token**
 
@@ -32,7 +32,7 @@ linters-python
 
     jobs:
       lint:
-        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.6.3
+        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v1.6.4
 
 Lints python code
 
@@ -112,7 +112,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v1.6.3
+        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v1.6.4
 
 Run pytest tests on python code
 
@@ -160,7 +160,7 @@ automerge-shared
 
     jobs:
       automerge:
-        uses: fizyk/actions-reuse/.github/workflows/automerge-shared.yml@v1.6.3
+        uses: fizyk/actions-reuse/.github/workflows/automerge-shared.yml@v1.6.4
 
 Runs automerge for dependabot pull requests using:
 
