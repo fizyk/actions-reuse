@@ -25,7 +25,7 @@ jobs:
           app_id: ${{ secrets.app_id }}
           private_key: ${{ secrets.private_key }}
       - name: Merge me!
-        uses: ridedott/merge-me-action@v2.10.39
+        uses: ridedott/merge-me-action@v2.10.40
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
