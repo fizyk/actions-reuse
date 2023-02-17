@@ -8,6 +8,11 @@ on:
         required: false
         default: false
         type: boolean
+      artifact:
+        description: 'Whether to store Python 🐍 distributions 📦 as pipeline artifact'
+        required: false
+        default: false
+        type: boolean
     secrets:
       pypi_token:
         description: 'Token used to authenticate to the PyPI'
@@ -33,6 +38,11 @@ jobs:
         run: pip install twine
       - name: Check the package
         run: twine check dist/*
+      - name: Store distributions 📦 as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: dist/
       - name: Publish distribution 📦 to PyPI
         if: ${{ inputs.publish }}
         uses: pypa/gh-action-pypi-publish@v1.6.4
