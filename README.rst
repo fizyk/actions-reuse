@@ -13,17 +13,28 @@ pypi
       build:
         uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v1.6.4
 
-Has optional parameter **publish** and optional secret **pypi_token**
+.. list-table:: Configuration
+   :header-rows: 1
 
-Without these parameters, this workflow only builds and validates package.
-With them, it also publishes the package to pypi.
+   * - parameter
+     - default
+     - note
+   * - publish
+     - false
+     - Whether to publish package to pypi or not
+   * - artifact
+     - false
+     - Whether to upload built packages as pipeline artifacts or not
 
-.. code-block:: yaml
 
-    with:
-      publish: true
-    secrets:
-      pypi_token: ${{ secrets.pypi_password }}
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - secret
+     - default
+     - note
+   * - pypi_token
+     - Pypi token used to authenticate with PyPI for upload.
 
 linters-python
 --------------
