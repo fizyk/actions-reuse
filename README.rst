@@ -152,6 +152,9 @@ Run pytest tests on python code
    * - os:
      - ubuntu-latest
      - Operating system tests are running on
+   * - fail_on_codecov_error:
+     - false
+     - Whether pipeline should fail if there would be an error on codecov side.
 
 
 .. list-table:: Configuration
