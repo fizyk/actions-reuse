@@ -3,6 +3,16 @@ Changelog
 
 .. towncrier release notes start
 
+1.7.0 (2023-02-27)
+==================
+
+Features
+--------
+
+- Ability to store built package as pipeline artifacts. (`#90 <https://https://github.com/fizyk/actions-reuse/issues/90>`_)
+- Be able to configure codecov's `fail_on_ci_error` - defaults to false. (`#91 <https://https://github.com/fizyk/actions-reuse/issues/91>`_)
+
+
 1.6.4 (2022-12-21)
 ==================
 
