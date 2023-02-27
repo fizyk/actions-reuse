@@ -1,0 +1,1 @@
+Be able to configure codecov's `fail_on_ci_error` - defaults to false.
