@@ -37,7 +37,7 @@ on:
         description: 'Whether pipeline should fail if there would be an error on codecov side.'
         default: false
         required: false
-        type: bool
+        type: boolean
     secrets:
       codecov_token:
         description: 'Codecov token'

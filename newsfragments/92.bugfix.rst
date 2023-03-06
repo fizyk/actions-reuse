@@ -1,0 +1,1 @@
+Fix incorrect parameter type bool -> boolean
