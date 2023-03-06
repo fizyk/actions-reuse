@@ -55,13 +55,13 @@ jobs:
       PYTHON: ${{ matrix.python-version }}
 
     steps:
-    - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.0
+    - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
       if: ${{ inputs.pipenv == false }}
       with:
         python-version: ${{ matrix.python-version }}
         requirements: ${{ inputs.requirements }}
         command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
       if: ${{ inputs.pipenv == true }}
       with:
         python-version: ${{ matrix.python-version }}

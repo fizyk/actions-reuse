@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+1.7.1 (2023-03-06)
+==================
+
+Bugfixes
+--------
+
+- Fix incorrect parameter type bool -> boolean (`#92 <https://https://github.com/fizyk/actions-reuse/issues/92>`_)
+
+
 1.7.0 (2023-02-27)
 ==================
 
