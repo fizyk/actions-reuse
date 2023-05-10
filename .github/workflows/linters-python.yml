@@ -3,11 +3,6 @@ name: Run linters
 on:
   workflow_call:
     inputs:
-      pipenv:
-        description: 'Use pipenv'
-        default: false
-        required: false
-        type: boolean
       pipenv-install-options:
         description: 'Pipenv installation options'
         default: ""
@@ -15,7 +10,6 @@ on:
         type: string
       requirements:
         description: 'Requirements file name'
-        default: 'requirements-lint.txt'
         required: false
         type: string
       python-version:
@@ -85,17 +79,18 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-      if: ${{ inputs.pipenv == false }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        requirements: ${{ inputs.requirements }}
-        command: pydocstyle ${{ inputs.pydocstyle-paths }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-      if: ${{ inputs.pipenv == true }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        command: pydocstyle ${{ inputs.pydocstyle-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
+        if: ${{ inputs.requirements != '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: pydocstyle ${{ inputs.pydocstyle-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
+        if: ${{ inputs.requirements == '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+          command: pydocstyle ${{ inputs.pydocstyle-paths }}
 
   pycodestyle:
     if: ${{ inputs.pycodestyle }}
@@ -103,35 +98,35 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-      if: ${{ inputs.pipenv == false }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        requirements: ${{ inputs.requirements }}
-        command: pycodestyle ${{ inputs.pycodestyle-paths }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-      if: ${{ inputs.pipenv == true }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        pipenv-install-options: ${{ inputs.pipenv-install-options }}
-        command: pycodestyle ${{ inputs.pycodestyle-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
+        if: ${{ inputs.requirements != '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: pycodestyle ${{ inputs.pycodestyle-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
+        if: ${{ inputs.requirements == '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+          command: pycodestyle ${{ inputs.pycodestyle-paths }}
 
   black:
     if: ${{ inputs.black }}
     runs-on: ubuntu-latest
     steps:
-    - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-      if: ${{ inputs.pipenv == false }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        requirements: ${{ inputs.requirements }}
-        command: black --diff --check  ${{ inputs.black-paths }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-      if: ${{ inputs.pipenv == true }}
-      with:
-        python-version: ${{ inputs.python-version }}
-        pipenv-install-options: ${{ inputs.pipenv-install-options }}
-        command: black --diff --check ${{ inputs.black-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
+        if: ${{ inputs.requirements != '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: black --diff --check  ${{ inputs.black-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
+        if: ${{ inputs.requirements == '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+          command: black --diff --check ${{ inputs.black-paths }}
 
   mypy:
     if: ${{ inputs.mypy }}
@@ -140,13 +135,13 @@ jobs:
       fail-fast: false
     steps:
       - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-        if: ${{ inputs.pipenv == false }}
+        if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: mypy ${{ inputs.mypy-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-        if: ${{ inputs.pipenv == true }}
+        if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
@@ -158,13 +153,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-        if: ${{ inputs.pipenv == false }}
+        if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: pylint --recursive y .
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-        if: ${{ inputs.pipenv == true }}
+        if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
@@ -175,13 +170,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
-        if: ${{ inputs.pipenv == false }}
+        if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: rst-lint ${{ inputs.rst-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
-        if: ${{ inputs.pipenv == true }}
+        if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}

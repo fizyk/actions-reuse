@@ -54,15 +54,11 @@ Lints python code
    * - parameter
      - default
      - note
-   * - pipenv
-     - false
-     - Whether to use pipenv or not
    * - pipenv-install-options
      - ""
      - Additional pipenv install options
    * - requirements
-     - requirements-lint.txt
-     - Requirements file name
+     - Requirements file name, makes action install requirements with pip instead of default pipenv
    * - python-version
      - 3.11
      - Python version to run linters on
@@ -134,14 +130,10 @@ Run pytest tests on python code
    * - parameter
      - default
      - note
-   * - pipenv
-     - false
-     - Whether to use pipenv or not
    * - pipenv-install-options
      - ""
      - Additional pipenv install options
    * - requirements
-     - requirements-lint.txt
      - Requirements file name
    * - pytest_opts
      - ""
