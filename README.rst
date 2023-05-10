@@ -63,19 +63,19 @@ Lints python code
      - 3.11
      - Python version to run linters on
    * - pydocstyle
-     - true
+     - false
      - Flag to run pydocstyle on code or not
    * - pydocstyle-paths
      - .
      - Path to run pydocstyle on
    * - pycodestyle
-     - true
+     - false
      - Flag to run pycodestyle on code or not
    * - pycodestyle-paths
      - .
      - Path to run pycodestyle on
    * - black
-     - true
+     - false
      - Flag to run black on code or not
    * - black-paths
      - .

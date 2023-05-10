@@ -20,7 +20,7 @@ on:
         description: 'Flag to run pydocstyle on code or not'
         type: boolean
         required: false
-        default: true
+        default: false
       pydocstyle-paths:
         description: 'Path to run pydocstyle on'
         type: string
@@ -30,7 +30,7 @@ on:
         description: 'Flag to run pycodestyle on code or not'
         type: boolean
         required: false
-        default: true
+        default: false
       pycodestyle-paths:
         description: 'Path to run pycodestyle on'
         type: string
@@ -40,7 +40,7 @@ on:
         description: 'Flag to run black on code or not'
         type: boolean
         required: false
-        default: true
+        default: false
       black-paths:
         description: 'Path to run black on'
         type: string
