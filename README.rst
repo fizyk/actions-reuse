@@ -95,22 +95,13 @@ Lints python code
    * - rst-paths
      - *.rst
      - Path to run rst-lint on
+   * - ruff
+     - false
+     - Flag to run ruff on code or not
+   * - ruff-paths
+     - .
+     - Path to run ruff on
 
-.. list-table:: linters that can be run
-    :header-rows: 1
-
-   * - linter
-     - default
-   * - pydocstyle
-     - yes
-   * - pycodestyle
-     - yes
-   * - black
-     - yes
-   * - mypy
-     - no
-   * - pylint
-     - no
 
 tests-pytests
 -------------

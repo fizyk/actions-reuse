@@ -67,10 +67,20 @@ on:
         required: false
         default: false
       rst-paths:
-        description: 'Path to run black on'
+        description: 'Path to run rst on'
         type: string
         required: false
         default: "*.rst"
+      ruff:
+        description: 'Flag to run ruff linter on code or not'
+        type: boolean
+        required: false
+        default: false
+      ruff-paths:
+        description: 'Path to run ruff on'
+        type: string
+        required: false
+        default: "."
 
 jobs:
   pydocstyle:
@@ -181,3 +191,20 @@ jobs:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: rst-lint ${{ inputs.rst-paths }}
+
+  ruff:
+    if: ${{ inputs.ruff }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fizyk/actions-reuse/.github/actions/pip@v1.7.1
+        if: ${{ inputs.requirements != '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: ruff check ${{ inputs.ruff-paths }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v1.7.1
+        if: ${{ inputs.requirements == '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+          command: ruff check ${{ inputs.ruff-paths }}
