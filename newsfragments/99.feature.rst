@@ -1,1 +1,0 @@
-Run all actions on pipenv by default instead of pip.

@@ -1,1 +1,0 @@
-Have all linters turned off by default. Turning them on explicitly would be much more sane.

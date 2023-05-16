@@ -1,1 +1,0 @@
-Removed pipenv option. Now pipenv is used by default and actions only fall back to pip if requirements file is being passed.

@@ -3,6 +3,23 @@ Changelog
 
 .. towncrier release notes start
 
+2.0.0 (2023-05-16)
+==================
+
+Features
+--------
+
+- Added support to run ruff linter (`#97 <https://https://github.com/fizyk/actions-reuse/issues/97>`_)
+- Have all linters turned off by default. Turning them on explicitly would be much more sane. (`#98 <https://https://github.com/fizyk/actions-reuse/issues/98>`_)
+- Run all actions on pipenv by default instead of pip. (`#99 <https://https://github.com/fizyk/actions-reuse/issues/99>`_)
+
+
+Deprecations and Removals
+-------------------------
+
+- Removed pipenv option. Now pipenv is used by default and actions only fall back to pip if requirements file is being passed. (`#99 <https://https://github.com/fizyk/actions-reuse/issues/99>`_)
+
+
 1.7.1 (2023-03-06)
 ==================
 
