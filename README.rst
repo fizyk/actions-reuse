@@ -26,15 +26,10 @@ pypi
      - false
      - Whether to upload built packages as pipeline artifacts or not
 
+.. note::
 
-.. list-table:: Configuration
-   :header-rows: 1
+    It requires `trusted publishers <https://docs.pypi.org/trusted-publishers/>`_ .
 
-   * - secret
-     - default
-     - note
-   * - pypi_token
-     - Pypi token used to authenticate with PyPI for upload.
 
 linters-python
 --------------
