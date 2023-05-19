@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.1.1 (2023-05-19)
+==================
+
+Bugfixes
+--------
+
+- Removed unneeded secrets fro pypi workflow (`#110 <https://https://github.com/fizyk/actions-reuse/issues/110>`_)
+
+
 2.1.0 (2023-05-19)
 ==================
 
