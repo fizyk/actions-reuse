@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.1.0 (2023-05-19)
+==================
+
+Features
+--------
+
+- Migrate pypi workflow to trusted publishers (`#109 <https://https://github.com/fizyk/actions-reuse/issues/109>`_)
+
+
 2.0.0 (2023-05-16)
 ==================
 
