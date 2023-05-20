@@ -1,0 +1,1 @@
+Revert trusted publishers, it's still not supported for reusable workflows.

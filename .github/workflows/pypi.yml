@@ -13,14 +13,17 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      pypi_token:
+        description: 'Token used to authenticate to the PyPI'
+        required: false
+
+
 
 jobs:
   build:
     name: Build Python 🐍 distributions 📦
     runs-on: ubuntu-latest
-    permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
-      id-token: write
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.11
@@ -36,7 +39,6 @@ jobs:
       - name: Check the package
         run: twine check dist/*
       - name: Store distributions 📦 as artifact
-        if: ${{ inputs.artifact }}
         uses: actions/upload-artifact@v3
         with:
           name: package
@@ -44,3 +46,6 @@ jobs:
       - name: Publish distribution 📦 to PyPI
         if: ${{ inputs.publish }}
         uses: pypa/gh-action-pypi-publish@v1.8.6
+        with:
+          password: ${{ secrets.pypi_token }}
+          verbose: true
