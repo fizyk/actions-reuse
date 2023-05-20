@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.1.2 (2023-05-20)
+==================
+
+Deprecations and Removals
+-------------------------
+
+- Revert trusted publishers, it's still not supported for reusable workflows. (`#111 <https://https://github.com/fizyk/actions-reuse/issues/111>`_)
+
+
 2.1.1 (2023-05-19)
 ==================
 
