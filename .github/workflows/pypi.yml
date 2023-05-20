@@ -13,6 +13,10 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      pypi_token:
+        description: 'Token used to authenticate to the PyPI'
+        required: false
 
 jobs:
   build:
@@ -36,7 +40,6 @@ jobs:
       - name: Check the package
         run: twine check dist/*
       - name: Store distributions 📦 as artifact
-        if: ${{ inputs.artifact }}
         uses: actions/upload-artifact@v3
         with:
           name: package
