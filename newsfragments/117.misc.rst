@@ -1,0 +1,1 @@
+Fixes README table's formatting

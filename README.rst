@@ -31,7 +31,6 @@ pypi
    :header-rows: 1
 
    * - secret
-     - default
      - note
    * - pypi_token
      - Pypi token used to authenticate with PyPI for upload.
@@ -58,6 +57,7 @@ Lints python code
      - ""
      - Additional pipenv install options
    * - requirements
+     - 
      - Requirements file name, makes action install requirements with pip instead of default pipenv
    * - python-version
      - 3.11
@@ -125,6 +125,7 @@ Run pytest tests on python code
      - ""
      - Additional pipenv install options
    * - requirements
+     -
      - Requirements file name
    * - pytest_opts
      - ""
@@ -179,7 +180,8 @@ Requires Github application to run!
    * - private_key
      - Github Application's private key
 
-# Release
+Release
+-------
 
 Install pipenv first,
 
