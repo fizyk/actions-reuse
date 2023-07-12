@@ -95,6 +95,9 @@ Lints python code
    * - rst-paths
      - *.rst
      - Path to run rst-lint on
+   * - rstcheck
+     - false
+     - Flag to run rstcheck on rst file or not
    * - ruff
      - false
      - Flag to run ruff on code or not

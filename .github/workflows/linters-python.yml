@@ -71,6 +71,11 @@ on:
         type: string
         required: false
         default: "*.rst"
+      rstcheck:
+        description: 'Flag to run rstcheck on rst file or not'
+        type: boolean
+        required: false
+        default: false
       ruff:
         description: 'Flag to run ruff linter on code or not'
         type: boolean
@@ -191,6 +196,23 @@ jobs:
           python-version: ${{ inputs.python-version }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: rst-lint ${{ inputs.rst-paths }}
+
+  rstcheck:
+    if: ${{ inputs.rst }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.1.2
+        if: ${{ inputs.requirements != '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          requirements: ${{ inputs.requirements }}
+          command: rstcheck -r .
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.1.2
+        if: ${{ inputs.requirements == '' }}
+        with:
+          python-version: ${{ inputs.python-version }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+          command: rstcheck -r .
 
   ruff:
     if: ${{ inputs.ruff }}
