@@ -94,13 +94,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: pydocstyle ${{ inputs.pydocstyle-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -113,13 +113,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: pycodestyle ${{ inputs.pycodestyle-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -130,13 +130,13 @@ jobs:
     if: ${{ inputs.black }}
     runs-on: ubuntu-latest
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: black --diff --check  ${{ inputs.black-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -149,13 +149,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: mypy ${{ inputs.mypy-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -167,13 +167,13 @@ jobs:
     if: ${{ inputs.pylint }}
     runs-on: ubuntu-latest
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: pylint --recursive y .
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -184,13 +184,13 @@ jobs:
     if: ${{ inputs.rst }}
     runs-on: ubuntu-latest
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: rst-lint ${{ inputs.rst-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -201,13 +201,13 @@ jobs:
     if: ${{ inputs.rstcheck }}
     runs-on: ubuntu-latest
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: rstcheck -r .
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -218,13 +218,13 @@ jobs:
     if: ${{ inputs.ruff }}
     runs-on: ubuntu-latest
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.1
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
           requirements: ${{ inputs.requirements }}
           command: ruff check ${{ inputs.ruff-paths }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.2.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}

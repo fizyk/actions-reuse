@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.2.1 (2023-07-12)
+==================
+
+Bugfixes
+--------
+
+- Trigger rstcheck on rstcheck flag not rst one. (`#123 <https:/github.com/fizyk/actions-reuse/issues/123>`_)
+
+
 2.2.0 (2023-07-12)
 ==================
 
