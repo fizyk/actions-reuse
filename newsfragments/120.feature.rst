@@ -1,1 +1,0 @@
-Added support for rstcheck rst linter

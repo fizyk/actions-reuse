@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+2.2.0 (2023-07-12)
+==================
+
+Features
+--------
+
+- Added support for rstcheck rst linter (`#120 <https:/github.com/fizyk/actions-reuse/issues/120>`_)
+
+
+Misc
+----
+
+- `#117 <https:/github.com/fizyk/actions-reuse/issues/117>`_
+
+
 2.1.2 (2023-05-20)
 ==================
 
