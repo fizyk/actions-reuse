@@ -198,7 +198,7 @@ jobs:
           command: rst-lint ${{ inputs.rst-paths }}
 
   rstcheck:
-    if: ${{ inputs.rst }}
+    if: ${{ inputs.rstcheck }}
     runs-on: ubuntu-latest
     steps:
       - uses: fizyk/actions-reuse/.github/actions/pip@v2.2.0

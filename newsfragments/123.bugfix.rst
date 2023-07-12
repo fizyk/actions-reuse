@@ -1,0 +1,1 @@
+Trigger rstcheck on rstcheck flag not rst one.
