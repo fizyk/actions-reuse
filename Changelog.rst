@@ -3,6 +3,19 @@ Changelog
 
 .. towncrier release notes start
 
+2.3.0 (2023-09-08)
+==================
+
+Features
+--------
+
+- Store Pipfile.lock as an artifact if it's not versioned. (`#128 <https:/github.com/fizyk/actions-reuse/issues/128>`_)
+- Cache pipenv dependencies (`#129 <https:/github.com/fizyk/actions-reuse/issues/129>`_)
+- Cache `Pipfile.lock` if it's not versioned in git -
+  this will help provide reproducible builds, and allows
+  to remove `--skip-lock` flags from pipenv install commands.. (`#129 <https:/github.com/fizyk/actions-reuse/issues/129>`_)
+
+
 2.2.1 (2023-07-12)
 ==================
 

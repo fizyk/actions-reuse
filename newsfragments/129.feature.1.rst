@@ -1,3 +1,0 @@
-Cache `Pipfile.lock` if it's not versioned in git -
-this will help provide reproducible builds, and allows
-to remove `--skip-lock` flags from pipenv install commands..

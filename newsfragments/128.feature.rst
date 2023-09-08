@@ -1,1 +1,0 @@
-Store Pipfile.lock as an artifact if it's not versioned.
