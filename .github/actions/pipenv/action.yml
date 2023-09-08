@@ -50,6 +50,12 @@ runs:
     with:
       path: Pipfile.lock
       key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
+  - name: Archive Pipfile.lock if not kept in git
+    if: steps.check_files.outputs.files_exists == 'false'
+    uses: actions/upload-artifact@v3
+    with:
+      name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
+      path: Pipfile.lock
   - name: Run ${{ inputs.command }}
     shell: bash
     run:  pipenv run ${{ inputs.command }}
