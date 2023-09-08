@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.3.1 (2023-09-08)
+==================
+
+Bugfixes
+--------
+
+- ix pipenv caching - use Pipfile for dependency cache not Pipfile.lock which might not be present (`#133 <https:/github.com/fizyk/actions-reuse/issues/133>`_)
+
+
 2.3.0 (2023-09-08)
 ==================
 
