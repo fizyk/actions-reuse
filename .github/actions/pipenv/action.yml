@@ -24,6 +24,7 @@ runs:
     with:
       python-version: ${{ inputs.python-version }}
       cache: pipenv
+      cache-dependency-path: 'Pipfile'
   - name: Check file existence
     id: check_files
     uses: andstor/file-existence-action@v2
