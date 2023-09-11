@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: ./.github/actions/pipenv
         with:
           python-version: "3.11"
@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: ./.github/actions/pipenv
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
