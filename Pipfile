@@ -6,5 +6,5 @@ name = "pypi"
 [packages]
 
 [dev-packages]
-tbump = "==6.10.0"
+tbump = "==6.11.0"
 towncrier = "==23.6.0"
