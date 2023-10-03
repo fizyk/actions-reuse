@@ -1,1 +1,0 @@
-Use Python 3.12 by default, drop 3.7 for default set of python versions.

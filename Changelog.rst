@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.4.0 (2023-10-03)
+==================
+
+Features
+--------
+
+- Use Python 3.12 by default, drop 3.7 for default set of python versions. (`#138 <https:/github.com/fizyk/actions-reuse/issues/138>`_)
+
+
 2.3.2 (2023-09-11)
 ==================
 
