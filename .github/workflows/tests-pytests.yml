@@ -19,7 +19,7 @@ on:
         type: string
       python-versions:
         description: 'Supported python versions'
-        default: '["3.7", "3.8", "3.9", "3.10", "3.11"]'
+        default: '["3.8", "3.9", "3.10", "3.11", "3.12"]'
         required: false
         type: string
       os:
