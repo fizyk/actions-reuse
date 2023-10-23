@@ -1,1 +1,0 @@
-If PKG_CONFIG_PATH is set, then work around setup-python and extend it with original value.

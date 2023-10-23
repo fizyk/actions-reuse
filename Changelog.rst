@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.4.1 (2023-10-23)
+==================
+
+Bugfixes
+--------
+
+- If PKG_CONFIG_PATH is set, then work around setup-python and extend it with original value. (`#139 <https:/github.com/fizyk/actions-reuse/issues/139>`_)
+
+
 2.4.0 (2023-10-03)
 ==================
 
