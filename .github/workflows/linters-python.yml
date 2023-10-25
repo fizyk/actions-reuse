@@ -8,6 +8,11 @@ on:
         default: ""
         required: false
         type: string
+      cache:
+        description: "Cache python environment?"
+        default: true
+        required: false
+        type: boolean
       requirements:
         description: 'Requirements file name'
         required: false
@@ -98,12 +103,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pydocstyle ${{ inputs.pydocstyle-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pydocstyle ${{ inputs.pydocstyle-paths }}
 
@@ -117,12 +124,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pycodestyle ${{ inputs.pycodestyle-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pycodestyle ${{ inputs.pycodestyle-paths }}
 
@@ -134,12 +143,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: black --diff --check  ${{ inputs.black-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: black --diff --check ${{ inputs.black-paths }}
 
@@ -153,12 +164,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: mypy ${{ inputs.mypy-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: mypy ${{ inputs.mypy-paths }}
 
@@ -171,12 +184,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pylint --recursive y .
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pylint --recursive y .
 
@@ -188,12 +203,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: rst-lint ${{ inputs.rst-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: rst-lint ${{ inputs.rst-paths }}
 
@@ -205,12 +222,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: rstcheck -r .
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: rstcheck -r .
 
@@ -222,11 +241,13 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: ruff check ${{ inputs.ruff-paths }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ inputs.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: ruff check ${{ inputs.ruff-paths }}
