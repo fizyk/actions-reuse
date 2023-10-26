@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.4.2 (2023-10-26)
+==================
+
+Features
+--------
+
+- Ability to make caching optional (`#140 <https:/github.com/fizyk/actions-reuse/issues/140>`_)
+
+
 2.4.1 (2023-10-23)
 ==================
 
