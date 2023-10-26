@@ -8,6 +8,11 @@ on:
         default: ""
         required: false
         type: string
+      cache:
+        description: "Cache python environment?"
+        default: true
+        required: false
+        type: boolean
       requirements:
         description: 'Requirements file name'
         required: false
@@ -53,12 +58,14 @@ jobs:
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ matrix.python-version }}
+          cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.4.1
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ matrix.python-version }}
+          cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
       - name: Upload coverage to Codecov

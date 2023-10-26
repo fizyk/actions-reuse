@@ -56,6 +56,9 @@ Lints python code
    * - pipenv-install-options
      - ""
      - Additional pipenv install options
+   * - cache
+     - true
+     - Whether to cache pythin environment
    * - requirements
      - 
      - Requirements file name, makes action install requirements with pip instead of default pipenv
@@ -127,6 +130,9 @@ Run pytest tests on python code
    * - pipenv-install-options
      - ""
      - Additional pipenv install options
+   * - cache
+     - true
+     - Whether to cache pythin environment
    * - requirements
      -
      - Requirements file name
