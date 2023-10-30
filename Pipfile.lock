@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d0ab1d10cfb61d1e6be6aaed5a9835fd717f37c6e43ea52883f06fe812f7fdce"
+            "sha256": "aa8731be8b9277424f1def7b2b74e3b1809524acc4d2d90e8db6919344974827"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -30,14 +30,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==8.1.7"
-        },
-        "click-default-group": {
-            "hashes": [
-                "sha256:9b60486923720e7fc61731bdb32b617039aba820e22e1c88766b1125592eaa5f",
-                "sha256:eb3f3c99ec0d456ca6cd2a7f08f7d4e91771bef51b01bdd9580cc6450fe1251e"
-            ],
-            "markers": "python_version >= '2.7'",
-            "version": "==1.2.4"
         },
         "colorama": {
             "hashes": [
@@ -164,6 +156,7 @@
                 "sha256:6b181fe6f3ae84ce0b9af8cc2009a8bca41ded34e73f623a7413b9684f1b4526"
             ],
             "index": "pypi",
+            "markers": "python_version >= '3.7' and python_version < '4.0'",
             "version": "==6.11.0"
         },
         "tomlkit": {
@@ -176,19 +169,20 @@
         },
         "towncrier": {
             "hashes": [
-                "sha256:da552f29192b3c2b04d630133f194c98e9f14f0558669d427708e203fea4d0a5",
-                "sha256:fc29bd5ab4727c8dacfbe636f7fb5dc53b99805b62da1c96b214836159ff70c1"
+                "sha256:8754e96264b55beca526a8ee77a3cc7b2170cfb2411f53eb6ac42e183ac96a17",
+                "sha256:bc633438cb218e3c1fb502e8cd5d78fe7429276fa791ae36f6c8017fdbabb905"
             ],
             "index": "pypi",
-            "version": "==23.6.0"
+            "markers": "python_version >= '3.8'",
+            "version": "==23.10.0"
         },
         "unidecode": {
             "hashes": [
-                "sha256:547d7c479e4f377b430dd91ac1275d593308dce0fc464fb2ab7d41f82ec653be",
-                "sha256:fed09cf0be8cf415b391642c2a5addfc72194407caee4f98719e40ec2a72b830"
+                "sha256:3c90b4662aa0de0cb591884b934ead8d2225f1800d8da675a7750cbc3bd94610",
+                "sha256:663a537f506834ed836af26a81b210d90cbde044c47bfbdc0fbbc9f94c86a6e4"
             ],
             "markers": "python_version >= '3.5'",
-            "version": "==1.3.6"
+            "version": "==1.3.7"
         }
     }
 }
