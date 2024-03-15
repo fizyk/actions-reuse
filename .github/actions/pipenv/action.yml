@@ -27,14 +27,14 @@ runs:
       fetch-depth: ${{ inputs.fetch-depth }}
   - name: Set up cached Python ${{ inputs.python-version }}
     if: ${{ inputs.cache == 'true' }}
-    uses: actions/setup-python@v4
+    uses: actions/setup-python@v5
     with:
       python-version: ${{ inputs.python-version }}
       cache: pipenv
       cache-dependency-path: 'Pipfile'
   - name: Set up Python ${{ inputs.python-version }}
     if: ${{ inputs.cache != 'true' }}
-    uses: actions/setup-python@v4
+    uses: actions/setup-python@v5
     with:
       python-version: ${{ inputs.python-version }}
   - shell: bash
@@ -42,7 +42,7 @@ runs:
     run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${{ steps.preserve-envvars.outputs.PKG_CONFIG_PATH }}" >> "$GITHUB_ENV"
   - name: Check file existence
     id: check_files
-    uses: andstor/file-existence-action@v2
+    uses: andstor/file-existence-action@v3
     with:
       files: "Pipfile.lock"
   - name: Restore Pipfile.lock if not in git
