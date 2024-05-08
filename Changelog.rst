@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.4.7 (2024-05-08)
+==================
+
+Misc
+----
+
+- `#173 <https:/github.com/fizyk/actions-reuse/issues/173>`_
+
+
 2.4.6 (2024-05-08)
 ==================
 
