@@ -47,7 +47,7 @@ runs:
       files: "Pipfile.lock"
   - name: Restore Pipfile.lock if not in git
     if: steps.check_files.outputs.files_exists == 'false'
-    uses: actions/cache@v3
+    uses: actions/cache@v4
     id: loadcache
     with:
       path: Pipfile.lock
@@ -61,14 +61,14 @@ runs:
       pipenv install --dev ${{ inputs.pipenv-install-options }}
   - name: Cache Pipfile.lock if not in git
     if: steps.check_files.outputs.files_exists == 'false'
-    uses: actions/cache/save@v3
+    uses: actions/cache/save@v4
     id: cache
     with:
       path: Pipfile.lock
       key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
   - name: Archive Pipfile.lock if not kept in git
     if: steps.check_files.outputs.files_exists == 'false'
-    uses: actions/upload-artifact@v3
+    uses: actions/upload-artifact@v4
     with:
       name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
       path: Pipfile.lock
