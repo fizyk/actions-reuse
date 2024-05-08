@@ -72,6 +72,7 @@ runs:
     with:
       name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
       path: Pipfile.lock
+      overwrite: true
   - name: Run ${{ inputs.command }}
     shell: bash
     run:  pipenv run ${{ inputs.command }}
