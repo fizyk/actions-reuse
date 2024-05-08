@@ -1,0 +1,1 @@
+Allow to job to continue in case there are errors while uploading the artifact.
