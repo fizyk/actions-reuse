@@ -13,6 +13,10 @@ on:
         required: false
         default: false
         type: boolean
+      python-version:
+        default: "3.13"
+        required: false
+        type: string
     secrets:
       pypi_token:
         description: 'Token used to authenticate to the PyPI'
@@ -26,10 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.12
+      - name: Set up Python ${{ inputs.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ inputs.python-version }}
       - name: Install build tools
         run: pip install build
       - name: Build a wheel package
