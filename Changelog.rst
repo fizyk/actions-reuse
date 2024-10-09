@@ -3,6 +3,16 @@ Changelog
 
 .. towncrier release notes start
 
+2.4.8 (2024-10-09)
+==================
+
+Features
+--------
+
+- Moved most of the default Python version to 3.13
+  Dropped python 3.8 from default set of pythons
+
+
 2.4.7 (2024-05-08)
 ==================
 

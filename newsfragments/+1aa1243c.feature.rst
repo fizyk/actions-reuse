@@ -1,2 +1,0 @@
-Moved most of the default Python version to 3.13
-Dropped python 3.8 from default set of pythons
