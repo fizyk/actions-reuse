@@ -13,7 +13,6 @@ jobs:
       - uses: ./.github/actions/pipenv
         with:
           python-version: "3.13"
-          pipenv-install-options: "--skip-lock"
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
   towncrier:
     runs-on: ubuntu-latest
@@ -24,6 +23,5 @@ jobs:
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           python-version: "3.13"
-          pipenv-install-options: "--skip-lock"
           command: towncrier check --compare-with origin/main
           fetch-depth: 0
