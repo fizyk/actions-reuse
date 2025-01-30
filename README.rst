@@ -107,6 +107,9 @@ Lints python code
    * - ruff-paths
      - .
      - Path to run ruff on
+   * - pre-commit
+     - false
+     - Runs pre-commit manual hooks
 
 
 tests-pytests
