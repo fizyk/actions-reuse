@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+2.5.0 (2025-01-30)
+==================
+
+Features
+--------
+
+- Ability to run pre-commit
+
+
+Misc
+----
+
+- Do not use --skip-lock flag in scripts.
+
+
 2.4.8 (2024-10-09)
 ==================
 
