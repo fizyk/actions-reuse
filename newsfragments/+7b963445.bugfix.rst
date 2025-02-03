@@ -1,0 +1,1 @@
+Fixed paramter for tunring on/off pre-commit linter.
