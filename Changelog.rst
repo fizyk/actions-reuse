@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+2.5.1 (2025-02-03)
+==================
+
+Bugfixes
+--------
+
+- Fixed paramter for tunring on/off pre-commit linter.
+
+
 2.5.0 (2025-01-30)
 ==================
 
