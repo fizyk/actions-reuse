@@ -99,7 +99,7 @@ on:
 
 jobs:
   pre-commit:
-    if: ${{ inputs.pre-commit != '[]'}}
+    if: ${{ inputs.pre-commit }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
