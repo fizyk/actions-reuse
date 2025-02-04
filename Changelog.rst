@@ -3,6 +3,17 @@ Changelog
 
 .. towncrier release notes start
 
+2.6.0 (2025-02-04)
+==================
+
+Features
+--------
+
+- Add pre-commit-config
+
+  Also update merge me workflows to take pre-commit into account.
+
+
 2.5.1 (2025-02-03)
 ==================
 

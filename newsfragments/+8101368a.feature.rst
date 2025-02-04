@@ -1,3 +1,0 @@
-Add pre-commit-config
-
-Also update merge me workflows to take pre-commit into account.
