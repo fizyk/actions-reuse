@@ -2,4 +2,4 @@
 directory = "newsfragments"
 single_file=true
 filename="Changelog.rst"
-issue_format="`#{issue} <https:/github.com/fizyk/actions-reuse/issues/{issue}>`_"
+issue_format="`#{issue} <https:/github.com/fizyk/actions-reuse/issues/{issue}>`__"

@@ -41,3 +41,21 @@ jobs:
           MERGE_METHOD: MERGE
           PRESET: DEPENDABOT_MINOR
           ENABLED_FOR_MANUAL_CHANGES: 'true'
+      - name: Merge me!
+        uses: ridedott/merge-me-action@v2.10.115
+        with:
+          # Depending on branch protection rules, a  manually populated
+          # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
+          # a protected branch must be used. This secret can have an arbitrary
+          # name, as an example, this repository uses `DOTTBOTT_TOKEN`.
+          #
+          # When using a custom token, it is recommended to leave the following
+          # comment for other developers to be aware of the reasoning behind it:
+          #
+          # This must be used as GitHub Actions token does not support pushing
+          # to protected branches.
+          GITHUB_LOGIN: pre-commit-ci
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          MERGE_METHOD: MERGE
+          PRESET: DEPENDABOT_MINOR
+          ENABLED_FOR_MANUAL_CHANGES: 'true'
