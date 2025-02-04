@@ -20,7 +20,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
       - uses: ./.github/actions/pipenv
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: "3.13"
           command: towncrier check --compare-with origin/main

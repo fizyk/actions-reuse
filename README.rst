@@ -54,13 +54,13 @@ Lints python code
      - default
      - note
    * - pipenv-install-options
-     - ""
+     -
      - Additional pipenv install options
    * - cache
      - true
      - Whether to cache pythin environment
    * - requirements
-     - 
+     -
      - Requirements file name, makes action install requirements with pip instead of default pipenv
    * - python-version
      - 3.11
@@ -69,25 +69,25 @@ Lints python code
      - false
      - Flag to run pydocstyle on code or not
    * - pydocstyle-paths
-     - .
+     - `.`
      - Path to run pydocstyle on
    * - pycodestyle
      - false
      - Flag to run pycodestyle on code or not
    * - pycodestyle-paths
-     - .
+     - `.`
      - Path to run pycodestyle on
    * - black
      - false
      - Flag to run black on code or not
    * - black-paths
-     - .
+     - `.`
      - Path to run black on
    * - mypy
      - false
      - Flag to run mypy on code or not
    * - mypy-paths
-     - .
+     - `.`
      - Path to run mypy on
    * - pylint
      - false
@@ -96,7 +96,7 @@ Lints python code
      - false
      - Flag to run rst on code or not
    * - rst-paths
-     - *.rst
+     - `*.rst`
      - Path to run rst-lint on
    * - rstcheck
      - false
@@ -105,7 +105,7 @@ Lints python code
      - false
      - Flag to run ruff on code or not
    * - ruff-paths
-     - .
+     - `.`
      - Path to run ruff on
    * - pre-commit
      - false
@@ -131,7 +131,7 @@ Run pytest tests on python code
      - default
      - note
    * - pipenv-install-options
-     - ""
+     -
      - Additional pipenv install options
    * - cache
      - true
@@ -140,7 +140,7 @@ Run pytest tests on python code
      -
      - Requirements file name
    * - pytest_opts
-     - ""
+     -
      - Additional pytest options
    * - python-versions
      - '["3.7", "3.8", "3.9", "3.10", "3.11"]'
@@ -199,6 +199,6 @@ Install pipenv first,
 
 Then run:
 
-.. code-block::
+.. code-block:: sh
 
     pipenv run tbump [NEW_VERSION]
