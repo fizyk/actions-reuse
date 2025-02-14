@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.1 (2025-02-14)
+==================
+
+Bugfixes
+--------
+
+- Fix shared-pr-check
+
+
 3.0.0 (2025-02-14)
 ==================
 
