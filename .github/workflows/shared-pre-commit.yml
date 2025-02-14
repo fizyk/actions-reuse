@@ -1,0 +1,27 @@
+name: Run linters
+
+on:
+  workflow_call:
+    inputs:
+      python-version:
+        default: "3.13"
+        required: false
+        type: string
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ inputs.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+      - name: Install pre-commit
+        id: pre-commit
+        run: pip install pre-commit && pre-commit install
+      - name: Run pre-commit
+        id: pre-commit-run
+        run: pre-commit run --hook-stage manual --all-files

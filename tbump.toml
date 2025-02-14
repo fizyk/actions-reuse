@@ -35,10 +35,12 @@ default = ""
 src = "README.rst"
 
 [[file]]
-src = ".github/workflows/linters-python.yml"
+src = ".github/workflows/shared-linters-python.yml"
+[[file]]
+src = ".github/workflows/shared-pr-check.yml"
 
 [[file]]
-src = ".github/workflows/tests-pytests.yml"
+src = ".github/workflows/shared-tests-pytests.yml"
 
 [[file]]
 src = ".github/workflows/automerge.yml"

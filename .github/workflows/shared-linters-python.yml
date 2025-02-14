@@ -91,31 +91,8 @@ on:
         type: string
         required: false
         default: "."
-      pre-commit:
-        description: "Runs pre-commit manual hooks"
-        type: boolean
-        required: false
-        default: false
 
 jobs:
-  pre-commit:
-    if: ${{ inputs.pre-commit }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ inputs.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.python-version }}
-      - name: Install pre-commit
-        id: pre-commit
-        run: pip install pre-commit && pre-commit install
-      - name: Run pre-commit
-        id: pre-commit-run
-        run: pre-commit run --hook-stage manual --all-files
-
   pydocstyle:
     if: ${{ inputs.pydocstyle }}
     runs-on: ubuntu-latest

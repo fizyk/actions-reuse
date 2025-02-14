@@ -5,23 +5,8 @@ on:
     branches: [ main ]
 
 jobs:
-  bump:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - uses: ./.github/actions/pipenv
-        with:
-          python-version: "3.13"
-          command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
-  towncrier:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-      - uses: ./.github/actions/pipenv
-        if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
-        with:
-          python-version: "3.13"
-          command: towncrier check --compare-with origin/main
-          fetch-depth: 0
+  automerge:
+    uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v2.6.0
+    secrets:
+      app_id: ${{ secrets.APP_ID }}
+      private_key: ${{ secrets.APP_PRIVATE_KEY }}
