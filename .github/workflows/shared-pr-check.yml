@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.5.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.6.0
         with:
           python-version: ${{ inputs.python-version }}
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.5.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v2.6.0
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
