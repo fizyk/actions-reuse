@@ -3,6 +3,59 @@ actions-reuse
 
 Set of reusable github actions workflows
 
+pr-check
+--------
+
+Checks Pull Request for the added towncrier newsfragment if PR is not performed by a bot, and every Pull Request
+if tbump is correctly configured according to new codebase.
+
+.. code-block:: yaml
+
+    jobs:
+      build:
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v2.6.0
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - default
+     - note
+   * - python-version
+     - 3.13
+     - Python version to use in the workflow
+
+
+pre-commit
+----------
+
+Checks Pull Request against manual enabled pre-commit hooks.
+
+.. code-block:: yaml
+
+    jobs:
+      build:
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v2.6.0
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - default
+     - note
+   * - python-version
+     - 3.13
+     - Python version to use in the workflow
+
+To configure pre-commit hooks to be run with this workflow, add stages parameter:
+
+.. code-block:: yaml
+
+  - repo: local
+    hooks:
+      - id: pipenv
+        stages: [pre-commit, manual]
+
 
 pypi
 ----
@@ -11,7 +64,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/pypi.yml@v2.6.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-pypi.yml@v2.6.0
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -42,7 +95,7 @@ linters-python
 
     jobs:
       lint:
-        uses: fizyk/actions-reuse/.github/workflows/linters-python.yml@v2.6.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-linters-python.yml@v2.6.0
 
 Lints python code
 
@@ -107,9 +160,6 @@ Lints python code
    * - ruff-paths
      - `.`
      - Path to run ruff on
-   * - pre-commit
-     - false
-     - Runs pre-commit manual hooks
 
 
 tests-pytests
@@ -119,7 +169,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/tests-pytests.yml@v2.6.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v2.6.0
 
 Run pytest tests on python code
 
@@ -163,14 +213,14 @@ Run pytest tests on python code
      - no
      - Codecov token
 
-automerge-shared
-----------------
+automerge
+---------
 
 .. code-block:: yaml
 
     jobs:
       automerge:
-        uses: fizyk/actions-reuse/.github/workflows/automerge-shared.yml@v2.6.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v2.6.0
 
 Runs automerge for dependabot pull requests using:
 
