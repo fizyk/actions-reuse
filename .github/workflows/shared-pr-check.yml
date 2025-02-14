@@ -2,10 +2,11 @@ name: Run test commands
 
 on:
   workflow_call:
-    python-version:
-      default: "3.13"
-      required: false
-      type: string
+    inputs:
+      python-`version:
+        default: "3.13"
+        required: false
+        type: string
 
 jobs:
   bump:
