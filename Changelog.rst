@@ -3,6 +3,22 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.0 (2025-02-14)
+==================
+
+Features
+--------
+
+- Added shared-automerge workflow, with dependabot and pre-commit bots listed as excep[tions for newsfragments.
+- Separated pre-commit linter into it's own shared workflow
+
+
+Deprecations and Removals
+-------------------------
+
+- Renamed all shared workflows to start with `shared-` prefix
+
+
 2.6.0 (2025-02-04)
 ==================
 

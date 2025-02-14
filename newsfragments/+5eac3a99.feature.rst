@@ -1,1 +1,0 @@
-Separated pre-commit linter into it's own shared workflow
