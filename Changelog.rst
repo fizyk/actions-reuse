@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.0.2 (2025-02-17)
+==================
+
+Bugfixes
+--------
+
+- Fixed issue where pr-check would look for newsfragments between current and main branch, not between a target branch.
+
+
 3.0.1 (2025-02-14)
 ==================
 
