@@ -5,8 +5,5 @@ on:
     branches: [ main ]
 
 jobs:
-  automerge:
-    uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v2.6.0
-    secrets:
-      app_id: ${{ secrets.APP_ID }}
-      private_key: ${{ secrets.APP_PRIVATE_KEY }}
+  pr-check:
+    uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v3.0.1

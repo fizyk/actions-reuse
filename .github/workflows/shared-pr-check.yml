@@ -3,7 +3,7 @@ name: Run test commands
 on:
   workflow_call:
     inputs:
-      python-`version:
+      python-version:
         default: "3.13"
         required: false
         type: string
@@ -27,5 +27,5 @@ jobs:
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
-          command: towncrier check --compare-with origin/main
+          command: towncrier check --compare-with origin/${{ github.base_ref }}
           fetch-depth: 0
