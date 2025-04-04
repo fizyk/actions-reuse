@@ -35,6 +35,8 @@ default = ""
 src = "README.rst"
 
 [[file]]
+src = ".github/workflows/pr-check.yml"
+[[file]]
 src = ".github/workflows/shared-linters-python.yml"
 [[file]]
 src = ".github/workflows/shared-pr-check.yml"
