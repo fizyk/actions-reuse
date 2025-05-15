@@ -1,0 +1,12 @@
+name: 'Pipenv run'
+description: 'Run command in pipenv'
+inputs:
+  command:
+    description: 'Command to run'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Run ${{ inputs.command }}
+      shell: bash
+      run:  pipenv run ${{ inputs.command }}
