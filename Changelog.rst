@@ -3,6 +3,22 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.0 (2025-05-15)
+==================
+
+Features
+--------
+
+- Added separate composite actions for pipenv, one to run command within pipenv, and other to set up pipenv environment
+
+
+Misc
+----
+
+- Fix automerge
+- Update tbump configuration
+
+
 3.0.2 (2025-02-17)
 ==================
 
