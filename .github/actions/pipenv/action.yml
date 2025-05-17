@@ -19,61 +19,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - id: preserve-envvars
-    shell: bash
-    run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> "$GITHUB_OUTPUT"
-  - uses: actions/checkout@v4
-    with:
-      fetch-depth: ${{ inputs.fetch-depth }}
-  - name: Set up cached Python ${{ inputs.python-version }}
-    if: ${{ inputs.cache == 'true' }}
-    uses: actions/setup-python@v5
-    with:
-      python-version: ${{ inputs.python-version }}
-      cache: pipenv
-      cache-dependency-path: 'Pipfile'
-  - name: Set up Python ${{ inputs.python-version }}
-    if: ${{ inputs.cache != 'true' }}
-    uses: actions/setup-python@v5
-    with:
-      python-version: ${{ inputs.python-version }}
-  - shell: bash
-    if: steps.preserve-envvars.outputs.PKG_CONFIG_PATH
-    run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${{ steps.preserve-envvars.outputs.PKG_CONFIG_PATH }}" >> "$GITHUB_ENV"
-  - name: Check file existence
-    id: check_files
-    uses: andstor/file-existence-action@v3
-    with:
-      files: "Pipfile.lock"
-  - name: Restore Pipfile.lock if not in git
-    if: steps.check_files.outputs.files_exists == 'false'
-    uses: actions/cache@v4
-    id: loadcache
-    with:
-      path: Pipfile.lock
-      key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
-  - name: Install pipenv and dependencies
-    shell: bash
-    run: |
-      python -m pip install --upgrade pip pipenv
-      pipenv --python $(which python)
-      pipenv run python --version
-      pipenv install --dev ${{ inputs.pipenv-install-options }}
-  - name: Cache Pipfile.lock if not in git
-    if: steps.check_files.outputs.files_exists == 'false'
-    uses: actions/cache/save@v4
-    id: cache
-    with:
-      path: Pipfile.lock
-      key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
-  - name: Archive Pipfile.lock if not kept in git
-    if: steps.check_files.outputs.files_exists == 'false'
-    continue-on-error: true
-    uses: actions/upload-artifact@v4
-    with:
-      name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
-      path: Pipfile.lock
-      overwrite: true
-  - name: Run ${{ inputs.command }}
-    shell: bash
-    run:  pipenv run ${{ inputs.command }}
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v3.1.0
+      with:
+        python-version: ${{ inputs.python-version }}
+        fetch-depth: ${{ inputs.fetch-depth }}
+        pipenv-install-options: ${{ inputs.pipenv-install-options }}
+        cache: ${{ inputs.cache }}
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v3.1.0
+      with:
+        command: ${{ inputs.command }}
