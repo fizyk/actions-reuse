@@ -35,6 +35,8 @@ default = ""
 src = "README.rst"
 
 [[file]]
+src = ".github/actions/pipenv/action.yml"
+[[file]]
 src = ".github/workflows/pr-check.yml"
 [[file]]
 src = ".github/workflows/shared-linters-python.yml"
