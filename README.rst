@@ -13,7 +13,7 @@ if tbump is correctly configured according to new codebase.
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v3.1.1
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -35,7 +35,7 @@ Checks Pull Request against manual enabled pre-commit hooks.
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v3.1.1
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -64,7 +64,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pypi.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-pypi.yml@v3.1.1
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -95,7 +95,7 @@ linters-python
 
     jobs:
       lint:
-        uses: fizyk/actions-reuse/.github/workflows/shared-linters-python.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-linters-python.yml@v3.1.1
 
 Lints python code
 
@@ -169,7 +169,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v3.1.1
 
 Run pytest tests on python code
 
@@ -220,7 +220,7 @@ automerge
 
     jobs:
       automerge:
-        uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v3.1.0
+        uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v3.1.1
 
 Runs automerge for dependabot pull requests using:
 

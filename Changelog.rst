@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+3.1.1 (2025-05-17)
+==================
+
+Misc
+----
+
+- Deduplicate pipenv code
+
+
 3.1.0 (2025-05-15)
 ==================
 
