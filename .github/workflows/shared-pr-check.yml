@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v3.1.1
         with:
           python-version: ${{ inputs.python-version }}
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v3.1.1
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
