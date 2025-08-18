@@ -17,6 +17,7 @@ jobs:
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v3.1.1
         with:
           python-version: ${{ inputs.python-version }}
+          allow-prereleases: false
           command: tbump --dry-run --only-patch $(pipenv run tbump current-version)"-x"
   towncrier:
     runs-on: ubuntu-latest
@@ -27,5 +28,6 @@ jobs:
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
+          allow-prereleases: false
           command: towncrier check --compare-with origin/${{ github.base_ref }}
           fetch-depth: 0

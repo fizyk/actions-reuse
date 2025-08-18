@@ -4,6 +4,9 @@ inputs:
   python-version:  # id of input
     description: 'Python version to use'
     required: true
+  allow-prereleases:
+    description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
+    required: true
   fetch-depth:
     description: 'How deep to fetch commits'
     default: 1
@@ -27,6 +30,7 @@ runs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
+        allow-prereleases: ${{ inputs.allow-prereleases }}
         cache: pipenv
         cache-dependency-path: 'Pipfile'
     - name: Set up Python ${{ inputs.python-version }}
@@ -34,6 +38,7 @@ runs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
+        allow-prereleases: ${{ inputs.allow-prereleases }}
     - shell: bash
       if: steps.preserve-envvars.outputs.PKG_CONFIG_PATH
       run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${{ steps.preserve-envvars.outputs.PKG_CONFIG_PATH }}" >> "$GITHUB_ENV"
