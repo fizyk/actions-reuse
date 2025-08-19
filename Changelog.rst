@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.0 (2025-08-19)
+==================
+
+Features
+--------
+
+- Add `allow-prereleases` flag which will be passed to pre-releases. This in turn allows to test code against unreleased yet python versions. (Like 3.14 at the moment)
+
+
+Deprecations and Removals
+-------------------------
+
+- Removed linters shared workflow. pre-commit is good enough, and it'll limit the complexity.
+
+
 3.1.1 (2025-05-17)
 ==================
 

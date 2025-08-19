@@ -1,1 +1,0 @@
-Add `allow-prereleases` flag which will be passed to pre-releases. This in turn allows to test code against unreleased yet python versions. (Like 3.14 at the moment)

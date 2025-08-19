@@ -1,1 +1,0 @@
-Removed linters shared workflow. pre-commit is good enough, and it'll limit the complexity.
