@@ -4,6 +4,9 @@ inputs:
   python-version:  # id of input
     description: 'Python version to use'
     required: true
+  allow-prereleases:
+    description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
+    required: true
   command:
     description: 'Command to run'
     required: true
@@ -22,6 +25,7 @@ runs:
     - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v3.1.1
       with:
         python-version: ${{ inputs.python-version }}
+        allow-prereleases: ${{ inputs.allow-prereleases }}
         fetch-depth: ${{ inputs.fetch-depth }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
