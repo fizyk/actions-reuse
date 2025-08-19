@@ -169,6 +169,11 @@ Requires Github application to run!
    * - private_key
      - Github Application's private key
 
+Python versions
+---------------
+
+Available python versions can be checked in `https://github.com/actions/python-versions?tab=readme-ov-file#python-for-actions <actions/python-versions>`__ repository.
+
 Release
 -------
 
