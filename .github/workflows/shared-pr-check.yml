@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.0.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.0.1
         with:
           python-version: ${{ inputs.python-version }}
           allow-prereleases: false
@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.0.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.0.1
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}

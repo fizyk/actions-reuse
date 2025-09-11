@@ -3,6 +3,16 @@ Changelog
 
 .. towncrier release notes start
 
+4.0.1 (2025-09-11)
+==================
+
+Features
+--------
+
+- pipenv command is not cross-platform compatible
+  by replacing unix specific `which python` with cross platform pyhon call.
+
+
 4.0.0 (2025-08-19)
 ==================
 

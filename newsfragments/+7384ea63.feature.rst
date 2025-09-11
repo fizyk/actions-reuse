@@ -1,2 +1,0 @@
-pipenv command is not cross-platform compatible
-by replacing unix specific `which python` with cross platform pyhon call.
