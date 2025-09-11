@@ -58,7 +58,8 @@ runs:
       shell: bash
       run: |
         python -m pip install --upgrade pip pipenv
-        pipenv --python $(which python)
+        PY=$(python -c "import sys; print(sys.executable)")
+        pipenv --python "$PY"
         pipenv run python --version
         pipenv install --dev ${{ inputs.pipenv-install-options }}
     - name: Cache Pipfile.lock if not in git
