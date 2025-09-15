@@ -120,11 +120,17 @@ Run pytest tests on python code
      -
      - Additional pytest options
    * - python-versions
-     - '["3.7", "3.8", "3.9", "3.10", "3.11"]'
+     - '["3.9", "3.10", "3.11", "3.12", "3.13"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
+   * - allow-prereleases
+     - true
+     - "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
    * - os:
      - ubuntu-latest
      - Operating system tests are running on
+   * - env
+     - {}
+     - 'JSON object string of environment variables to set (only for pipenv path)'
    * - fail_on_codecov_error:
      - false
      - Whether pipeline should fail if there would be an error on codecov side.

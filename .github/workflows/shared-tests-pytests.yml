@@ -41,6 +41,11 @@ on:
         default: false
         required: false
         type: boolean
+      env:
+        description: 'JSON object string of environment variables to set (only for pipenv path)'
+        default: '{}'
+        required: false
+        type: string
     secrets:
       codecov_token:
         description: 'Codecov token'
@@ -66,7 +71,7 @@ jobs:
           cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.0.1
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@envs
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ matrix.python-version }}
@@ -74,6 +79,7 @@ jobs:
           cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
+          env: ${{ inputs.env }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5.5.1
         with:
