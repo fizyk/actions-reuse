@@ -43,7 +43,7 @@ on:
         type: boolean
       env:
         description: 'JSON object string of environment variables to set (only for pipenv path)'
-        default: ''
+        default: '{}'
         required: false
         type: string
     secrets:

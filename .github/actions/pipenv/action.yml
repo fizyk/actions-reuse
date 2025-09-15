@@ -22,7 +22,7 @@ inputs:
   env:
     description: 'JSON object string of environment variables to set'
     required: false
-    default: ''
+    default: '{}'
 runs:
   using: "composite"
   steps:

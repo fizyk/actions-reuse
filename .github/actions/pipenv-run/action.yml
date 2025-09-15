@@ -7,13 +7,11 @@ inputs:
   env:
     description: 'JSON object string of environment variables to set'
     required: false
-    default: ''
+    default: '{}'
 runs:
   using: "composite"
   steps:
     - name: Run ${{ inputs.command }}
       shell: bash
-      run: |
-        set -e
-        pipenv run ${{ inputs.command }}
+      run: pipenv run ${{ inputs.command }}
       env: ${{ fromJSON(inputs.env) }}
