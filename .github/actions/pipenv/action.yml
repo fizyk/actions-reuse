@@ -19,6 +19,10 @@ inputs:
   cache:
     description: "Cache python environment?"
     default: true
+  env:
+    description: 'JSON object string of environment variables to set'
+    required: false
+    default: '{}'
 runs:
   using: "composite"
   steps:
@@ -29,6 +33,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.0.1
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@envs
       with:
         command: ${{ inputs.command }}
+        env: ${{ inputs.env }}
