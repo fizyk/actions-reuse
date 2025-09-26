@@ -33,7 +33,7 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@envs
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.1.0
       with:
         command: ${{ inputs.command }}
         env: ${{ inputs.env }}
