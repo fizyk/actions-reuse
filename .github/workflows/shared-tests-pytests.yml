@@ -63,7 +63,7 @@ jobs:
       PYTHON: ${{ matrix.python-version }}
 
     steps:
-      - uses: fizyk/actions-reuse/.github/actions/pip@v4.0.1
+      - uses: fizyk/actions-reuse/.github/actions/pip@v4.1.0
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ matrix.python-version }}

@@ -26,7 +26,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.0.1
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.1.0
       with:
         python-version: ${{ inputs.python-version }}
         allow-prereleases: ${{ inputs.allow-prereleases }}

@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.1.0 (2025-09-26)
+==================
+
+Features
+--------
+
+- Pytest tests shared workflow now accepts a json object with environment variables to set for the test command to run with.
+
+
 4.0.1 (2025-09-11)
 ==================
 

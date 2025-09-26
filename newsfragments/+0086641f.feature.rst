@@ -1,1 +1,0 @@
-Pytest tests shared workflow now accepts a json object with environment variables to set for the test command to run with.
