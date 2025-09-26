@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.1.1 (2025-09-26)
+==================
+
+Bugfixes
+--------
+
+- Fix lefover non-existing reference.
+
+
 4.1.0 (2025-09-26)
 ==================
 
