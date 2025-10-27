@@ -43,7 +43,7 @@ jobs:
       - name: Check the package
         run: twine check dist/*
       - name: Store distributions 📦 as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: package
           path: dist/
