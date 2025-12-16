@@ -16,6 +16,9 @@ inputs:
   cache:
     description: "Cache python environment?"
     default: true
+  categories:
+    description: "Additional categories from Pipfile to install"
+    default: ""
 runs:
   using: "composite"
   steps:
@@ -53,7 +56,7 @@ runs:
       id: loadcache
       with:
         path: Pipfile.lock
-        key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
+        key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}-categories-${{ inputs.categories || 'default' }}
     - name: Install pipenv and dependencies
       shell: bash
       run: |
@@ -61,19 +64,23 @@ runs:
         PY=$(python -c "import sys; print(sys.executable)")
         pipenv --python "$PY"
         pipenv run python --version
-        pipenv install --dev ${{ inputs.pipenv-install-options }}
+        CATEGORIES_SUFFIX=""
+        if [ -n "${{ inputs.categories }}" ]; then
+          CATEGORIES_SUFFIX="--categories ${{ inputs.categories }}"
+        fi
+        pipenv install --dev $CATEGORIES_SUFFIX ${{ inputs.pipenv-install-options }}
     - name: Cache Pipfile.lock if not in git
       if: steps.check_files.outputs.files_exists == 'false'
       uses: actions/cache/save@v4
       id: cache
       with:
         path: Pipfile.lock
-        key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
+        key: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}-categories-${{ inputs.categories || 'default' }}
     - name: Archive Pipfile.lock if not kept in git
       if: steps.check_files.outputs.files_exists == 'false'
       continue-on-error: true
       uses: actions/upload-artifact@v4
       with:
-        name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
+        name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}-categories-${{ inputs.categories || 'default' }}
         path: Pipfile.lock
         overwrite: true
