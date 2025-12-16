@@ -120,7 +120,7 @@ Run pytest tests on python code
      -
      - Additional pytest options
    * - python-versions
-     - '["3.9", "3.10", "3.11", "3.12", "3.13"]'
+     - '["3.10", "3.11", "3.12", "3.13", "3.14"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
    * - allow-prereleases
      - true
