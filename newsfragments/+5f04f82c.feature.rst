@@ -1,0 +1,1 @@
+Add support to install custom categories defined in Pipfile.
