@@ -16,8 +16,8 @@ jobs:
     steps:
       - name: Configure git
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
         with:
           python-version: "3.14"
