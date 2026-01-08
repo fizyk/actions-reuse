@@ -20,9 +20,9 @@ runs:
   - id: preserve-envvars
     shell: bash
     run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> "$GITHUB_OUTPUT"
-  - uses: actions/checkout@v4
+  - uses: actions/checkout@v6
   - name: Set up Python ${{ inputs.python-version }}
-    uses: actions/setup-python@v5
+    uses: actions/setup-python@v6
     with:
       python-version: ${{ inputs.python-version }}
       allow-prereleases: ${{ inputs.allow-prereleases }}
