@@ -1,0 +1,26 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version to be added'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Grant the action permission to write to the repository
+    permissions:
+      contents: write
+    steps:
+      - name: Configure git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
+        with:
+          python-version: "3.14"
+          allow-prereleases: false
+          cache: true
+          command: pipenv run tbump ${{ inputs.version }} --non-interactive --dry-run
