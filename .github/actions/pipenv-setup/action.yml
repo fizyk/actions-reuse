@@ -7,9 +7,6 @@ inputs:
   allow-prereleases:
     description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
     required: true
-  fetch-depth:
-    description: 'How deep to fetch commits'
-    default: 1
   pipenv-install-options:
     description: "Pipenv install options"
     default: ""
@@ -22,9 +19,6 @@ runs:
     - id: preserve-envvars
       shell: bash
       run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> "$GITHUB_OUTPUT"
-    - uses: actions/checkout@v6
-      with:
-        fetch-depth: ${{ inputs.fetch-depth }}
     - name: Set up cached Python ${{ inputs.python-version }}
       if: ${{ inputs.cache == 'true' }}
       uses: actions/setup-python@v6

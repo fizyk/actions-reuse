@@ -1,4 +1,5 @@
 name: Release
+
 on:
   workflow_dispatch:
     inputs:
@@ -9,8 +10,9 @@ on:
 
 jobs:
   release:
-    permissions:
-      contents: write
-    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@main
+    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v4.1.1
     with:
       version: ${{ inputs.version }}
+    secrets:
+      app_id: ${{ secrets.RELEASE_APP_ID }}
+      private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}

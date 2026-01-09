@@ -24,10 +24,11 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
         if: ${{ !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
           allow-prereleases: false
           command: towncrier check --compare-with origin/${{ github.base_ref }}
-          fetch-depth: 0

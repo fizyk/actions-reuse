@@ -207,6 +207,16 @@ Runs release on a repository. Requires tbump to be installed and configured in d
    * - version
      - Required to be passed
 
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - secret
+     - note
+   * - app_id
+     - Github Application ID that'll be used for releasing
+   * - private_key
+     - Github Application's private key
+
 Python versions
 ---------------
 
