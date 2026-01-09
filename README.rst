@@ -175,6 +175,36 @@ Requires Github application to run!
    * - private_key
      - Github Application's private key
 
+release
+-------
+
+.. code-block:: yaml
+
+    name: Release
+    on:
+      workflow_dispatch:
+        inputs:
+          version:
+            description: 'New version to be added'
+            required: true
+            type: string
+    jobs:
+      release:
+        uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v4.1.1
+        with:
+          version: ${{ github.event.inputs.version }}
+
+Runs release on a repository. Requires tbump to be installed and configured in dependencies.
+
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - note
+   * - version
+     - Required to be passed
+
 Python versions
 ---------------
 

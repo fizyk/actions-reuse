@@ -9,18 +9,6 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    # Grant the action permission to write to the repository
-    permissions:
-      contents: write
-    steps:
-      - name: Configure git
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
-        with:
-          python-version: "3.14"
-          allow-prereleases: false
-          cache: true
-          command: pipenv run tbump ${{ inputs.version }} --non-interactive --dry-run
+    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@custom-release
+    with:
+      version: ${{ github.event.inputs.version }}
