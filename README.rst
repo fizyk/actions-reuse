@@ -190,9 +190,11 @@ release
             type: string
     jobs:
       release:
+        permissions:
+          contents: write
         uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v4.1.1
         with:
-          version: ${{ github.event.inputs.version }}
+          version: ${{ inputs.version }}
 
 Runs release on a repository. Requires tbump to be installed and configured in dependencies.
 

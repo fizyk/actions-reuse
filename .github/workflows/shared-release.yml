@@ -23,4 +23,4 @@ jobs:
           python-version: "3.14"
           allow-prereleases: false
           cache: true
-          command: pipenv run tbump ${{ inputs.version }} --non-interactive --dry-run
+          command: pipenv run tbump ${{ inputs.version }} --non-interactive

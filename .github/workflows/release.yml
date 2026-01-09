@@ -9,6 +9,8 @@ on:
 
 jobs:
   release:
-    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@custom-release
+    permissions:
+      contents: write
+    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@main
     with:
-      version: ${{ github.event.inputs.version }}
+      version: ${{ inputs.version }}
