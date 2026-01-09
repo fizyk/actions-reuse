@@ -1,0 +1,1 @@
+Implement shared release workflow, to be reused in other repositories.

@@ -40,10 +40,10 @@ src = ".github/actions/pipenv/action.yml"
 src = ".github/workflows/pr-check.yml"
 [[file]]
 src = ".github/workflows/shared-pr-check.yml"
-
+[[file]]
+src = ".github/workflows/shared-release.yml"
 [[file]]
 src = ".github/workflows/shared-tests-pytests.yml"
-
 [[file]]
 src = ".github/workflows/automerge.yml"
 
