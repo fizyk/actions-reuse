@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.2.1 (2026-01-12)
+==================
+
+Misc
+----
+
+- Fix release branch reference and tbump configuration
+
+
 4.2.0 (2026-01-12)
 ==================
 
