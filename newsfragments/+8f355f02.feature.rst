@@ -1,1 +1,0 @@
-Add manual release workflow to this repository

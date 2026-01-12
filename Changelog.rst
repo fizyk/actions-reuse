@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+4.2.0 (2026-01-12)
+==================
+
+Features
+--------
+
+- Add manual release workflow to this repository
+- Drop python 3.9 from default python versions and add python 3.14
+
+  Move the single defaults from 3.13 to 3.14.
+- Implement shared release workflow, to be reused in other repositories.
+
+  The workflow requires github app to operate on, to be able to overcome branch protections set.
+
+
 4.1.1 (2025-09-26)
 ==================
 

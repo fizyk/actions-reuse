@@ -1,3 +1,0 @@
-Implement shared release workflow, to be reused in other repositories.
-
-The workflow requires github app to operate on, to be able to overcome branch protections set.
