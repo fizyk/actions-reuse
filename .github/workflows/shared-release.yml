@@ -6,18 +6,36 @@ on:
         description: 'New version to be added'
         required: true
         type: string
+    secrets:
+      app_id:
+        description: "Github Application ID that'll be used for releasing"
+        required: true
+      private_key:
+        description: "Github Application's private key"
+        required: true
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    # Grant the action permission to write to the repository
-    permissions:
-      contents: write
     steps:
-      - name: Configure git
-        run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Action"
+      - name: Impersonate update bot
+        uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ secrets.app_id }}
+          private-key: ${{ secrets.private_key }}
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      - run: |
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          token: ${{ steps.app-token.outputs.token }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.1.1
         with:
           python-version: "3.14"

@@ -10,9 +10,6 @@ inputs:
   command:
     description: 'Command to run'
     required: true
-  fetch-depth:
-    description: 'How deep to fetch commits'
-    default: 1
   pipenv-install-options:
     description: "Pipenv install options"
     default: ""
@@ -30,7 +27,6 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
         allow-prereleases: ${{ inputs.allow-prereleases }}
-        fetch-depth: ${{ inputs.fetch-depth }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
     - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.1.1
