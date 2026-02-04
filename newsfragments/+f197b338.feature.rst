@@ -1,0 +1,1 @@
+Add shared workflow to generate svg files out of mmd diagrams.
