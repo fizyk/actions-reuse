@@ -146,6 +146,44 @@ Run pytest tests on python code
      - no
      - Codecov token
 
+diagrams
+--------
+
+.. code-block:: yaml
+
+    name: Render Mermaid Diagrams
+    on:
+      push:
+        paths:
+          - 'docs/*.mmd' # Trigger only when mermaid files change
+          - '.github/workflows/diagram.yml'
+
+    jobs:
+      diagrams:
+        # Grant the action permission to write to the repository
+        permissions:
+          contents: write
+        uses: fizyk/actions-reuse/.github/workflows/shared-diagrams.yml@v4.2.1
+
+
+Generates svg images out of the mmd diagrams
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - default
+     - note
+   * - mmd_path
+     - docs
+     - Location of the Mermaid Markdown file
+   * - svg_path
+     - docs/images
+     - Location of the path to generate svg files to
+   * - puppeteer_config
+     - docs/puppeteer-config.json
+     - Path to puppeteer config file
+
 automerge
 ---------
 

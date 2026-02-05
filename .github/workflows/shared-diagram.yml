@@ -1,0 +1,49 @@
+name: Render Mermaid Diagrams
+on:
+  workflow_call:
+    inputs:
+      mmd_path:
+        description: 'Location of the Mermaid Markdown file'
+        required: false
+        default: "docs"
+        type: string
+      svg_path:
+        description: 'Location of the path to generate svg files to'
+        required: false
+        default: "docs/images"
+        type: string
+      puppeteer_config:
+        description: 'Path to puppeteer config file'
+        required: false
+        default: "docs/puppeteer-config.json"
+        type: string
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: Render Diagrams
+        run: |
+          mkdir -p "${{ inputs.svg_path }}"
+          shopt -s nullglob
+          files=("${{ inputs.mmd_path }}"/*.mmd)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No .mmd files found in ${{ inputs.mmd_path }}; skipping."
+            exit 0
+          fi
+          for file in "${files[@]}"; do
+            base="$(basename "${file}" .mmd)"
+            mmdc -p "${{ inputs.puppeteer_config }}" -i "${file}" -o "${{ inputs.svg_path }}/${base}.svg" -t neutral
+          done
+
+      - name: Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          commit_message: "docs: update rendered mermaid diagram [skip ci]"
+          file_pattern: '${{ inputs.svg_path }}/*.svg'
