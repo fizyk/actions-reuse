@@ -13,7 +13,7 @@ if tbump is correctly configured according to new codebase.
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v4.3.0
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -35,7 +35,7 @@ Checks Pull Request against manual enabled pre-commit hooks.
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v4.3.0
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -64,7 +64,7 @@ pypi
 
     jobs:
       build:
-        uses: fizyk/actions-reuse/.github/workflows/shared-pypi.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-pypi.yml@v4.3.0
 
 .. list-table:: Configuration
    :header-rows: 1
@@ -96,7 +96,7 @@ tests-pytests
 
     jobs:
       tests:
-        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v4.3.0
 
 Run pytest tests on python code
 
@@ -163,7 +163,7 @@ diagrams
         # Grant the action permission to write to the repository
         permissions:
           contents: write
-        uses: fizyk/actions-reuse/.github/workflows/shared-diagrams.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-diagrams.yml@v4.3.0
 
 
 Generates svg images out of the mmd diagrams
@@ -191,7 +191,7 @@ automerge
 
     jobs:
       automerge:
-        uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v4.3.0
 
 Runs automerge for dependabot pull requests using:
 
@@ -230,7 +230,7 @@ release
       release:
         permissions:
           contents: write
-        uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v4.2.1
+        uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v4.3.0
         with:
           version: ${{ inputs.version }}
 

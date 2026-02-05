@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.3.0 (2026-02-05)
+==================
+
+Features
+--------
+
+- Add shared workflow to generate svg files out of mmd diagrams.
+
+
 4.2.1 (2026-01-12)
 ==================
 

@@ -36,7 +36,7 @@ jobs:
         with:
           fetch-depth: 1
           token: ${{ steps.app-token.outputs.token }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.2.1
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.3.0
         with:
           python-version: "3.14"
           allow-prereleases: false
