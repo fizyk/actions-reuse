@@ -13,6 +13,9 @@ inputs:
   cache:
     description: "Cache python environment?"
     default: true
+  editable:
+    description: "Install package as editable?"
+    default: false
 runs:
   using: "composite"
   steps:
@@ -56,6 +59,9 @@ runs:
         pipenv --python "$PY"
         pipenv run python --version
         pipenv install --dev ${{ inputs.pipenv-install-options }}
+        if [[ "${{ inputs.editable }}" == "true" ]]; then
+            pipenv install --dev --editable .
+        fi
     - name: Cache Pipfile.lock if not in git
       if: steps.check_files.outputs.files_exists == 'false'
       uses: actions/cache/save@v4

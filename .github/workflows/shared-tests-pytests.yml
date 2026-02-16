@@ -46,6 +46,11 @@ on:
         default: '{}'
         required: false
         type: string
+      install_editable:
+        description: 'Whether to install in pipenv editable mode'
+        default: false
+        required: false
+        type: boolean
     secrets:
       codecov_token:
         description: 'Codecov token'
@@ -83,6 +88,7 @@ jobs:
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
           env: ${{ inputs.env }}
+          editable: ${{ inputs.install_editable }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5.5.2
         with:
