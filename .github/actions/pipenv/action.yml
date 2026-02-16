@@ -26,14 +26,14 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.3.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v4.4.0
       with:
         python-version: ${{ inputs.python-version }}
         allow-prereleases: ${{ inputs.allow-prereleases }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
         editable: ${{ inputs.editable }}
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.3.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.0
       with:
         command: ${{ inputs.command }}
         env: ${{ inputs.env }}

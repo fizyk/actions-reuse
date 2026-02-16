@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.0 (2026-02-16)
+==================
+
+Features
+--------
+
+- Ability to install tested package as editable
+
+
 4.3.0 (2026-02-05)
 ==================
 

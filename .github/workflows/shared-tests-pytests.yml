@@ -71,7 +71,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: ${{ inputs.fetch-depth }}
-      - uses: fizyk/actions-reuse/.github/actions/pip@v4.3.0
+      - uses: fizyk/actions-reuse/.github/actions/pip@v4.4.0
         if: ${{ inputs.requirements != '' }}
         with:
           python-version: ${{ matrix.python-version }}
@@ -79,7 +79,7 @@ jobs:
           cache: ${{ inputs.cache }}
           requirements: ${{ inputs.requirements }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.3.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.4.0
         if: ${{ inputs.requirements == '' }}
         with:
           python-version: ${{ matrix.python-version }}
