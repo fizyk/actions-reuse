@@ -134,6 +134,9 @@ Run pytest tests on python code
    * - fail_on_codecov_error:
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
+   * - install_editable
+     - false
+     - Whether to install tested code in pipenv editable mode
 
 
 .. list-table:: Configuration
