@@ -1,3 +1,0 @@
-Editable mode installed along with `--dev` flag (2nd time) which caused side effects (as installing actually releases package).
-
-Now, the second pipenv install just runs `--editable .`

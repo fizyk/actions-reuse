@@ -3,6 +3,17 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.1 (2026-02-25)
+==================
+
+Bugfixes
+--------
+
+- Editable mode installed along with `--dev` flag (2nd time) which caused side effects (as installing actually releases package).
+
+  Now, the second pipenv install just runs `--editable .`
+
+
 4.4.0 (2026-02-16)
 ==================
 
