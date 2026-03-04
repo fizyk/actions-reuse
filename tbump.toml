@@ -33,9 +33,13 @@ default = ""
 # tbump.toml location.
 [[file]]
 src = "README.rst"
+[[file]]
+src = "ACTIONS.rst"
 
 [[file]]
 src = ".github/actions/pipenv/action.yml"
+[[file]]
+src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]
 src = ".github/workflows/pr-check.yml"
 [[file]]
