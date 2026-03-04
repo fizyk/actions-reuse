@@ -13,10 +13,10 @@ runs:
   using: composite
   steps:
     - name: Combine coverage data
-      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.2
+      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.3
       with:
         command: python -m coverage combine --data-file=${{ inputs.data-file }} ${{ inputs.data-file }}*
     - name: Export coverage XML
-      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.2
+      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.3
       with:
         command: python -m coverage xml --data-file=${{ inputs.data-file }} -o ${{ inputs.output-file }}

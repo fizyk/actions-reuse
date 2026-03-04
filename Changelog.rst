@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.3 (2026-03-04)
+==================
+
+Bugfixes
+--------
+
+- Update references in new coverage-combine-export composite actions and made them auto-updateable
+
+
 4.4.2 (2026-03-04)
 ==================
 
