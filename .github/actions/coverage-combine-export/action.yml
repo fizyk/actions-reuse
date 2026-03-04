@@ -1,0 +1,22 @@
+name: Coverage combine and export
+description: Combine coverage files and export XML report
+
+inputs:
+  data-file:
+    description: Coverage data file prefix (for example .coverage.serial)
+    required: true
+  output-file:
+    description: XML output filename
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Combine coverage data
+      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.0
+      with:
+        command: python -m coverage combine --data-file=${{ inputs.data-file }} ${{ inputs.data-file }}*
+    - name: Export coverage XML
+      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v4.4.0
+      with:
+        command: python -m coverage xml --data-file=${{ inputs.data-file }} -o ${{ inputs.output-file }}
