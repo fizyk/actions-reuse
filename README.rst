@@ -273,3 +273,8 @@ Then run:
 .. code-block:: sh
 
     pipenv run tbump [NEW_VERSION]
+
+Composite actions
+-----------------
+
+See `ACTIONS.rst <ACTIONS.rst>`__ for documentation of available composite actions.
