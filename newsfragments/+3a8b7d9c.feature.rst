@@ -1,1 +1,0 @@
-Add `ACTIONS.rst` with documentation for all repository composite actions, and link it from `README.rst`.

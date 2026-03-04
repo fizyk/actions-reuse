@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.2 (2026-03-04)
+==================
+
+Features
+--------
+
+- Add `ACTIONS.rst` with documentation for all repository composite actions, and link it from `README.rst`.
+
+
 4.4.1 (2026-02-25)
 ==================
 
