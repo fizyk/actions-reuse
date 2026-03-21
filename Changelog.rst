@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.4 (2026-03-21)
+==================
+
+Misc
+----
+
+- Update actions/cache and actions/upload-artifact
+
+
 4.4.3 (2026-03-04)
 ==================
 
