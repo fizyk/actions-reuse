@@ -46,7 +46,7 @@ runs:
         files: "Pipfile.lock"
     - name: Restore Pipfile.lock if not in git
       if: steps.check_files.outputs.files_exists == 'false'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       id: loadcache
       with:
         path: Pipfile.lock
@@ -64,7 +64,7 @@ runs:
         fi
     - name: Cache Pipfile.lock if not in git
       if: steps.check_files.outputs.files_exists == 'false'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       id: cache
       with:
         path: Pipfile.lock
@@ -72,7 +72,7 @@ runs:
     - name: Archive Pipfile.lock if not kept in git
       if: steps.check_files.outputs.files_exists == 'false'
       continue-on-error: true
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: pipfile-lock-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('Pipfile') }}
         path: Pipfile.lock
