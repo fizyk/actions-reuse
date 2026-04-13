@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.6 (2026-04-13)
+==================
+
+Misc
+----
+
+- Update actions/create-github-app-token and replace deprecated field.
+
+
 4.4.5 (2026-03-23)
 ==================
 
