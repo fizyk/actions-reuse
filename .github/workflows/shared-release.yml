@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Impersonate update bot
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@v3.1.1
         id: app-token
         with:
-          app-id: ${{ secrets.app_id }}
+          client-id: ${{ secrets.app_id }}
           private-key: ${{ secrets.private_key }}
       - name: Get GitHub App User ID
         id: get-user-id

@@ -2,12 +2,16 @@ version: 2
 updates:
 - package-ecosystem: github-actions
   directory: "/"
+  cooldown:
+    default-days: 7
   schedule:
     interval: weekly
     time: "04:00"
   open-pull-requests-limit: 1
 - package-ecosystem: pip
   directory: "/"
+  cooldown:
+    default-days: 7
   schedule:
     interval: weekly
     time: "04:10"
