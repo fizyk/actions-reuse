@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+4.4.7 (2026-04-20)
+==================
+
+Misc
+----
+
+- Make ``[skip ci]`` optional in ``shared-diagram.yml`` via a new ``skip_ci`` workflow input (default: ``false``).
+
+
 4.4.6 (2026-04-13)
 ==================
 
