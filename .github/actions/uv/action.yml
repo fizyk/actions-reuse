@@ -1,0 +1,35 @@
+name: 'uv run'
+description: 'Run tests'
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+  allow-prereleases:
+    description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
+    required: true
+  command:
+    description: 'Command to run'
+    required: true
+  uv-install-options:
+    description: "uv sync options"
+    default: ""
+  cache:
+    description: "Cache python environment?"
+    default: true
+  env:
+    description: 'JSON object string of environment variables to set'
+    required: false
+    default: '{}'
+runs:
+  using: "composite"
+  steps:
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v4.4.7
+      with:
+        python-version: ${{ inputs.python-version }}
+        allow-prereleases: ${{ inputs.allow-prereleases }}
+        uv-install-options: ${{ inputs.uv-install-options }}
+        cache: ${{ inputs.cache }}
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@v4.4.7
+      with:
+        command: ${{ inputs.command }}
+        env: ${{ inputs.env }}

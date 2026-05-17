@@ -1,0 +1,17 @@
+name: 'uv run'
+description: 'Run command in uv'
+inputs:
+  command:
+    description: 'Command to run'
+    required: true
+  env:
+    description: 'JSON object string of environment variables to set'
+    required: false
+    default: '{}'
+runs:
+  using: "composite"
+  steps:
+    - name: Run ${{ inputs.command }}
+      shell: bash
+      run: uv run ${{ inputs.command }}
+      env: ${{ fromJSON(inputs.env) }}

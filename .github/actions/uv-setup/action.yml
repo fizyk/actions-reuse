@@ -1,0 +1,32 @@
+name: 'Setup uv environment'
+description: 'Setup uv'
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+  allow-prereleases:
+    description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
+    required: true
+  uv-install-options:
+    description: "uv sync options"
+    default: ""
+  cache:
+    description: "Cache python environment?"
+    default: true
+runs:
+  using: "composite"
+  steps:
+    - id: preserve-envvars
+      shell: bash
+      run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> "$GITHUB_OUTPUT"
+    - name: Set up uv and Python ${{ inputs.python-version }}
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+        enable-cache: ${{ inputs.cache }}
+    - shell: bash
+      if: steps.preserve-envvars.outputs.PKG_CONFIG_PATH
+      run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${{ steps.preserve-envvars.outputs.PKG_CONFIG_PATH }}" >> "$GITHUB_ENV"
+    - name: Install dependencies
+      shell: bash
+      run: uv sync --all-groups ${{ inputs.uv-install-options }}
