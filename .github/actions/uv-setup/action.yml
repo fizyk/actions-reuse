@@ -4,9 +4,6 @@ inputs:
   python-version:
     description: 'Python version to use'
     required: true
-  allow-prereleases:
-    description: "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
-    required: true
   uv-install-options:
     description: "uv sync options"
     default: ""

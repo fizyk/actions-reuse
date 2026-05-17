@@ -57,7 +57,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-run@v4.4.7
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@uv
       with:
         command: pytest -q
         env: '{"PYTEST_ADDOPTS":"-ra"}'
@@ -93,7 +93,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v4.4.7
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@uv
       with:
         python-version: "3.14"
         allow-prereleases: false
@@ -136,7 +136,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv@v4.4.7
+    - uses: fizyk/actions-reuse/.github/actions/uv@uv
       with:
         python-version: "3.14"
         allow-prereleases: false
