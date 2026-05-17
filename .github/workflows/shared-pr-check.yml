@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v6
-      - uses: fizyk/actions-reuse/.github/actions/uv@uv
+      - uses: fizyk/actions-reuse/.github/actions/uv@v4.4.7
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: fizyk/actions-reuse/.github/actions/uv@uv
+      - uses: fizyk/actions-reuse/.github/actions/uv@v4.4.7
         if: ${{ inputs.dependency-manager == 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
