@@ -3,6 +3,23 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.0.0 (2026-05-18)
+================================
+
+Features
+--------
+
+- Add uv support: new ``uv-setup``, ``uv-run``, and ``uv`` composite actions, and a ``dependency-manager`` input for ``shared-tests-pytests`` and ``shared-pr-check`` workflows.
+  Migrate repository tooling from pipenv to uv.
+
+
+Deprecations and Removals
+-------------------------
+
+- Remove ``requirements`` input and pip dependency manager path from ``shared-tests-pytests`` workflow.
+  Projects using ``requirements:`` should migrate to uv (``dependency-manager: uv``) or pipenv.
+
+
 4.4.7 (2026-04-20)
 ==================
 
