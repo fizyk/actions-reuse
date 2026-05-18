@@ -39,6 +39,12 @@ src = "ACTIONS.rst"
 [[file]]
 src = ".github/actions/pipenv/action.yml"
 [[file]]
+src = ".github/actions/uv/action.yml"
+[[file]]
+src = ".github/actions/uv-setup/action.yml"
+[[file]]
+src = ".github/actions/uv-run/action.yml"
+[[file]]
 src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]
 src = ".github/workflows/pr-check.yml"
@@ -59,7 +65,7 @@ src = ".github/workflows/automerge.yml"
 
 [[before_commit]]
 name = "Build changelog"
-cmd = "pipenv run towncrier build --version {new_version} --yes"
+cmd = "uv run towncrier build --version {new_version} --yes"
 
 # Or run some commands after the git tag and the branch
 # have been pushed:

@@ -33,12 +33,42 @@ Example:
         output-file: coverage.xml
 
 
-pip
----
+uv-run
+------
 
-Path: ``.github/actions/pip/action.yml``
+Path: ``.github/actions/uv-run/action.yml``
 
-Set up Python, install dependencies from requirements file, and run a command.
+Run a command inside an existing uv environment.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - command
+     - yes
+     -
+   * - env
+     - no
+     - ``{}``
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@v4.4.7
+      with:
+        command: pytest -q
+        env: '{"PYTEST_ADDOPTS":"-ra"}'
+
+
+uv-setup
+--------
+
+Path: ``.github/actions/uv-setup/action.yml``
+
+Set up Python and uv, then install project dependencies via ``uv sync --all-groups``.
 
 .. list-table:: Inputs
    :header-rows: 1
@@ -52,22 +82,64 @@ Set up Python, install dependencies from requirements file, and run a command.
    * - allow-prereleases
      - yes
      -
-   * - requirements
+   * - uv-install-options
      - no
-     - ``requirements.txt``
-   * - command
-     - yes
-     -
+     - ``""``
+   * - cache
+     - no
+     - ``true``
 
 Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pip@v4.4.7
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v4.4.7
       with:
         python-version: "3.14"
         allow-prereleases: false
-        requirements: requirements.txt
+        cache: true
+
+
+uv
+--
+
+Path: ``.github/actions/uv/action.yml``
+
+Set up uv and run a command in one step.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - python-version
+     - yes
+     -
+   * - allow-prereleases
+     - yes
+     -
+   * - command
+     - yes
+     -
+   * - uv-install-options
+     - no
+     - ``""``
+   * - cache
+     - no
+     - ``true``
+   * - env
+     - no
+     - ``{}``
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/uv@v4.4.7
+      with:
+        python-version: "3.14"
+        allow-prereleases: false
         command: pytest
 
 

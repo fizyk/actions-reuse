@@ -6,6 +6,11 @@ on:
         description: 'New version to be added'
         required: true
         type: string
+      dependency-manager:
+        description: 'Dependency manager to use (pipenv, uv)'
+        default: 'pipenv'
+        required: false
+        type: string
     secrets:
       app_id:
         description: "Github Application ID that'll be used for releasing"
@@ -36,9 +41,17 @@ jobs:
         with:
           fetch-depth: 1
           token: ${{ steps.app-token.outputs.token }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.4.7
+      - uses: fizyk/actions-reuse/.github/actions/uv@v4.4.7
+        if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: "3.14"
           allow-prereleases: false
           cache: true
-          command: pipenv run tbump ${{ inputs.version }} --non-interactive
+          command: tbump ${{ inputs.version }} --non-interactive
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v4.4.7
+        if: ${{ inputs.dependency-manager != 'uv' }}
+        with:
+          python-version: "3.14"
+          allow-prereleases: false
+          cache: true
+          command: tbump ${{ inputs.version }} --non-interactive

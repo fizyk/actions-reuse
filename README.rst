@@ -22,8 +22,11 @@ if tbump is correctly configured according to new codebase.
      - default
      - note
    * - python-version
-     - 3.13
+     - 3.14
      - Python version to use in the workflow
+   * - dependency-manager
+     - pipenv
+     - Dependency manager to use (``pipenv``, ``uv``)
 
 
 pre-commit
@@ -44,7 +47,7 @@ Checks Pull Request against manual enabled pre-commit hooks.
      - default
      - note
    * - python-version
-     - 3.13
+     - 3.14
      - Python version to use in the workflow
 
 To configure pre-commit hooks to be run with this workflow, add stages parameter:
@@ -107,15 +110,15 @@ Run pytest tests on python code
    * - parameter
      - default
      - note
+   * - dependency-manager
+     - pipenv
+     - Dependency manager to use (``pipenv``, ``uv``)
    * - pipenv-install-options
      -
-     - Additional pipenv install options
+     - Additional pipenv install options (pipenv only)
    * - cache
      - true
-     - Whether to cache pythin environment
-   * - requirements
-     -
-     - Requirements file name
+     - Whether to cache python environment
    * - pytest_opts
      -
      - Additional pytest options
@@ -125,18 +128,18 @@ Run pytest tests on python code
    * - allow-prereleases
      - true
      - "Allow falling back to pre-release versions of Python when a matching GA version of Python is not available."
-   * - os:
+   * - os
      - ubuntu-latest
      - Operating system tests are running on
    * - env
      - {}
-     - 'JSON object string of environment variables to set (only for pipenv path)'
-   * - fail_on_codecov_error:
+     - JSON object string of environment variables to set
+   * - fail_on_codecov_error
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
    * - install_editable
      - false
-     - Whether to install tested code in pipenv editable mode
+     - Whether to install tested code in editable mode (pipenv only)
 
 
 .. list-table:: Configuration
@@ -269,13 +272,13 @@ Available python versions can be checked in `https://github.com/actions/python-v
 Release
 -------
 
-Install pipenv first,
+Install uv first (https://docs.astral.sh/uv/getting-started/installation/),
 
 Then run:
 
 .. code-block:: sh
 
-    pipenv run tbump [NEW_VERSION]
+    uv run tbump [NEW_VERSION]
 
 Composite actions
 -----------------
