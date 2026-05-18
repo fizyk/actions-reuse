@@ -41,10 +41,6 @@ src = ".github/actions/pipenv/action.yml"
 [[file]]
 src = ".github/actions/uv/action.yml"
 [[file]]
-src = ".github/actions/uv-setup/action.yml"
-[[file]]
-src = ".github/actions/uv-run/action.yml"
-[[file]]
 src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]
 src = ".github/workflows/pr-check.yml"
