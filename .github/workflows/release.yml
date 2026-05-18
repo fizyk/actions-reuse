@@ -13,6 +13,7 @@ jobs:
     uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.0.0
     with:
       version: ${{ inputs.version }}
+      dependency-manager: 'uv'
     secrets:
       app_id: ${{ secrets.RELEASE_APP_ID }}
       private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
