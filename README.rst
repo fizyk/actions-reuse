@@ -81,6 +81,12 @@ pypi
    * - artifact
      - false
      - Whether to upload built packages as pipeline artifacts or not
+   * - python-version
+     - "3.14"
+     - Python version used to build the distributions
+   * - dependency-manager
+     - build
+     - Build tool to use (``build`` uses ``python -m build``; ``uv`` uses ``uv build``)
 
 
 .. list-table:: Configuration
