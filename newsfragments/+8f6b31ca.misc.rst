@@ -1,0 +1,1 @@
+Update all astral-sh/setup-uv to 8.1.0
