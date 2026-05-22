@@ -1,1 +1,0 @@
-Add uv build path to the ``shared-pypi`` workflow: new ``python-build`` and ``uv-build`` composite actions, and a ``dependency-manager`` input on ``shared-pypi.yml`` (``build`` default; ``uv`` opts into ``uv build`` + ``uvx twine check``).

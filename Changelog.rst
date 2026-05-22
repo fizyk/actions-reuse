@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.1.0 (2026-05-22)
+================================
+
+Features
+--------
+
+- Add uv build path to the ``shared-pypi`` workflow: new ``python-build`` and ``uv-build`` composite actions, and a ``dependency-manager`` input on ``shared-pypi.yml`` (``build`` default; ``uv`` opts into ``uv build`` + ``uvx twine check``).
+
+
 actions-reuse 5.0.0 (2026-05-18)
 ================================
 
