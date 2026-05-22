@@ -45,7 +45,6 @@ jobs:
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: "3.14"
-          allow-prereleases: false
           cache: true
           command: tbump ${{ inputs.version }} --non-interactive
       - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.1.1
