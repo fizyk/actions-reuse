@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.1.1 (2026-05-22)
+================================
+
+Misc
+----
+
+- Update all astral-sh/setup-uv to 8.1.0
+
+
 actions-reuse 5.1.0 (2026-05-22)
 ================================
 
