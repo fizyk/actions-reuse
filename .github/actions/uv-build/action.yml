@@ -1,0 +1,19 @@
+name: 'uv build'
+description: 'Build Python distributions using uv and validate with twine'
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up uv and Python ${{ inputs.python-version }}
+      uses: astral-sh/setup-uv@v8.1.0
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Build a wheel package
+      shell: bash
+      run: uv build
+    - name: Check the package
+      shell: bash
+      run: uvx twine check dist/*

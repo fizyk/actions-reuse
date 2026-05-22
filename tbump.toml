@@ -49,6 +49,8 @@ src = ".github/workflows/release.yml"
 [[file]]
 src = ".github/workflows/shared-pr-check.yml"
 [[file]]
+src = ".github/workflows/shared-pypi.yml"
+[[file]]
 src = ".github/workflows/shared-release.yml"
 [[file]]
 src = ".github/workflows/shared-tests-pytests.yml"

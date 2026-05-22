@@ -1,0 +1,25 @@
+name: 'python -m build'
+description: 'Build Python distributions using the pypa build frontend and validate with twine'
+inputs:
+  python-version:
+    description: 'Python version to use'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Install build tools
+      shell: bash
+      run: pip install build
+    - name: Build a wheel package
+      shell: bash
+      run: python -m build .
+    - name: Install twine to check the package
+      shell: bash
+      run: pip install twine
+    - name: Check the package
+      shell: bash
+      run: twine check dist/*

@@ -258,3 +258,55 @@ Example:
         python-version: "3.14"
         allow-prereleases: false
         command: pytest
+
+
+python-build
+------------
+
+Path: ``.github/actions/python-build/action.yml``
+
+Build Python distributions using the pypa ``build`` frontend (``python -m build``) and validate the result with ``twine check``.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - python-version
+     - yes
+     -
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/python-build@v5.0.0
+      with:
+        python-version: "3.14"
+
+
+uv-build
+--------
+
+Path: ``.github/actions/uv-build/action.yml``
+
+Build Python distributions using ``uv build`` and validate the result with ``uvx twine check``.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - python-version
+     - yes
+     -
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.0.0
+      with:
+        python-version: "3.14"

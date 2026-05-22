@@ -17,6 +17,11 @@ on:
         default: "3.14"
         required: false
         type: string
+      dependency-manager:
+        description: 'Build tool to use (build, uv)'
+        default: 'build'
+        required: false
+        type: string
     secrets:
       pypi_token:
         description: 'Token used to authenticate to the PyPI'
@@ -30,18 +35,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Python ${{ inputs.python-version }}
-        uses: actions/setup-python@v6
+      - uses: fizyk/actions-reuse/.github/actions/python-build@v5.0.0
+        if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
-      - name: Install build tools
-        run: pip install build
-      - name: Build a wheel package
-        run: python -m build .
-      - name: Install twine to check the package
-        run: pip install twine
-      - name: Check the package
-        run: twine check dist/*
+      - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.0.0
+        if: ${{ inputs.dependency-manager == 'uv' }}
+        with:
+          python-version: ${{ inputs.python-version }}
       - name: Store distributions 📦 as artifact
         uses: actions/upload-artifact@v7
         with:
