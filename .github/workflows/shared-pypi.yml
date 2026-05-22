@@ -35,11 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: fizyk/actions-reuse/.github/actions/python-build@v5.1.1
+      - uses: fizyk/actions-reuse/.github/actions/python-build@v5.1.2
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
-      - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.1.1
+      - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.1.2
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}

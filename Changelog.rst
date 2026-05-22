@@ -3,6 +3,20 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.1.2 (2026-05-22)
+================================
+
+Bugfixes
+--------
+
+- Drop the ``allow-prereleases`` input from the ``uv`` and ``uv-setup`` actions
+  (and from ``shared-tests-pytests``/``shared-pr-check``/``shared-release`` callsites):
+  uv has no CLI flag to forbid pre-release fallback, so the input was non-functional.
+  uv selects a pre-release only when no matching stable Python is available.
+- uv track: install Python explicitly via ``uv python install`` rather than relying on the
+  implicit download triggered by ``uv sync``.
+
+
 actions-reuse 5.1.1 (2026-05-22)
 ================================
 
