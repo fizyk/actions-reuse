@@ -16,7 +16,7 @@ runs:
     - id: preserve-envvars
       shell: bash
       run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH" >> "$GITHUB_OUTPUT"
-    - name: Set up uv and Python ${{ inputs.python-version }}
+    - name: Set up uv
       uses: astral-sh/setup-uv@v8.1.0
       with:
         python-version: ${{ inputs.python-version }}
@@ -24,6 +24,9 @@ runs:
     - shell: bash
       if: steps.preserve-envvars.outputs.PKG_CONFIG_PATH
       run: echo "PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${{ steps.preserve-envvars.outputs.PKG_CONFIG_PATH }}" >> "$GITHUB_ENV"
+    - name: Install Python ${{ inputs.python-version }}
+      shell: bash
+      run: uv python install ${{ inputs.python-version }}
     - name: Install dependencies
       shell: bash
       run: uv sync --all-groups ${{ inputs.uv-install-options }}

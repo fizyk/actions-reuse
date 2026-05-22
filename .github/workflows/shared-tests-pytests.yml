@@ -76,7 +76,6 @@ jobs:
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ matrix.python-version }}
-          allow-prereleases: ${{ inputs.allow-prereleases }}
           cache: ${{ inputs.cache }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
           env: ${{ inputs.env }}
