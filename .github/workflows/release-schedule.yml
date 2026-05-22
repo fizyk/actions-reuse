@@ -1,0 +1,15 @@
+name: Scheduled release
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch: {}
+
+jobs:
+  schedule:
+    uses: ./.github/workflows/shared-release-schedule.yml
+    with:
+      dependency-manager: 'uv'
+    secrets:
+      app_id: ${{ secrets.RELEASE_APP_ID }}
+      private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}

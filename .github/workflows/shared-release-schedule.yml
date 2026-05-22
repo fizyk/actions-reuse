@@ -1,0 +1,73 @@
+name: Scheduled release
+
+on:
+  workflow_call:
+    inputs:
+      dependency-manager:
+        description: 'Dependency manager to use (pipenv, uv)'
+        default: 'pipenv'
+        required: false
+        type: string
+    secrets:
+      app_id:
+        description: "Github Application ID that'll be used for releasing"
+        required: true
+      private_key:
+        description: "Github Application's private key"
+        required: true
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.compute.outputs.should_release }}
+      version: ${{ steps.compute.outputs.version }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+      - id: compute
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! latest_tag=$(git describe --tags --abbrev=0 2>/dev/null); then
+            echo "No tags found; skipping release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Latest tag: $latest_tag"
+          commit_count=$(git rev-list "${latest_tag}..HEAD" --count)
+          echo "Commits since tag: $commit_count"
+          if [ "$commit_count" -eq 0 ]; then
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          base=${latest_tag#v}
+          IFS='.' read -r major minor patch <<<"$base"
+          shopt -s nullglob
+          features=(newsfragments/*.feature.rst)
+          if [ "${#features[@]}" -gt 0 ]; then
+            echo "Feature fragments found (${#features[@]}); bumping minor."
+            minor=$((minor + 1))
+            patch=0
+          else
+            echo "No feature fragments; bumping patch."
+            patch=$((patch + 1))
+          fi
+          next="${major}.${minor}.${patch}"
+          echo "Next version: $next"
+          echo "should_release=true" >> "$GITHUB_OUTPUT"
+          echo "version=$next" >> "$GITHUB_OUTPUT"
+
+  release:
+    needs: plan
+    if: needs.plan.outputs.should_release == 'true'
+    uses: ./.github/workflows/shared-release.yml
+    with:
+      version: ${{ needs.plan.outputs.version }}
+      dependency-manager: ${{ inputs.dependency-manager }}
+    secrets:
+      app_id: ${{ secrets.app_id }}
+      private_key: ${{ secrets.private_key }}
