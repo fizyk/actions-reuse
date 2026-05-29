@@ -3,8 +3,8 @@ name: Merge me test dependencies!
 on:
   workflow_call:
     secrets:
-      app_id:
-        description: "Github Application ID that'll be used for merging"
+      client_id:
+        description: "Github Application Client ID that'll be used for merging"
         required: true
       private_key:
         description: "Github Application's private key"
@@ -19,11 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Impersonate update bot
-        uses: tibdex/github-app-token@v2
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: generate-token
         with:
-          app_id: ${{ secrets.app_id }}
-          private_key: ${{ secrets.private_key }}
+          client-id: ${{ secrets.client_id }}
+          private-key: ${{ secrets.private_key }}
+          permission-pull-requests: write
       - name: Merge me!
         uses: ridedott/merge-me-action@f2b305b5ce4ac8d262d2e236d772483a295eb862 # v2.10.163
         with:

@@ -1,0 +1,1 @@
+Replaced deprecated `tibdex/github-app-token` usage with `actions/create-github-app-token`.
