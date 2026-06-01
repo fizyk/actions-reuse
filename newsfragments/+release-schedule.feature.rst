@@ -1,1 +1,0 @@
-Add ``shared-release-schedule`` reusable workflow: on a cron, compares ``HEAD`` against the most recent tag and triggers ``shared-release`` with the next patch version when commits exist. If any ``newsfragments/*.feature.rst`` fragments are present at the time of run, bumps the minor instead. Local ``release-schedule.yml`` runs monthly (first of the month, 06:00 UTC).

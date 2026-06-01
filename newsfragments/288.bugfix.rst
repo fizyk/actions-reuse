@@ -1,1 +1,0 @@
-Pin all GitHub Actions references to commit SHAs (supply-chain hardening)

@@ -3,6 +3,22 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.0 (2026-06-01)
+================================
+
+Features
+--------
+
+- Add ``shared-release-schedule`` reusable workflow: on a cron, compares ``HEAD`` against the most recent tag and triggers ``shared-release`` with the next patch version when commits exist. If any ``newsfragments/*.feature.rst`` fragments are present at the time of run, bumps the minor instead. Local ``release-schedule.yml`` runs monthly (first of the month, 06:00 UTC).
+
+
+Bugfixes
+--------
+
+- Pin all GitHub Actions references to commit SHAs (supply-chain hardening) (`#288 <https:/github.com/fizyk/actions-reuse/issues/288>`__)
+- Replaced deprecated `tibdex/github-app-token` usage with `actions/create-github-app-token`. (`#291 <https:/github.com/fizyk/actions-reuse/issues/291>`__)
+
+
 actions-reuse 5.1.2 (2026-05-22)
 ================================
 
