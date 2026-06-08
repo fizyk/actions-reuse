@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.1 (2026-06-08)
+================================
+
+Bugfixes
+--------
+
+- Secure all non-release checkouts by setting `persist-credentials: false`. (`#290 <https:/github.com/fizyk/actions-reuse/issues/290>`__)
+
+
 actions-reuse 5.2.0 (2026-06-01)
 ================================
 

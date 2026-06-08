@@ -37,11 +37,11 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: fizyk/actions-reuse/.github/actions/python-build@v5.2.0
+      - uses: fizyk/actions-reuse/.github/actions/python-build@v5.2.1
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
-      - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.2.0
+      - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.2.1
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}

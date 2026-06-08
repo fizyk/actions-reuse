@@ -1,1 +1,0 @@
-Secure all non-release checkouts by setting `persist-credentials: false`.

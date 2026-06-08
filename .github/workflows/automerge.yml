@@ -11,7 +11,7 @@ on:
 
 jobs:
   automerge:
-    uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.2.0
+    uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.2.1
     secrets:
       client_id: ${{ secrets.MERGE_APP_CLIENT_ID }}
       private_key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
