@@ -54,8 +54,6 @@ src = ".github/workflows/shared-pypi.yml"
 src = ".github/workflows/shared-release.yml"
 [[file]]
 src = ".github/workflows/shared-tests-pytests.yml"
-[[file]]
-src = ".github/workflows/automerge.yml"
 
 # You can specify a list of commands to
 # run after the files have been patched

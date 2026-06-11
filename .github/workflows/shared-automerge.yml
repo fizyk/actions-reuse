@@ -25,6 +25,9 @@ jobs:
           client-id: ${{ secrets.client_id }}
           private-key: ${{ secrets.private_key }}
           permission-pull-requests: write
+          permission-contents: write
+          permission-administration: read
+          permission-metadata: read
       - name: Merge me!
         uses: ridedott/merge-me-action@f2b305b5ce4ac8d262d2e236d772483a295eb862 # v2.10.163
         with:
