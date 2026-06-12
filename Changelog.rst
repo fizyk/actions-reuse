@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.2 (2026-06-12)
+================================
+
+Bugfixes
+--------
+
+- Strictly define which permission is automerge given
+
+
 actions-reuse 5.2.1 (2026-06-08)
 ================================
 

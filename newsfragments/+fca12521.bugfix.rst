@@ -1,1 +1,0 @@
-Strictly define which permission is automerge given
