@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.3 (2026-06-21)
+================================
+
+Bugfixes
+--------
+
+- Add missing `coverage-combine-export-uv` composite action to combine coverage files and export an XML report using uv.
+
+
 actions-reuse 5.2.2 (2026-06-12)
 ================================
 

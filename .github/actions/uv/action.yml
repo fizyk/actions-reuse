@@ -20,12 +20,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.2.2
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.2.3
       with:
         python-version: ${{ inputs.python-version }}
         uv-install-options: ${{ inputs.uv-install-options }}
         cache: ${{ inputs.cache }}
-    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.2.2
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.2.3
       with:
         command: ${{ inputs.command }}
         env: ${{ inputs.env }}
