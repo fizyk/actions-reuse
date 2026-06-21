@@ -33,6 +33,36 @@ Example:
         output-file: coverage.xml
 
 
+coverage-combine-export-uv
+--------------------------
+
+Path: ``.github/actions/coverage-combine-export-uv/action.yml``
+
+Combine coverage files and export a single XML report using uv.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - note
+   * - data-file
+     - yes
+     - Coverage data file prefix (for example ``.coverage.serial``)
+   * - output-file
+     - yes
+     - XML output filename
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.2.2
+      with:
+        data-file: .coverage.serial
+        output-file: coverage.xml
+
+
 uv-run
 ------
 
