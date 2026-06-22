@@ -73,14 +73,14 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: ${{ inputs.fetch-depth }}
-      - uses: fizyk/actions-reuse/.github/actions/uv@v5.2.3
+      - uses: fizyk/actions-reuse/.github/actions/uv@v5.2.4
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ matrix.python-version }}
           cache: ${{ inputs.cache }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
           env: ${{ inputs.env }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.2.3
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.2.4
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           python-version: ${{ matrix.python-version }}

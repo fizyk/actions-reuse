@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.4 (2026-06-22)
+================================
+
+Bugfixes
+--------
+
+- Fix `coverage-combine-export-uv` action internal references
+
+
 actions-reuse 5.2.3 (2026-06-21)
 ================================
 
