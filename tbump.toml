@@ -43,6 +43,8 @@ src = ".github/actions/uv/action.yml"
 [[file]]
 src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]
+src = ".github/actions/coverage-combine-export-uv/action.yml"
+[[file]]
 src = ".github/workflows/pr-check.yml"
 [[file]]
 src = ".github/workflows/release.yml"
