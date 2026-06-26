@@ -217,6 +217,8 @@ Mind that dependabot pull requests are treated as 3rd party pull requests, hence
 
 Requires Github application to run!
 
+Trigger the caller workflow on both ``workflow_run`` and ``check_suite`` completion. ``workflow_run`` observes in-repo Actions workflows, while ``check_suite`` also observes external apps such as pre-commit.ci. Using both re-attempts the merge as each completes, so it is not raced by a slower external check.
+
 
 .. list-table:: Configuration
    :header-rows: 1

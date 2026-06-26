@@ -15,7 +15,11 @@ jobs:
     name: Merge me!
     # It is often a desired behavior to merge only when a workflow execution
     # succeeds. This can be changed as needed.
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    # Supports both trigger styles so callers can use either a workflow_run
+    # or a check_suite event without breaking: workflow_run callers keep
+    # working, while check_suite callers (recommended, see automerge.yml)
+    # also re-attempt the merge after external checks such as pre-commit.ci.
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.check_suite.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Impersonate update bot
