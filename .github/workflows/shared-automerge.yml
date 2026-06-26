@@ -33,7 +33,7 @@ jobs:
           permission-administration: read
           permission-metadata: read
       - name: Merge me!
-        uses: ridedott/merge-me-action@1a20708b403609c1a17624bd1ad5772cb631ed49 # v2.10.165
+        uses: ridedott/merge-me-action@faf8f0954223f7f157e4a72d31a0bc2120b0179a # v2.10.167
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
@@ -50,7 +50,7 @@ jobs:
           PRESET: DEPENDABOT_MINOR
           ENABLED_FOR_MANUAL_CHANGES: 'true'
       - name: Merge me!
-        uses: ridedott/merge-me-action@1a20708b403609c1a17624bd1ad5772cb631ed49 # v2.10.165
+        uses: ridedott/merge-me-action@faf8f0954223f7f157e4a72d31a0bc2120b0179a # v2.10.167
         with:
           # Depending on branch protection rules, a  manually populated
           # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
