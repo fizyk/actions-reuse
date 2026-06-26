@@ -1,12 +1,17 @@
 name: Merge me test dependencies!
 
 on:
+  # workflow_run covers in-repo Actions; check_suite covers external apps
+  # such as pre-commit.ci. See the automerge section in README.rst.
   workflow_run:
     types:
       - completed
     workflows:
       # List all required workflow names here.
       - 'Run test commands'
+  check_suite:
+    types:
+      - completed
 
 
 jobs:
