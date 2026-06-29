@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.5 (2026-06-29)
+================================
+
+Bugfixes
+--------
+
+- Trigger automerge on ``check_suite`` completion in addition to ``workflow_run``, so the merge is no longer raced by external checks such as pre-commit.ci that finish after the in-repo workflows
+
+
 actions-reuse 5.2.4 (2026-06-22)
 ================================
 
