@@ -3,6 +3,12 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.2.8 (2026-07-20)
+================================
+
+No significant changes.
+
+
 actions-reuse 5.2.7 (2026-07-13)
 ================================
 
