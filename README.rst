@@ -272,6 +272,62 @@ Runs release on a repository. Requires tbump to be installed and configured in d
    * - private_key
      - Github Application's private key
 
+release-schedule
+----------------
+
+.. code-block:: yaml
+
+    name: Scheduled release
+    on:
+      schedule:
+        - cron: '17 6 1 * *'
+        - cron: '17 6 * * 1'
+      workflow_dispatch: {}
+
+    jobs:
+      schedule:
+        uses: fizyk/actions-reuse/.github/workflows/shared-release-schedule.yml@v5.2.8
+        with:
+          dependency-manager: 'uv'
+        secrets:
+          app_id: ${{ secrets.RELEASE_APP_ID }}
+          private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+Computes the next version and, if warranted, runs the ``release`` workflow on a schedule
+(and on demand via ``workflow_dispatch``). Because ``schedule`` triggers only fire from
+a workflow file present on the repository's default branch, this caller has to live
+in each repository - copy the snippet above and pin it to a tag.
+
+The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a release
+is only planned when there are commits since that tag; the bump is *minor*
+when ``newsfragments/*.feature.rst`` fragments are present and *patch* otherwise.
+Requires tbump to be installed and configured, and a ``newsfragments`` directory managed
+by towncrier.
+
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - parameter
+     - default
+     - note
+   * - dependency-manager
+     - pipenv
+     - Dependency manager to use (``pipenv``, ``uv``)
+   * - newsfragments-required
+     - false
+     - Only release when at least one towncrier newsfragment is present in ``newsfragments``
+
+.. list-table:: Configuration
+   :header-rows: 1
+
+   * - secret
+     - note
+   * - app_id
+     - Github Application ID that'll be used for releasing
+   * - private_key
+     - Github Application's private key
+
 Python versions
 ---------------
 

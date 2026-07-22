@@ -8,6 +8,11 @@ on:
         default: 'pipenv'
         required: false
         type: string
+      newsfragments-required:
+        description: 'Only release when at least one towncrier newsfragment is present'
+        default: false
+        required: false
+        type: boolean
     secrets:
       app_id:
         description: "Github Application ID that'll be used for releasing"
@@ -30,6 +35,8 @@ jobs:
           persist-credentials: false
       - id: compute
         shell: bash
+        env:
+          NEWSFRAGMENTS_REQUIRED: ${{ inputs.newsfragments-required }}
         run: |
           set -euo pipefail
           if ! latest_tag=$(git describe --tags --abbrev=0 2>/dev/null); then
@@ -47,7 +54,13 @@ jobs:
           base=${latest_tag#v}
           IFS='.' read -r major minor patch <<<"$base"
           shopt -s nullglob
+          fragments=(newsfragments/*.rst)
           features=(newsfragments/*.feature.rst)
+          if [ "$NEWSFRAGMENTS_REQUIRED" = "true" ] && [ "${#fragments[@]}" -eq 0 ]; then
+            echo "newsfragments-required is set and no newsfragments found; skipping release."
+            echo "should_release=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if [ "${#features[@]}" -gt 0 ]; then
             echo "Feature fragments found (${#features[@]}); bumping minor."
             minor=$((minor + 1))
