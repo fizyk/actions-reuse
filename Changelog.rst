@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.3.0 (2026-07-27)
+================================
+
+Features
+--------
+
+- Add ``newsfragments-required`` input to ``shared-release-schedule``: when ``true``, release only if a newsfragment is present. Defaults to ``false``.
+
+
+Improved Documentation
+----------------------
+
+- Document the ``release-schedule`` workflow in the README.
+
+
 actions-reuse 5.2.8 (2026-07-20)
 ================================
 
