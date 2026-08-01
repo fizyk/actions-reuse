@@ -21,12 +21,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: fizyk/actions-reuse/.github/actions/uv@v5.3.0
+      - uses: fizyk/actions-reuse/.github/actions/uv@v5.3.1
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
           command: tbump --dry-run --only-patch $(uv run tbump current-version)"-x"
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.3.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.3.1
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           python-version: ${{ inputs.python-version }}
@@ -40,12 +40,12 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - uses: fizyk/actions-reuse/.github/actions/uv@v5.3.0
+      - uses: fizyk/actions-reuse/.github/actions/uv@v5.3.1
         if: ${{ inputs.dependency-manager == 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
           command: towncrier check --compare-with origin/${{ github.base_ref }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.3.0
+      - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.3.1
         if: ${{ inputs.dependency-manager != 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
