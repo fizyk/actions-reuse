@@ -16,9 +16,7 @@ jobs:
     # It is often a desired behavior to merge only when a workflow execution
     # succeeds. This can be changed as needed.
     # Supports both trigger styles so callers can use either a workflow_run
-    # or a check_suite event without breaking: workflow_run callers keep
-    # working, while check_suite callers (recommended, see automerge.yml)
-    # also re-attempt the merge after external checks such as pre-commit.ci.
+    # or a check_suite event without breaking.
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.check_suite.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -30,40 +28,54 @@ jobs:
           private-key: ${{ secrets.private_key }}
           permission-pull-requests: write
           permission-contents: write
-          permission-administration: read
           permission-metadata: read
-      - name: Merge me!
-        uses: ridedott/merge-me-action@98f5cf6a9f7c0ebef4a253f9dffe6530e2c1bd7c # v2.10.174
-        with:
-          # Depending on branch protection rules, a  manually populated
-          # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
-          # a protected branch must be used. This secret can have an arbitrary
-          # name, as an example, this repository uses `DOTTBOTT_TOKEN`.
-          #
-          # When using a custom token, it is recommended to leave the following
-          # comment for other developers to be aware of the reasoning behind it:
-          #
-          # This must be used as GitHub Actions token does not support pushing
-          # to protected branches.
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          MERGE_METHOD: MERGE
-          PRESET: DEPENDABOT_MINOR
-          ENABLED_FOR_MANUAL_CHANGES: 'true'
-      - name: Merge me!
-        uses: ridedott/merge-me-action@98f5cf6a9f7c0ebef4a253f9dffe6530e2c1bd7c # v2.10.174
-        with:
-          # Depending on branch protection rules, a  manually populated
-          # `GITHUB_TOKEN_WORKAROUND` secret with permissions to push to
-          # a protected branch must be used. This secret can have an arbitrary
-          # name, as an example, this repository uses `DOTTBOTT_TOKEN`.
-          #
-          # When using a custom token, it is recommended to leave the following
-          # comment for other developers to be aware of the reasoning behind it:
-          #
-          # This must be used as GitHub Actions token does not support pushing
-          # to protected branches.
-          GITHUB_LOGIN: pre-commit-ci
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          MERGE_METHOD: MERGE
-          PRESET: DEPENDABOT_MINOR
-          ENABLED_FOR_MANUAL_CHANGES: 'true'
+      # Arms GitHub's native auto-merge rather than merging immediately.
+      # Merging immediately races external checks that report through the
+      # Statuses API (pre-commit.ci): those land after the last workflow_run
+      # or check_suite event fires, so the merge is rejected for a pending
+      # required check and nothing triggers a retry. Auto-merge is
+      # declarative -- GitHub performs the merge once the final required
+      # check reports, whichever API it arrives through.
+      #
+      # Requires `allow_auto_merge` to be enabled on the calling repository.
+      - name: Arm auto-merge
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests || github.event.check_suite.pull_requests) }}
+        run: |
+          set -euo pipefail
+
+          for number in $(jq -r '.[]? | .number' <<<"$PULL_REQUESTS"); do
+            information=$(gh pr view "$number" --json author,state,commits)
+            author=$(jq -r '.author.login' <<<"$information")
+            state=$(jq -r '.state' <<<"$information")
+            body=$(jq -r '.commits[-1].messageBody // ""' <<<"$information")
+
+            if [ "$state" != "OPEN" ]; then
+              echo "Pull request #$number is not open: $state."
+              continue
+            fi
+
+            case "$author" in
+              app/dependabot)
+                # Equivalent of merge-me-action's DEPENDABOT_MINOR preset,
+                # read from the metadata dependabot writes into the commit
+                # message rather than parsed out of the pull request title.
+                case "$body" in
+                  *version-update:semver-major*)
+                    echo "Pull request #$number is a major version bump, skipping."
+                    continue
+                    ;;
+                esac
+                ;;
+              app/pre-commit-ci) ;;
+              *)
+                echo "Pull request #$number was created by $author, skipping."
+                continue
+                ;;
+            esac
+
+            echo "Enabling auto-merge for pull request #$number by $author."
+            gh pr merge --auto --merge "$number"
+          done

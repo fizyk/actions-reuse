@@ -208,16 +208,20 @@ automerge
       automerge:
         uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.3.2
 
-Runs automerge for dependabot pull requests using:
-
-* `ridedott/merge-me-action <https://github.com/ridedott/merge-me-action>_` to run the merge
-* `tibdex/github-app-token <https://github.com/tibdex/github-app-token>`_ to generate short-lived github app token with enough permissions to run the merge.
+Arms `GitHub's native auto-merge <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request>`_ on dependabot and pre-commit.ci pull requests, using
+`actions/create-github-app-token <https://github.com/actions/create-github-app-token>`_ to generate a short-lived github app token with enough permissions to enable it.
 
 Mind that dependabot pull requests are treated as 3rd party pull requests, hence default GITHUB_TOKEN will only have read permissions.
 
 Requires Github application to run!
 
-Trigger the caller workflow on both ``workflow_run`` and ``check_suite`` completion. ``workflow_run`` observes in-repo Actions workflows, while ``check_suite`` also observes external apps such as pre-commit.ci. Using both re-attempts the merge as each completes, so it is not raced by a slower external check.
+**Requires** ``allow_auto_merge`` to be enabled on the calling repository, otherwise enabling auto-merge fails::
+
+    gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true
+
+Major version bumps are left alone; patch and minor bumps are armed.
+
+The workflow arms auto-merge instead of merging directly, so it does not need to run at the moment every check happens to be green. GitHub performs the merge once the last required check reports, including checks that report through the Statuses API rather than the Checks API, such as pre-commit.ci. Trigger the caller workflow on ``workflow_run`` and/or ``check_suite`` completion; a single event reaching this workflow is enough to arm it.
 
 
 .. list-table:: Configuration
@@ -225,8 +229,8 @@ Trigger the caller workflow on both ``workflow_run`` and ``check_suite`` complet
 
    * - secret
      - note
-   * - app_id
-     - Github Application ID that'll be used for merging
+   * - client_id
+     - Github Application Client ID that'll be used for merging
    * - private_key
      - Github Application's private key
 
