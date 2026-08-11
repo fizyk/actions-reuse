@@ -13,11 +13,15 @@ on:
 jobs:
   merge-me:
     name: Merge me!
-    # It is often a desired behavior to merge only when a workflow execution
-    # succeeds. This can be changed as needed.
-    # Supports both trigger styles so callers can use either a workflow_run
-    # or a check_suite event without breaking.
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event.check_suite.conclusion == 'success' }}
+    # `pull_request_target` is the cheapest trigger: arming is a one-shot
+    # action, so there is no reason to run once per finished check. The
+    # continuous integration triggers stay supported for callers that have
+    # not moved over, and there only a successful run is worth acting on.
+    #
+    # `pull_request` is deliberately absent: dependabot-triggered
+    # `pull_request` runs get a read-only token and no repository secrets,
+    # so the app token cannot be minted.
+    if: ${{ github.event_name == 'pull_request_target' || github.event.workflow_run.conclusion == 'success' || github.event.check_suite.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Impersonate update bot
@@ -43,10 +47,20 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
           PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests || github.event.check_suite.pull_requests) }}
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           set -euo pipefail
 
-          for number in $(jq -r '.[]? | .number' <<<"$PULL_REQUESTS"); do
+          # `pull_request_target` carries a single pull request directly, the
+          # continuous integration events carry a list of the pull requests
+          # the finished run belonged to.
+          if [ -n "$PULL_REQUEST_NUMBER" ]; then
+            numbers=$PULL_REQUEST_NUMBER
+          else
+            numbers=$(jq -r '.[]? | .number' <<<"$PULL_REQUESTS")
+          fi
+
+          for number in $numbers; do
             information=$(gh pr view "$number" --json author,state,commits,reviews)
             author=$(jq -r '.author.login' <<<"$information")
             state=$(jq -r '.state' <<<"$information")
