@@ -204,6 +204,18 @@ automerge
 
 .. code-block:: yaml
 
+    name: Merge me test dependencies!
+
+    on:
+      workflow_run:
+        types:
+          - completed
+        workflows:
+          - 'Run tests'
+      check_suite:
+        types:
+          - completed
+
     jobs:
       automerge:
         uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.3.2
@@ -223,7 +235,9 @@ Major version bumps are left alone; patch and minor bumps are armed.
 
 Pull requests without an approving review are approved by the application before auto-merge is armed, so repositories that set ``required_approving_review_count`` above zero keep merging dependency updates while still holding human pull requests for review.
 
-The workflow arms auto-merge instead of merging directly, so it does not need to run at the moment every check happens to be green. GitHub performs the merge once the last required check reports, including checks that report through the Statuses API rather than the Checks API, such as pre-commit.ci. Trigger the caller workflow on ``workflow_run`` and/or ``check_suite`` completion; a single event reaching this workflow is enough to arm it.
+The job takes the pull request from the triggering event, so the caller has to be triggered on ``workflow_run`` and/or ``check_suite`` completion; on any other event the job is skipped.
+
+Arming does not have to happen at a moment when every check is green, so one event carrying the pull request is enough. GitHub performs the merge once the last required check reports, including checks that report through the Statuses API rather than the Checks API, such as pre-commit.ci. There is no need to list every workflow under ``workflows:`` to avoid being raced by a slow external check.
 
 
 .. list-table:: Configuration
