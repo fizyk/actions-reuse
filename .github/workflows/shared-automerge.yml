@@ -47,10 +47,11 @@ jobs:
           set -euo pipefail
 
           for number in $(jq -r '.[]? | .number' <<<"$PULL_REQUESTS"); do
-            information=$(gh pr view "$number" --json author,state,commits)
+            information=$(gh pr view "$number" --json author,state,commits,reviews)
             author=$(jq -r '.author.login' <<<"$information")
             state=$(jq -r '.state' <<<"$information")
             body=$(jq -r '.commits[-1].messageBody // ""' <<<"$information")
+            approvals=$(jq -r '[.reviews[] | select(.state == "APPROVED")] | length' <<<"$information")
 
             if [ "$state" != "OPEN" ]; then
               echo "Pull request #$number is not open: $state."
@@ -75,6 +76,16 @@ jobs:
                 continue
                 ;;
             esac
+
+            # Approve only when nothing has approved yet, mirroring
+            # merge-me-action's `reviews(last: 1, states: APPROVED)` check.
+            # Without this a repository requiring approvals would arm
+            # auto-merge and then wait forever, since nothing else reviews
+            # dependabot and pre-commit.ci pull requests.
+            if [ "$approvals" -eq 0 ]; then
+              echo "Approving pull request #$number."
+              gh pr review --approve "$number"
+            fi
 
             echo "Enabling auto-merge for pull request #$number by $author."
             gh pr merge --auto --merge "$number"

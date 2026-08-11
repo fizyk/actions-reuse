@@ -221,6 +221,8 @@ Requires Github application to run!
 
 Major version bumps are left alone; patch and minor bumps are armed.
 
+Pull requests without an approving review are approved by the application before auto-merge is armed, so repositories that set ``required_approving_review_count`` above zero keep merging dependency updates while still holding human pull requests for review.
+
 The workflow arms auto-merge instead of merging directly, so it does not need to run at the moment every check happens to be green. GitHub performs the merge once the last required check reports, including checks that report through the Statuses API rather than the Checks API, such as pre-commit.ci. Trigger the caller workflow on ``workflow_run`` and/or ``check_suite`` completion; a single event reaching this workflow is enough to arm it.
 
 
