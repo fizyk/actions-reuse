@@ -225,17 +225,11 @@ Requires Github application to run!
 
     gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true
 
-Major version bumps are left alone; patch and minor bumps are armed.
+Major version bumps are left alone; patch and minor bumps are armed. Pull requests with no approving review are approved first, so repositories requiring approvals keep merging dependency updates while still holding human pull requests.
 
-Pull requests without an approving review are approved by the application before auto-merge is armed, so repositories that set ``required_approving_review_count`` above zero keep merging dependency updates while still holding human pull requests for review.
+Prefer ``pull_request_target``: arming is a one-shot action, and GitHub merges once the last required check reports, whichever API it reports through. It arms as the pull request opens, which assumes required status checks are configured. ``workflow_run`` and ``check_suite`` completion also work, but run the job once per finished check. On any other event the job is skipped.
 
-The job takes the pull request from the triggering event, so the caller has to be triggered on ``pull_request_target``, or on ``workflow_run`` and/or ``check_suite`` completion. On any other event the job is skipped.
-
-Prefer ``pull_request_target``. Arming does not have to happen at a moment when every check is green, so running once per pull request is enough; GitHub performs the merge once the last required check reports, including checks that report through the Statuses API rather than the Checks API, such as pre-commit.ci. The continuous integration triggers remain supported for callers that have not moved over, and on those only a successful run is acted on, but they run the job once per finished check to do work that is only needed once.
-
-Do not use ``pull_request``: dependabot-triggered ``pull_request`` runs get a read-only token and no repository secrets, so the app token cannot be minted. ``pull_request_target`` runs in the base branch context with full access to secrets, which is safe here because the job never checks out pull request code.
-
-Mind that on ``pull_request_target`` the pull request is armed as soon as it is opened, before its checks have registered. This assumes the repository has required status checks configured, so that a pull request with nothing reported yet is not already mergeable.
+Do not use ``pull_request``: dependabot runs get no repository secrets there, so the app token cannot be minted.
 
 
 .. list-table:: Configuration
