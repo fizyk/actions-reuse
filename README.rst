@@ -204,20 +204,32 @@ automerge
 
 .. code-block:: yaml
 
+    name: Merge me test dependencies!
+
+    on:
+      pull_request_target:
+        types: [opened, reopened, synchronize]
+
     jobs:
       automerge:
         uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.3.2
 
-Runs automerge for dependabot pull requests using:
-
-* `ridedott/merge-me-action <https://github.com/ridedott/merge-me-action>_` to run the merge
-* `tibdex/github-app-token <https://github.com/tibdex/github-app-token>`_ to generate short-lived github app token with enough permissions to run the merge.
+Arms `GitHub's native auto-merge <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request>`_ on dependabot and pre-commit.ci pull requests, using
+`actions/create-github-app-token <https://github.com/actions/create-github-app-token>`_ to generate a short-lived github app token with enough permissions to enable it.
 
 Mind that dependabot pull requests are treated as 3rd party pull requests, hence default GITHUB_TOKEN will only have read permissions.
 
 Requires Github application to run!
 
-Trigger the caller workflow on both ``workflow_run`` and ``check_suite`` completion. ``workflow_run`` observes in-repo Actions workflows, while ``check_suite`` also observes external apps such as pre-commit.ci. Using both re-attempts the merge as each completes, so it is not raced by a slower external check.
+**Requires** ``allow_auto_merge`` to be enabled on the calling repository, otherwise enabling auto-merge fails::
+
+    gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true
+
+Major version bumps are left alone; patch and minor bumps are armed. Pull requests with no approving review are approved first, so repositories requiring approvals keep merging dependency updates while still holding human pull requests.
+
+Prefer ``pull_request_target``: arming is a one-shot action, and GitHub merges once the last required check reports, whichever API it reports through. It arms as the pull request opens, which assumes required status checks are configured. ``workflow_run`` and ``check_suite`` completion also work, but run the job once per finished check. On any other event the job is skipped.
+
+Do not use ``pull_request``: dependabot runs get no repository secrets there, so the app token cannot be minted.
 
 
 .. list-table:: Configuration
@@ -225,8 +237,8 @@ Trigger the caller workflow on both ``workflow_run`` and ``check_suite`` complet
 
    * - secret
      - note
-   * - app_id
-     - Github Application ID that'll be used for merging
+   * - client_id
+     - Github Application Client ID that'll be used for merging
    * - private_key
      - Github Application's private key
 
