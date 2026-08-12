@@ -166,7 +166,7 @@ jobs:
   release:
     needs: plan
     if: needs.plan.outputs.should_release == 'true'
-    uses: ./.github/workflows/shared-release.yml
+    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.3.2
     with:
       version: ${{ needs.plan.outputs.version }}
       dependency-manager: ${{ inputs.dependency-manager }}
