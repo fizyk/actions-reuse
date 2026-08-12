@@ -109,11 +109,13 @@ jobs:
 
           # Tolerate prerelease/build metadata (v1.2.3-rc1, v1.2.3+build) by bumping
           # from the release core, but refuse anything we cannot parse rather than
-          # feeding a non-numeric component into arithmetic.
+          # feeding a non-numeric component into arithmetic. Zero-padded components
+          # are rejected too: bash reads them as octal, so 1.010.0 would silently
+          # bump to 1.9.0 and 1.08.0 would abort inside arithmetic expansion.
           core=${latest_tag#v}
           core=${core%%-*}
           core=${core%%+*}
-          if [[ ! $core =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+          if [[ ! $core =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
             echo "::error::Cannot derive the next version from tag '${latest_tag}': expected [v]MAJOR.MINOR.PATCH."
             exit 1
           fi
