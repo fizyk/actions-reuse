@@ -311,10 +311,30 @@ a workflow file present on the repository's default branch, this caller has to l
 in each repository - copy the snippet above and pin it to a tag.
 
 The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a release
-is only planned when there are commits since that tag; the bump is *minor*
-when ``newsfragments/*.feature.rst`` fragments are present and *patch* otherwise.
-Requires tbump to be installed and configured, and a ``newsfragments`` directory managed
-by towncrier.
+is only planned when there are commits since that tag. The bump level is decided by the
+towncrier types of the newsfragments present - *major* when a type listed in
+``major-fragments`` is found, else *minor* when a type listed in ``minor-fragments`` is
+found, else *patch*. Requires tbump to be installed and configured, and a towncrier
+newsfragments directory.
+
+On a pre-1.0 project a breaking change should raise the minor, not the major, so leave
+``major-fragments`` empty and list the breaking type under ``minor-fragments``::
+
+    with:
+      minor-fragments: 'feature,break'
+
+Fragments are matched as ``<dir>/*.<type>.<extension>``, so files without a towncrier
+type segment - ``README.rst``, ``.gitkeep`` - are never counted as newsfragments.
+
+When ``newsfragments-required`` is enabled, a repository with an empty newsfragments
+directory is simply skipped, quietly and successfully, so a repository that has not
+changed in months does not report failures every run. A *misconfigured* repository does
+fail, however: the run errors when the newsfragments directory is missing altogether, or
+when it holds fragment-shaped files under an extension other than the configured one,
+because such a repository would otherwise never release anything.
+
+Note that ``newsfragments-required`` is a boolean input - pass it unquoted
+(``newsfragments-required: true``).
 
 
 .. list-table:: Configuration
@@ -328,7 +348,19 @@ by towncrier.
      - Dependency manager to use (``pipenv``, ``uv``)
    * - newsfragments-required
      - false
-     - Only release when at least one towncrier newsfragment is present in ``newsfragments``
+     - Only release when at least one towncrier newsfragment is present
+   * - newsfragments-dir
+     - newsfragments
+     - Directory holding towncrier newsfragments (towncrier's ``directory`` setting)
+   * - newsfragments-extension
+     - rst
+     - Newsfragment file extension, without the leading dot (``rst``, ``md``)
+   * - minor-fragments
+     - feature
+     - Comma-separated towncrier types that trigger a minor bump
+   * - major-fragments
+     -
+     - Comma-separated towncrier types that trigger a major bump. Leave empty on pre-1.0 projects
 
 .. list-table:: Configuration
    :header-rows: 1
