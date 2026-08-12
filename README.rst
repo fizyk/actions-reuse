@@ -314,8 +314,14 @@ The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a rele
 only planned when there are commits since that tag. The bump level follows the towncrier
 types present - *major* for a type listed in ``major-fragments``, else *minor* for one
 listed in ``minor-fragments``, else *patch*. Fragments are matched as
-``<dir>/*.<type>.<extension>``, so a stray ``README.rst`` is never counted. Requires
-tbump to be installed and configured, and a towncrier newsfragments directory.
+``<dir>/*.<type>[.<counter>].<extension>``, so a stray ``README.rst`` is never counted
+while towncrier's counter form (``790.feature.1.rst``) is. Requires tbump to be installed
+and configured, and a towncrier newsfragments directory.
+
+Every fragment must carry the configured extension. towncrier itself also accepts an
+extension-less ``790.feature``, but the planner will not see it: in a repository mixing
+both styles the bump level is decided by the extended fragments alone, and one holding
+only extension-less fragments is treated as having none.
 
 On a pre-1.0 project a breaking change should raise the minor, so leave
 ``major-fragments`` empty and list the breaking type under ``minor-fragments``::
