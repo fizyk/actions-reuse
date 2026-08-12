@@ -310,31 +310,22 @@ Computes the next version and, if warranted, runs the ``release`` workflow on a 
 a workflow file present on the repository's default branch, this caller has to live
 in each repository - copy the snippet above and pin it to a tag.
 
-The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a release
-is only planned when there are commits since that tag. The bump level is decided by the
-towncrier types of the newsfragments present - *major* when a type listed in
-``major-fragments`` is found, else *minor* when a type listed in ``minor-fragments`` is
-found, else *patch*. Requires tbump to be installed and configured, and a towncrier
-newsfragments directory.
+The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a release is
+only planned when there are commits since that tag. The bump level follows the towncrier
+types present - *major* for a type listed in ``major-fragments``, else *minor* for one
+listed in ``minor-fragments``, else *patch*. Fragments are matched as
+``<dir>/*.<type>.<extension>``, so a stray ``README.rst`` is never counted. Requires
+tbump to be installed and configured, and a towncrier newsfragments directory.
 
-On a pre-1.0 project a breaking change should raise the minor, not the major, so leave
+On a pre-1.0 project a breaking change should raise the minor, so leave
 ``major-fragments`` empty and list the breaking type under ``minor-fragments``::
 
     with:
       minor-fragments: 'feature,break'
 
-Fragments are matched as ``<dir>/*.<type>.<extension>``, so files without a towncrier
-type segment - ``README.rst``, ``.gitkeep`` - are never counted as newsfragments.
-
-When ``newsfragments-required`` is enabled, a repository with an empty newsfragments
-directory is simply skipped, quietly and successfully, so a repository that has not
-changed in months does not report failures every run. A *misconfigured* repository does
-fail, however: the run errors when the newsfragments directory is missing altogether, or
-when it holds fragment-shaped files under an extension other than the configured one,
-because such a repository would otherwise never release anything.
-
-Note that ``newsfragments-required`` is a boolean input - pass it unquoted
-(``newsfragments-required: true``).
+With ``newsfragments-required`` enabled an empty newsfragments directory skips quietly
+and successfully, while a missing directory - or fragments found only under another
+extension - fails the run, since such a repository would never release.
 
 
 .. list-table:: Configuration
