@@ -61,8 +61,9 @@ jobs:
           fi
 
           for number in $numbers; do
-            information=$(gh pr view "$number" --json author,state,commits,reviews,autoMergeRequest)
+            information=$(gh pr view "$number" --json author,state,commits,reviews,autoMergeRequest,headRefOid)
             author=$(jq -r '.author.login' <<<"$information")
+            head=$(jq -r '.headRefOid' <<<"$information")
             state=$(jq -r '.state' <<<"$information")
             body=$(jq -r '.commits[-1].messageBody // ""' <<<"$information")
             approvals=$(jq -r '[.reviews[] | select(.state == "APPROVED")] | length' <<<"$information")
@@ -111,6 +112,10 @@ jobs:
               continue
             fi
 
+            # The gates above were evaluated against $head, so pin the arming
+            # to it: dependabot force-pushes on rebase, and without this a
+            # push landing between the read and the call would arm a commit
+            # that was never gated.
             echo "Enabling auto-merge for pull request #$number by $author."
-            gh pr merge --auto --merge "$number"
+            gh pr merge --auto --merge --match-head-commit "$head" "$number"
           done
