@@ -27,24 +27,34 @@ jobs:
   render:
     runs-on: ubuntu-latest
     steps:
+      # git-auto-commit-action below pushes the rendered diagrams back, so this
+      # checkout has to keep its credentials. At this pin they are not written
+      # into the checkout: they live in a config file under $RUNNER_TEMP that the
+      # repository's .git/config includes.
       - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1  # zizmor: ignore[artipacked]
 
+      # mermaid-cli is a one-off global tool for this job, so there is no
+      # lockfile to install it from.
       - name: Install Mermaid CLI
-        run: npm install -g @mermaid-js/mermaid-cli
+        run: npm install -g @mermaid-js/mermaid-cli  # zizmor: ignore[adhoc-packages]
 
       - name: Render Diagrams
+        env:
+          MMD_PATH: ${{ inputs.mmd_path }}
+          SVG_PATH: ${{ inputs.svg_path }}
+          PUPPETEER_CONFIG: ${{ inputs.puppeteer_config }}
         run: |
-          mkdir -p "${{ inputs.svg_path }}"
+          mkdir -p "${SVG_PATH}"
           shopt -s nullglob
-          files=("${{ inputs.mmd_path }}"/*.mmd)
+          files=("${MMD_PATH}"/*.mmd)
           if [ ${#files[@]} -eq 0 ]; then
-            echo "No .mmd files found in ${{ inputs.mmd_path }}; skipping."
+            echo "No .mmd files found in ${MMD_PATH}; skipping."
             exit 0
           fi
           for file in "${files[@]}"; do
             base="$(basename "${file}" .mmd)"
-            mmdc -p "${{ inputs.puppeteer_config }}" -i "${file}" -o "${{ inputs.svg_path }}/${base}.svg" -t neutral
+            mmdc -p "${PUPPETEER_CONFIG}" -i "${file}" -o "${SVG_PATH}/${base}.svg" -t neutral
           done
 
       - name: Prepare Commit Message

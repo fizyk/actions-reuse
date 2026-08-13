@@ -20,9 +20,6 @@ inputs:
     description: 'JSON object string of environment variables to set'
     required: false
     default: '{}'
-  editable:
-    description: "Install package as editable?"
-    default: false
 runs:
   using: "composite"
   steps:
@@ -32,7 +29,6 @@ runs:
         allow-prereleases: ${{ inputs.allow-prereleases }}
         pipenv-install-options: ${{ inputs.pipenv-install-options }}
         cache: ${{ inputs.cache }}
-        editable: ${{ inputs.editable }}
     - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.4.1
       with:
         command: ${{ inputs.command }}

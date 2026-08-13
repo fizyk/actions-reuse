@@ -5,6 +5,11 @@ on:
     - cron: '17 6 * * 1'
   workflow_dispatch: {}
 
+# The release itself is pushed with the app token minted inside the shared
+# workflow, so the job token only ever reads.
+permissions:
+  contents: read
+
 jobs:
   schedule:
     uses: ./.github/workflows/shared-release-schedule.yml

@@ -42,11 +42,6 @@ on:
         default: '{}'
         required: false
         type: string
-      install_editable:
-        description: 'Whether to install in pipenv editable mode'
-        default: false
-        required: false
-        type: boolean
       dependency-manager:
         description: 'Dependency manager to use (pipenv, uv)'
         default: 'pipenv'
@@ -89,7 +84,6 @@ jobs:
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
           command: pytest -v --cov --cov-report=xml ${{ inputs.pytest_opts }}
           env: ${{ inputs.env }}
-          editable: ${{ inputs.install_editable }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:

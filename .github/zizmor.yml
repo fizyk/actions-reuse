@@ -1,0 +1,11 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # This repository's own actions and reusable workflows are referenced by
+        # the version tag tbump rewrites on release, so they cannot be
+        # hash-pinned: the hash would have to be known before the commit that
+        # contains it exists.
+        fizyk/actions-reuse: ref-pin
+        fizyk/actions-reuse/*: ref-pin
+        "*": hash-pin
