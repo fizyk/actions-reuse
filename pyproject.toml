@@ -4,7 +4,25 @@ version = "0.0.0"
 requires-python = ">=3.10"
 
 [dependency-groups]
-dev = [
-    "tbump==6.11.0",
+# The one towncrier pin: the release-plan action installs this group, and nothing else.
+release-plan = [
     "towncrier==25.8.0",
 ]
+dev = [
+    "pytest==9.1.1",
+    "pytest-cov==7.1.0",
+    "pyyaml==6.0.3",
+    "tbump==6.11.0",
+    "tomli>=2.0 ; python_full_version < '3.11'",
+    { include-group = "release-plan" },
+]
+
+[tool.pytest]
+testpaths = ["tests"]
+pythonpath = [".github/actions/release-plan"]
+
+[tool.coverage.run]
+source = [".github/actions/release-plan"]
+
+[tool.coverage.report]
+show_missing = true

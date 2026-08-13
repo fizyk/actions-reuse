@@ -63,6 +63,66 @@ Example:
         output-file: coverage.xml
 
 
+release-plan
+------------
+
+Path: ``.github/actions/release-plan/action.yml``
+
+Decide whether a release is warranted and compute the next version. The bump level
+follows the towncrier newsfragments present: *major* for a type listed in
+``major-fragments``, else *minor* for one listed in ``minor-fragments``, else *patch*.
+
+The fragments directory and the fragment types are read from the repository's own
+towncrier configuration, and every filename is classified by towncrier's parser, so
+custom types, sections, markdown fragments, the counter form (``790.feature.1.rst``)
+and extension-less fragments (``790.feature``) all work without configuring anything
+twice. Used by the ``release-schedule`` workflow; needs a checkout with tags
+(``fetch-depth: 0``, ``fetch-tags: true``).
+
+The planner reads towncrier's private API, so it installs the towncrier version pinned
+in ``actions-reuse``'s own ``pyproject.toml`` - which is also the version this
+repository's test suite runs against. There is no version input: a second pin could
+drift from the one being tested.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - newsfragments-required
+     - no
+     - ``false``
+   * - minor-fragments
+     - no
+     - ``feature``
+   * - major-fragments
+     - no
+     - ``""``
+   * - python-version
+     - no
+     - ``3.14``
+
+.. list-table:: Outputs
+   :header-rows: 1
+
+   * - output
+     - note
+   * - should_release
+     - ``true`` when a release should be made
+   * - version
+     - The next version, set only when ``should_release`` is ``true``
+
+Example:
+
+.. code-block:: yaml
+
+    - id: plan
+      uses: fizyk/actions-reuse/.github/actions/release-plan@v5.3.2
+      with:
+        minor-fragments: 'feature,break'
+
+
 uv-run
 ------
 

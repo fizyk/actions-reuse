@@ -13,16 +13,6 @@ on:
         default: false
         required: false
         type: boolean
-      newsfragments-dir:
-        description: "Directory holding towncrier newsfragments (towncrier's 'directory' setting)"
-        default: 'newsfragments'
-        required: false
-        type: string
-      newsfragments-extension:
-        description: 'Newsfragment file extension, without the leading dot (rst, md)'
-        default: 'rst'
-        required: false
-        type: string
       minor-fragments:
         description: 'Comma-separated towncrier types that trigger a minor bump'
         default: 'feature'
@@ -45,145 +35,20 @@ jobs:
   plan:
     runs-on: ubuntu-latest
     outputs:
-      should_release: ${{ steps.compute.outputs.should_release }}
-      version: ${{ steps.compute.outputs.version }}
+      should_release: ${{ steps.plan.outputs.should_release }}
+      version: ${{ steps.plan.outputs.version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - id: compute
-        shell: bash
-        env:
-          NEWSFRAGMENTS_REQUIRED: ${{ inputs.newsfragments-required }}
-          NEWSFRAGMENTS_DIR: ${{ inputs.newsfragments-dir }}
-          NEWSFRAGMENTS_EXTENSION: ${{ inputs.newsfragments-extension }}
-          MINOR_FRAGMENTS: ${{ inputs.minor-fragments }}
-          MAJOR_FRAGMENTS: ${{ inputs.major-fragments }}
-        run: |
-          set -euo pipefail
-          shopt -s nullglob
-
-          dir=${NEWSFRAGMENTS_DIR%/}
-          ext=${NEWSFRAGMENTS_EXTENSION#.}
-          required=$NEWSFRAGMENTS_REQUIRED
-
-          skip() {
-            echo "$1"
-            echo "should_release=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          }
-
-          # Expand patterns into FOUND, keeping regular files only - a glob matches
-          # directories just as happily, and one named like a fragment would
-          # otherwise be counted as one.
-          FOUND=()
-          expand_files() {
-            local path
-            FOUND=()
-            for path in "$@"; do
-              [[ -f $path ]] && FOUND+=("$path")
-            done
-            # Never inherit the last test's status: a trailing non-file would make
-            # this function return 1 and take the whole step down under set -e.
-            return 0
-          }
-
-          # A towncrier fragment is named <name>.<type>[.<counter>].<ext>, so it
-          # always has at least two dots. Matching on that keeps files like
-          # README.rst out of the fragment count. Globs never match dotfiles, so
-          # .gitignore/.gitkeep are excluded too. The optional counter is what
-          # towncrier appends for a second fragment of one type on one issue
-          # (790.feature.1.rst), so classification has to allow for it.
-          fragment_types() {
-            local spec=$1 type
-            local -a wanted matches
-            IFS=',' read -ra wanted <<<"$spec"
-            for type in "${wanted[@]}"; do
-              type=${type//[[:space:]]/}
-              [ -n "$type" ] || continue
-              expand_files "$dir"/*."$type"."$ext" "$dir"/*."$type".[0-9]*."$ext"
-              matches=("${FOUND[@]}")
-              if [ "${#matches[@]}" -gt 0 ]; then
-                echo "Matched ${#matches[@]} '$type' fragment(s): ${matches[*]}" >&2
-                return 0
-              fi
-            done
-            return 1
-          }
-
-          if ! latest_tag=$(git describe --tags --abbrev=0 2>/dev/null); then
-            echo "::warning::No tags found, so there is no version to bump from; skipping release."
-            skip "Nothing to release."
-          fi
-          echo "Latest tag: $latest_tag"
-
-          commit_count=$(git rev-list "${latest_tag}..HEAD" --count)
-          echo "Commits since tag: $commit_count"
-          if [ "$commit_count" -eq 0 ]; then
-            skip "No commits since ${latest_tag}; nothing to release."
-          fi
-
-          # Tolerate prerelease/build metadata (v1.2.3-rc1, v1.2.3+build) by bumping
-          # from the release core, but refuse anything we cannot parse rather than
-          # feeding a non-numeric component into arithmetic. Zero-padded components
-          # are rejected too: bash reads them as octal, so 1.010.0 would silently
-          # bump to 1.9.0 and 1.08.0 would abort inside arithmetic expansion.
-          core=${latest_tag#v}
-          core=${core%%-*}
-          core=${core%%+*}
-          if [[ ! $core =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
-            echo "::error::Cannot derive the next version from tag '${latest_tag}': expected [v]MAJOR.MINOR.PATCH."
-            exit 1
-          fi
-          major=${BASH_REMATCH[1]}
-          minor=${BASH_REMATCH[2]}
-          patch=${BASH_REMATCH[3]}
-
-          fragments=()
-          if [ -d "$dir" ]; then
-            expand_files "$dir"/*.*."$ext"
-            fragments=("${FOUND[@]}")
-          elif [ "$required" = "true" ]; then
-            echo "::error::newsfragments-required is set but newsfragments directory '${dir}' does not exist."
-            exit 1
-          else
-            echo "No '${dir}' directory; continuing without newsfragments."
-          fi
-          echo "Newsfragments found: ${#fragments[@]}"
-
-          if [ "$required" = "true" ] && [ "${#fragments[@]}" -eq 0 ]; then
-            # An empty fragment directory is the normal state of a quiet repository
-            # and must stay quiet. Fragments present under a different extension,
-            # however, mean this repository would never release - so fail loudly.
-            expand_files "$dir"/*.*.*
-            other=("${FOUND[@]}")
-            if [ "${#other[@]}" -gt 0 ]; then
-              echo "::error::No '*.*.${ext}' newsfragments in '${dir}', but it holds ${#other[@]} other fragment-shaped file(s): ${other[*]}. Check the newsfragments-extension input."
-              exit 1
-            fi
-            skip "newsfragments-required is set and '${dir}' holds no newsfragments; skipping release."
-          fi
-
-          if [ -n "${MAJOR_FRAGMENTS//[[:space:]]/}" ] && fragment_types "$MAJOR_FRAGMENTS"; then
-            echo "Major-level fragments present; bumping major."
-            major=$((major + 1))
-            minor=0
-            patch=0
-          elif [ -n "${MINOR_FRAGMENTS//[[:space:]]/}" ] && fragment_types "$MINOR_FRAGMENTS"; then
-            echo "Minor-level fragments present; bumping minor."
-            minor=$((minor + 1))
-            patch=0
-          else
-            echo "No major- or minor-level fragments; bumping patch."
-            patch=$((patch + 1))
-          fi
-
-          next="${major}.${minor}.${patch}"
-          echo "Next version: $next"
-          echo "should_release=true" >> "$GITHUB_OUTPUT"
-          echo "version=$next" >> "$GITHUB_OUTPUT"
+      - id: plan
+        uses: fizyk/actions-reuse/.github/actions/release-plan@v5.3.2
+        with:
+          newsfragments-required: ${{ inputs.newsfragments-required }}
+          minor-fragments: ${{ inputs.minor-fragments }}
+          major-fragments: ${{ inputs.major-fragments }}
 
   release:
     needs: plan
