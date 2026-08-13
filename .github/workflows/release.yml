@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   release:
-    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.4.1
+    uses: ./.github/workflows/shared-release.yml
     with:
       version: ${{ inputs.version }}
       dependency-manager: 'uv'

@@ -9,6 +9,6 @@ permissions:
 
 jobs:
   pr-check:
-    uses: fizyk/actions-reuse/.github/workflows/shared-pr-check.yml@v5.4.1
+    uses: ./.github/workflows/shared-pr-check.yml
     with:
       dependency-manager: 'uv'
