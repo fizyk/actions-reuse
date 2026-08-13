@@ -27,7 +27,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.4.1
       with:
         data-file: .coverage.serial
         output-file: coverage.xml
@@ -57,7 +57,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.4.1
       with:
         data-file: .coverage.serial
         output-file: coverage.xml
@@ -118,7 +118,7 @@ Example:
 .. code-block:: yaml
 
     - id: plan
-      uses: fizyk/actions-reuse/.github/actions/release-plan@v5.4.0
+      uses: fizyk/actions-reuse/.github/actions/release-plan@v5.4.1
       with:
         minor-fragments: 'feature,break'
 
@@ -147,7 +147,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.4.1
       with:
         command: pytest -q
         env: '{"PYTEST_ADDOPTS":"-ra"}'
@@ -183,7 +183,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.4.1
       with:
         python-version: "3.14"
         allow-prereleases: false
@@ -226,7 +226,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/uv@v5.4.1
       with:
         python-version: "3.14"
         allow-prereleases: false
@@ -257,7 +257,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.4.1
       with:
         command: pytest -q
         env: '{"PYTEST_ADDOPTS":"-ra"}'
@@ -296,7 +296,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.4.1
       with:
         python-version: "3.14"
         allow-prereleases: false
@@ -343,7 +343,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.4.1
       with:
         python-version: "3.14"
         allow-prereleases: false
@@ -371,7 +371,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/python-build@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/python-build@v5.4.1
       with:
         python-version: "3.14"
 
@@ -397,6 +397,6 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.4.0
+    - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.4.1
       with:
         python-version: "3.14"

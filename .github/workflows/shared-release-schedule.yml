@@ -44,7 +44,7 @@ jobs:
           fetch-tags: true
           persist-credentials: false
       - id: plan
-        uses: fizyk/actions-reuse/.github/actions/release-plan@v5.4.0
+        uses: fizyk/actions-reuse/.github/actions/release-plan@v5.4.1
         with:
           newsfragments-required: ${{ inputs.newsfragments-required }}
           minor-fragments: ${{ inputs.minor-fragments }}
@@ -53,7 +53,7 @@ jobs:
   release:
     needs: plan
     if: needs.plan.outputs.should_release == 'true'
-    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.4.0
+    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.4.1
     with:
       version: ${{ needs.plan.outputs.version }}
       dependency-manager: ${{ inputs.dependency-manager }}
