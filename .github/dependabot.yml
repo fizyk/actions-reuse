@@ -2,21 +2,33 @@ version: 2
 updates:
 - package-ecosystem: github-actions
   # "/" reaches .github/workflows and a root action.yml, never .github/actions - so the
-  # composite actions have to be named. The group keeps one bump in one pull request
-  # rather than one per directory it appears in.
+  # composite actions have to be named.
   directories:
   - "/"
   - "/.github/actions/*"
+  # One pull request per action, covering every directory it is pinned in.
   groups:
-    github-actions:
+    setup-uv:
       patterns:
-      - "*"
+      - "astral-sh/setup-uv"
+    setup-python:
+      patterns:
+      - "actions/setup-python"
+    checkout:
+      patterns:
+      - "actions/checkout"
+    upload-artifact:
+      patterns:
+      - "actions/upload-artifact"
+    cache:
+      patterns:
+      - "actions/cache*"
   cooldown:
     default-days: 7
   schedule:
     interval: weekly
     time: "04:00"
-  open-pull-requests-limit: 1
+  open-pull-requests-limit: 5
 - package-ecosystem: pip
   directory: "/"
   cooldown:
