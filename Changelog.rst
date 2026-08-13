@@ -3,6 +3,41 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.4.0 (2026-08-13)
+================================
+
+Features
+--------
+
+- Move ``shared-release-schedule``'s version planning into the new ``release-plan`` composite action, which asks towncrier what a newsfragment is instead of imitating it with globs.
+  The fragments directory and the fragment types come from the repository's own towncrier configuration, and every name towncrier accepts counts - custom types, sections, markdown, the counter form and extension-less fragments alike. (`#316 <https:/github.com/fizyk/actions-reuse/issues/316>`__)
+- Make ``shared-release-schedule`` bump levels configurable through ``minor-fragments`` and ``major-fragments``, both taking their previous behaviour as defaults.
+  Previously only ``feature`` raised the minor and nothing raised the major, so a ``break`` fragment released as a patch. On a pre-1.0 project list the breaking type under ``minor-fragments`` and leave ``major-fragments`` empty.
+- Support triggering ``shared-automerge`` on ``pull_request_target``, which is now the preferred trigger.
+  Arming auto-merge is a one-shot action, so the ``workflow_run``/``check_suite`` triggers ran the job once per finished check to do work only needed once; they remain supported.
+  ``pull_request`` is not supported, since dependabot-triggered ``pull_request`` runs get no repository secrets and cannot mint the app token.
+
+
+Bugfixes
+--------
+
+- Arm GitHub's native auto-merge in ``shared-automerge`` instead of merging immediately.
+  The previous approach still lost a race against external checks reporting through the Statuses API, such as pre-commit.ci: those land after the last ``workflow_run``/``check_suite`` event fires, so the merge was rejected for a pending required check and nothing re-triggered the workflow.
+  This drops the ``ridedott/merge-me-action`` dependency; the author and version-bump gates it provided are kept, now read from the update metadata dependabot writes into the commit message rather than parsed out of the pull request title, as is its behaviour of approving pull requests that have no approving review yet.
+- Bump ``astral-sh/setup-uv`` to 10.0.0, which no longer prunes the cache by default.
+  Dependabot had never updated it in ``uv-setup`` and ``uv-build``: ``directory: "/"`` reaches the workflows but not ``.github/actions``, so the pins there are now watched explicitly.
+- Fix ``shared-release-schedule`` failing for every caller outside this repository.
+  It reached ``shared-release`` through the ``./.github/workflows`` shorthand, which GitHub resolves against the calling repository - none of which hold a ``shared-release.yml``. Only this repository's own caller exercised that path, where the shorthand does resolve, which kept the breakage hidden.
+
+
+Deprecations and Removals
+-------------------------
+
+- ``shared-automerge`` now requires ``allow_auto_merge`` to be enabled on the calling repository.
+  Callers that take this version without enabling it fail with "Auto-merge is not allowed for this repository".
+  Enable it with ``gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true``.
+
+
 actions-reuse 5.3.2 (2026-08-10)
 ================================
 

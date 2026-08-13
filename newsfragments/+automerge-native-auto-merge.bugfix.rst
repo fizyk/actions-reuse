@@ -1,3 +1,0 @@
-Arm GitHub's native auto-merge in ``shared-automerge`` instead of merging immediately.
-The previous approach still lost a race against external checks reporting through the Statuses API, such as pre-commit.ci: those land after the last ``workflow_run``/``check_suite`` event fires, so the merge was rejected for a pending required check and nothing re-triggered the workflow.
-This drops the ``ridedott/merge-me-action`` dependency; the author and version-bump gates it provided are kept, now read from the update metadata dependabot writes into the commit message rather than parsed out of the pull request title, as is its behaviour of approving pull requests that have no approving review yet.
