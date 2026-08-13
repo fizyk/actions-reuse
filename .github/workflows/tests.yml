@@ -1,0 +1,16 @@
+name: Run tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/shared-tests-pytests.yml
+    with:
+      dependency-manager: 'uv'
+      python-versions: '["3.14"]'
+    secrets:
+      codecov_token: ${{ secrets.CODECOV_TOKEN }}

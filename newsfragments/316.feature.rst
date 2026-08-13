@@ -1,0 +1,2 @@
+Move ``shared-release-schedule``'s version planning into the new ``release-plan`` composite action, which asks towncrier what a newsfragment is instead of imitating it with globs.
+The fragments directory and the fragment types come from the repository's own towncrier configuration, and every name towncrier accepts counts - custom types, sections, markdown, the counter form and extension-less fragments alike.

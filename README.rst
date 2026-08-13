@@ -313,15 +313,15 @@ in each repository - copy the snippet above and pin it to a tag.
 The next version is derived from the latest ``vX.Y.Z``/``X.Y.Z`` git tag: a release is
 only planned when there are commits since that tag. The bump level follows the towncrier
 types present - *major* for a type listed in ``major-fragments``, else *minor* for one
-listed in ``minor-fragments``, else *patch*. Fragments are matched as
-``<dir>/*.<type>[.<counter>].<extension>``, so a stray ``README.rst`` is never counted
-while towncrier's counter form (``790.feature.1.rst``) is. Requires tbump to be installed
-and configured, and a towncrier newsfragments directory.
+listed in ``minor-fragments``, else *patch*. Requires tbump to be installed and
+configured, and a towncrier newsfragments directory.
 
-Every fragment must carry the configured extension. towncrier itself also accepts an
-extension-less ``790.feature``, but the planner will not see it: in a repository mixing
-both styles the bump level is decided by the extended fragments alone, and one holding
-only extension-less fragments is treated as having none.
+Planning is done by the `release-plan <ACTIONS.rst>`__ action, which reads the
+repository's towncrier configuration and classifies fragments with towncrier's own
+parser. The fragments directory and the fragment types - custom ones included - are
+whatever the repository already declares, so there is nothing to repeat here; and every
+name towncrier accepts is recognised, including its counter form (``790.feature.1.rst``)
+and extension-less fragments (``790.feature``).
 
 On a pre-1.0 project a breaking change should raise the minor, so leave
 ``major-fragments`` empty and list the breaking type under ``minor-fragments``::
@@ -330,8 +330,8 @@ On a pre-1.0 project a breaking change should raise the minor, so leave
       minor-fragments: 'feature,break'
 
 With ``newsfragments-required`` enabled an empty newsfragments directory skips quietly
-and successfully, while a missing directory - or fragments found only under another
-extension - fails the run, since such a repository would never release.
+and successfully. A missing directory fails the run, and so does a directory holding
+only files that no fragment type claims - such a repository would never release.
 
 
 .. list-table:: Configuration
@@ -346,12 +346,6 @@ extension - fails the run, since such a repository would never release.
    * - newsfragments-required
      - false
      - Only release when at least one towncrier newsfragment is present
-   * - newsfragments-dir
-     - newsfragments
-     - Directory holding towncrier newsfragments (towncrier's ``directory`` setting)
-   * - newsfragments-extension
-     - rst
-     - Newsfragment file extension, without the leading dot (``rst``, ``md``)
    * - minor-fragments
      - feature
      - Comma-separated towncrier types that trigger a minor bump
@@ -384,6 +378,22 @@ Then run:
 .. code-block:: sh
 
     uv run tbump [NEW_VERSION]
+
+Tests
+-----
+
+Composite actions that carry logic of their own are unit tested. Install uv, then run:
+
+.. code-block:: sh
+
+    uv sync --all-groups
+    uv run pytest
+
+The suite runs in CI through this repository's own ``tests-pytests`` workflow.
+``release-plan`` installs the towncrier version pinned here rather than carrying a pin of
+its own, so a dependabot bump of towncrier exercises the planner against the version the
+action actually ships - which is what makes the planner's use of towncrier's private API
+tolerable.
 
 Composite actions
 -----------------

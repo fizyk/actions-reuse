@@ -1,7 +1,16 @@
 version: 2
 updates:
 - package-ecosystem: github-actions
-  directory: "/"
+  # "/" reaches .github/workflows and a root action.yml, never .github/actions - so the
+  # composite actions have to be named. The group keeps one bump in one pull request
+  # rather than one per directory it appears in.
+  directories:
+  - "/"
+  - "/.github/actions/*"
+  groups:
+    github-actions:
+      patterns:
+      - "*"
   cooldown:
     default-days: 7
   schedule:

@@ -1,0 +1,46 @@
+name: 'Release plan'
+description: 'Decide whether a release is warranted and compute the next version from towncrier newsfragments'
+inputs:
+  newsfragments-required:
+    description: 'Only release when at least one towncrier newsfragment is present'
+    default: 'false'
+  minor-fragments:
+    description: 'Comma-separated towncrier types that trigger a minor bump'
+    default: 'feature'
+  major-fragments:
+    description: 'Comma-separated towncrier types that trigger a major bump. Leave empty on pre-1.0 projects and list the breaking type under minor-fragments instead.'
+    default: ''
+  python-version:
+    description: 'Python version the planner runs on'
+    default: '3.14'
+outputs:
+  should_release:
+    description: 'Whether a release should be made'
+    value: ${{ steps.plan.outputs.should_release }}
+  version:
+    description: 'The next version, set only when should_release is true'
+    value: ${{ steps.plan.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Set up uv
+      uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
+      with:
+        python-version: ${{ inputs.python-version }}
+    - name: Plan the release
+      id: plan
+      shell: bash
+      env:
+        NEWSFRAGMENTS_REQUIRED: ${{ inputs.newsfragments-required }}
+        MINOR_FRAGMENTS: ${{ inputs.minor-fragments }}
+        MAJOR_FRAGMENTS: ${{ inputs.major-fragments }}
+        PYTHON_VERSION: ${{ inputs.python-version }}
+      # Three levels up is actions-reuse's own checkout, so towncrier comes from its pin
+      # rather than a copy of it. No flag here changes the working directory: the planner
+      # still reads the repository being released.
+      run: |
+        uv run --frozen \
+          --project "$GITHUB_ACTION_PATH/../../.." \
+          --only-group release-plan \
+          --python "$PYTHON_VERSION" \
+          python "$GITHUB_ACTION_PATH/release_plan.py"
