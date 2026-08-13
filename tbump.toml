@@ -55,6 +55,8 @@ src = ".github/workflows/shared-pypi.yml"
 [[file]]
 src = ".github/workflows/shared-release.yml"
 [[file]]
+src = ".github/workflows/shared-release-schedule.yml"
+[[file]]
 src = ".github/workflows/shared-tests-pytests.yml"
 
 # You can specify a list of commands to
