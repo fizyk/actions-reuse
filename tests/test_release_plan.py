@@ -17,7 +17,9 @@ from release_plan import (
     bump,
     bump_level,
     collect_fragments,
+    commits_since,
     decide,
+    latest_tag,
     main,
     parse_tag,
     split_types,
@@ -291,7 +293,7 @@ def test_parse_tag(tag: str, core: tuple[int, int, int]) -> None:
     ],
 )
 def test_unparseable_tag(tag: str) -> None:
-    with pytest.raises(PlanError, match="expected \\[v\\]MAJOR.MINOR.PATCH"):
+    with pytest.raises(PlanError, match=r"expected \[v\]MAJOR\.MINOR\.PATCH"):
         parse_tag(tag)
 
 
@@ -420,7 +422,7 @@ def test_decide_required_without_towncrier_configuration_fails() -> None:
 
 def test_decide_required_with_only_unrecognised_files_fails() -> None:
     """Files nothing claims mean a repository that would never release."""
-    with pytest.raises(PlanError, match="790.feat.rst"):
+    with pytest.raises(PlanError, match=r"790\.feat\.rst"):
         decide(
             tag="v1.2.3",
             commit_count=1,
@@ -505,6 +507,31 @@ def test_main_without_a_fragments_directory(
     assert main(repo) == 0
     assert outputs() == {"should_release": "true", "version": "1.2.4"}
     assert "No fragments directory at" in capsys.readouterr().out
+
+
+def test_main_without_a_repository(make_repo, outputs, capsys) -> None:
+    """An unusable checkout must not read as a repository with nothing to release."""
+    assert main(make_repo("790.feature.rst")) == 1
+    assert outputs() == {}
+    assert "::error::git tag --merged HEAD failed" in capsys.readouterr().out
+
+
+def test_latest_tag_reports_a_broken_checkout(tmp_path: Path) -> None:
+    with pytest.raises(PlanError, match="not a git repository"):
+        latest_tag(tmp_path)
+
+
+def test_latest_tag_is_none_when_nothing_is_tagged(make_repo, git_history) -> None:
+    repo = make_repo("790.feature.rst")
+    git_history(repo)
+    assert latest_tag(repo) is None
+
+
+def test_commits_since_reports_an_unknown_revision(make_repo, git_history) -> None:
+    repo = make_repo("790.feature.rst")
+    git_history(repo, tag="v1.2.3")
+    with pytest.raises(PlanError, match="git rev-list"):
+        commits_since("v9.9.9", repo)
 
 
 def test_main_without_towncrier_configuration(

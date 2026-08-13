@@ -235,23 +235,30 @@ def decide(
 
 
 def git(*args: str, cwd: str | os.PathLike[str] = ".") -> str:
-    """Run git and return its stdout, stripped."""
-    completed = subprocess.run(
-        ("git", *args),
-        cwd=cwd,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    """Run git and return its stdout, stripped. A failed command is a PlanError."""
+    try:
+        completed = subprocess.run(
+            ("git", *args),
+            cwd=cwd,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except subprocess.CalledProcessError as error:
+        detail = error.stderr.strip() or f"exit status {error.returncode}"
+        raise PlanError(f"git {' '.join(args)} failed: {detail}") from error
     return completed.stdout.strip()
 
 
 def latest_tag(cwd: str | os.PathLike[str] = ".") -> str | None:
-    """The most recent reachable tag, or None when the repository has none."""
-    try:
-        return git("describe", "--tags", "--abbrev=0", cwd=cwd) or None
-    except subprocess.CalledProcessError:
+    """The most recent tag reachable from HEAD, or None when nothing is tagged."""
+    # `git describe` fails the same way whether nothing is tagged or the checkout is
+    # unusable, and only the first of those is a quiet skip. Listing reachable tags
+    # tells them apart: it succeeds with no output when there is simply no tag, and
+    # fails when there is no repository or no HEAD to reach one from.
+    if not git("tag", "--merged", "HEAD", cwd=cwd):
         return None
+    return git("describe", "--tags", "--abbrev=0", cwd=cwd) or None
 
 
 def commits_since(tag: str, cwd: str | os.PathLike[str] = ".") -> int:
@@ -274,12 +281,12 @@ def main(cwd: str | os.PathLike[str] = ".") -> int:
     minor_types = split_types(os.environ.get("MINOR_FRAGMENTS", ""))
     major_types = split_types(os.environ.get("MAJOR_FRAGMENTS", ""))
 
-    tag = latest_tag(cwd)
-    commit_count = commits_since(tag, cwd) if tag is not None else 0
-    print(f"Latest tag: {tag or '(none)'}")
-    print(f"Commits since tag: {commit_count}")
-
     try:
+        tag = latest_tag(cwd)
+        commit_count = commits_since(tag, cwd) if tag is not None else 0
+        print(f"Latest tag: {tag or '(none)'}")
+        print(f"Commits since tag: {commit_count}")
+
         fragments = collect_fragments(cwd)
         if fragments.configured:
             found = ", ".join(sorted(fragments.categories)) or "(none)"
