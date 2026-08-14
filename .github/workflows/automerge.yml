@@ -5,17 +5,8 @@ name: Merge me test dependencies!
 # or executes pull request code: the shared workflow only reads pull request
 # metadata through the API and gates on it before arming auto-merge.
 on:  # zizmor: ignore[dangerous-triggers]
-  # workflow_run covers in-repo Actions; check_suite covers external apps
-  # such as pre-commit.ci. See the automerge section in README.rst.
-  workflow_run:
-    types:
-      - completed
-    workflows:
-      # List all required workflow names here.
-      - 'Run test commands'
-  check_suite:
-    types:
-      - completed
+    pull_request_target:
+      types: [opened, reopened, synchronize]
 
 
 # Everything the shared workflow does goes through the merge app's token, so the

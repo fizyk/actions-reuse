@@ -1,5 +1,9 @@
 language: en-GB
 reviews:
+  profile: "assertive"
+  suggested_labels: true
+  auto_apply_labels: true
+
   path_instructions:
     - path: "newsfragments/*.rst"
       instructions: |
@@ -27,6 +31,9 @@ reviews:
           Remind contributors to use: `pipenv run towncrier create [number].[type].rst` (or `pipenv run towncrier create +.[type]` for orphan fragments)
           Skip the check if the PR only updates existing newsfragments or is a trivial change.
   auto_review:
-    auto_pause_after_reviewed_commits: 0
+    auto_pause_after_reviewed_commits: 1
     labels: ["!no code rabbit"]
-    drafts: true
+    drafts: false
+  slop_detection:
+    enabled: true
+    label: "ai-spam"
