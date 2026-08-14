@@ -31,6 +31,11 @@ on:
         description: "Github Application's private key"
         required: true
 
+# Planning only reads the repository; the release is pushed with the app token
+# minted in shared-release.yml.
+permissions:
+  contents: read
+
 jobs:
   plan:
     runs-on: ubuntu-latest

@@ -8,9 +8,14 @@ on:
         required: true
         type: string
 
+# The release itself is pushed with the app token minted inside the shared
+# workflow, so the job token only ever reads.
+permissions:
+  contents: read
+
 jobs:
   release:
-    uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.4.1
+    uses: ./.github/workflows/shared-release.yml
     with:
       version: ${{ inputs.version }}
       dependency-manager: 'uv'

@@ -45,10 +45,6 @@ src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]
 src = ".github/actions/coverage-combine-export-uv/action.yml"
 [[file]]
-src = ".github/workflows/pr-check.yml"
-[[file]]
-src = ".github/workflows/release.yml"
-[[file]]
 src = ".github/workflows/shared-pr-check.yml"
 [[file]]
 src = ".github/workflows/shared-pypi.yml"

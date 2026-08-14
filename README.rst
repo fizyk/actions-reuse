@@ -143,9 +143,6 @@ Run pytest tests on python code
    * - fail_on_codecov_error
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
-   * - install_editable
-     - false
-     - Whether to install tested code in editable mode (pipenv only)
 
 
 .. list-table:: Configuration
@@ -257,13 +254,24 @@ release
             type: string
     jobs:
       release:
+        # The bump commit and the tag are pushed with the app token, not with
+        # the job's GITHUB_TOKEN, so reading is all this job needs.
         permissions:
-          contents: write
+          contents: read
         uses: fizyk/actions-reuse/.github/workflows/shared-release.yml@v5.4.1
         with:
           version: ${{ inputs.version }}
 
 Runs release on a repository. Requires tbump to be installed and configured in dependencies.
+
+The app token is minted with only the permissions the release needs, so the Github
+application has to grant all three: *Contents: write* for the bump commit and the tag,
+*Metadata: read*, and *Workflows: write*. The last one is requested unconditionally and
+minting the token fails without it, so it is required even when the repository keeps no
+workflows - a push touching ``.github/workflows`` is rejected without it anyway.
+
+The version passed in has to look like a version (``[0-9A-Za-z.+-]``): it reaches tbump
+through a shell command, and this workflow holds the release credentials.
 
 
 .. list-table:: Configuration

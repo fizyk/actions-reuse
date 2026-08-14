@@ -288,9 +288,6 @@ Set up Python and pipenv, then install project dependencies.
    * - cache
      - no
      - ``true``
-   * - editable
-     - no
-     - ``false``
 
 Example:
 
@@ -301,7 +298,6 @@ Example:
         python-version: "3.14"
         allow-prereleases: false
         cache: true
-        editable: false
 
 
 pipenv
@@ -335,9 +331,6 @@ Set up pipenv and run a command in one step.
    * - env
      - no
      - ``{}``
-   * - editable
-     - no
-     - ``false``
 
 Example:
 

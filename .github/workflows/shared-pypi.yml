@@ -50,9 +50,13 @@ jobs:
         with:
           name: package
           path: dist/
+      # Trusted publishing has to be configured per project on PyPI and needs an
+      # `id-token: write` grant from the caller, so this workflow keeps taking a
+      # token: callers that have moved to trusted publishing can call
+      # pypa/gh-action-pypi-publish directly instead.
       - name: Publish distribution 📦 to PyPI
         if: ${{ inputs.publish }}
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2  # zizmor: ignore[use-trusted-publishing]
         with:
           password: ${{ secrets.pypi_token }}
           verbose: true
