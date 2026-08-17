@@ -1,2 +1,0 @@
-Audit the workflows and composite actions with `zizmor <https://docs.zizmor.sh/>`__ on every pre-commit run.
-Its ``unpinned-uses`` policy allows tag references into ``fizyk/actions-reuse`` itself - a hash pin cannot name the commit that carries it - and requires a hash everywhere else; every other suppression sits inline next to the code it excuses.

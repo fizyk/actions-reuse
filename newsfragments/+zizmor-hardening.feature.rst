@@ -1,4 +1,0 @@
-Mint ``shared-release``'s app token with just *Contents: write*, *Workflows: write* and *Metadata: read* instead of the whole installation's permissions, and declare ``permissions`` on the workflows in this repository.
-The release caller only needs ``contents: read`` now, as the bump commit and the tag have always been pushed with the app token; the documented snippet was updated accordingly.
-Inputs that name a path, a Python version or a step output reach their shell through the environment rather than through template expansion; the ``command`` and install-option inputs stay expanded, as callers rely on shell syntax inside them.
-``shared-release`` now refuses a ``version`` that is not one (``[0-9A-Za-z.+-]``) before minting the app token, as that input reaches tbump through a shell command.

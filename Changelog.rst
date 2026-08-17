@@ -3,6 +3,34 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.5.0 (2026-08-17)
+================================
+
+Features
+--------
+
+- Audit the workflows and composite actions with `zizmor <https://docs.zizmor.sh/>`__ on every pre-commit run.
+  Its ``unpinned-uses`` policy allows tag references into ``fizyk/actions-reuse`` itself - a hash pin cannot name the commit that carries it - and requires a hash everywhere else; every other suppression sits inline next to the code it excuses. (`#313 <https:/github.com/fizyk/actions-reuse/issues/313>`__)
+- Mint ``shared-release``'s app token with just *Contents: write*, *Workflows: write* and *Metadata: read* instead of the whole installation's permissions, and declare ``permissions`` on the workflows in this repository.
+  The release caller only needs ``contents: read`` now, as the bump commit and the tag have always been pushed with the app token; the documented snippet was updated accordingly.
+  Inputs that name a path, a Python version or a step output reach their shell through the environment rather than through template expansion; the ``command`` and install-option inputs stay expanded, as callers rely on shell syntax inside them.
+  ``shared-release`` now refuses a ``version`` that is not one (``[0-9A-Za-z.+-]``) before minting the app token, as that input reaches tbump through a shell command.
+
+
+Deprecations and Removals
+-------------------------
+
+- Drop the ``pipenv install --editable .`` step and the inputs that drove it: ``editable`` on the ``pipenv`` and ``pipenv-setup`` actions, ``install_editable`` on ``shared-tests-pytests``.
+  A Pipfile says the same thing by itself - ``<project> = {path = ".", editable = true}`` under ``[packages]`` - so the input only duplicated it.
+  Callers still passing it have to drop the line: a reusable workflow rejects an input it does not declare.
+
+
+Misc
+----
+
+- `#330 <https:/github.com/fizyk/actions-reuse/issues/330>`__
+
+
 actions-reuse 5.4.1 (2026-08-13)
 ================================
 

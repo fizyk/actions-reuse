@@ -1,2 +1,0 @@
-Automerge now arms eligible pull requests when they are opened, reopened,
-or synchronised.
