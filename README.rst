@@ -143,6 +143,15 @@ Run pytest tests on python code
    * - fail_on_codecov_error
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
+   * - coverage-mode
+     - pytest-cov
+     - Engine measuring coverage: ``pytest-cov`` runs ``pytest --cov``, ``coverage-run`` runs pytest under ``coverage run``. See below.
+   * - pytest-runs
+     - '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
+     - Jsonified list of pytest runs, each ``{"name", "opts"}``. Each one becomes its own job, coverage data file and Codecov upload flagged with its name. ``coverage-mode: coverage-run`` only.
+   * - coverage-process-start
+     - .coveragerc
+     - Coverage configuration file xdist workers and subprocesses read. It has to enable ``parallel``. ``coverage-mode: coverage-run`` only.
 
 
 .. list-table:: Configuration
@@ -154,6 +163,36 @@ Run pytest tests on python code
    * - codecov_token
      - no
      - Codecov token
+
+Testing a pytest plugin
++++++++++++++++++++++++
+
+``pytest --cov`` starts measuring coverage after pytest imported its entry point
+plugins, so for a project that *is* a pytest plugin every import time line of the
+plugin - imports, ``def``, ``class``, decorators, constants - is reported as
+missed. Rather than working around it in the test suite with ``-p no:myplugin``
+plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
+
+.. code-block:: yaml
+
+    jobs:
+      tests:
+        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v5.5.0
+        with:
+          dependency-manager: 'uv'
+          coverage-mode: 'coverage-run'
+        secrets:
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
+
+``coverage run -m pytest`` starts before pytest is imported and sees those lines.
+``pytest-cov`` stays installed and keeps measuring xdist workers through its
+``.pth`` hook - it just no longer drives the parent process, so ``--cov`` must not
+be passed in ``pytest_opts``.
+
+Projects needing steps in between - a database service to set up, a binary to
+detect - cannot use this workflow and should compose the
+``uv-pytest``/``pipenv-pytest`` composite actions in their own job instead. See
+`ACTIONS.rst <ACTIONS.rst>`__.
 
 diagrams
 --------

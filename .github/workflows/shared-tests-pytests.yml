@@ -47,6 +47,30 @@ on:
         default: 'pipenv'
         required: false
         type: string
+      coverage-mode:
+        description: >-
+          Which engine measures coverage: pytest-cov (default, pytest --cov), or
+          coverage-run when the code under test is imported at pytest startup -
+          a pytest plugin - and pytest-cov would report its import time lines as
+          missed.
+        default: 'pytest-cov'
+        required: false
+        type: string
+      pytest-runs:
+        description: >-
+          JSON list of pytest runs, each {"name": ..., "opts": ...}. Every run
+          becomes its own job with its own coverage data file and Codecov
+          upload, flagged with its name. coverage-mode: coverage-run only.
+        default: '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
+        required: false
+        type: string
+      coverage-process-start:
+        description: >-
+          Coverage configuration file xdist workers and subprocesses read. It
+          has to enable `parallel`. coverage-mode: coverage-run only.
+        default: '.coveragerc'
+        required: false
+        type: string
     secrets:
       codecov_token:
         description: 'Codecov token'
@@ -54,6 +78,7 @@ on:
 
 jobs:
   pytests:
+    if: ${{ inputs.coverage-mode == 'pytest-cov' }}
     runs-on: ${{ inputs.os }}
     strategy:
       fail-fast: false
@@ -90,3 +115,63 @@ jobs:
           flags: unittests
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
+
+  # `coverage run -m pytest` starts measuring before pytest imports any entry
+  # point plugin, so a plugin under test gets its import time lines counted.
+  # pytest-cov is still installed and still measures xdist workers through its
+  # .pth hook - it just is not the engine driving the parent process, so `--cov`
+  # must not be passed here.
+  pytests-coverage-run:
+    if: ${{ inputs.coverage-mode == 'coverage-run' }}
+    name: pytest ${{ matrix.pytest-run.name }} (${{ matrix.python-version }})
+    runs-on: ${{ inputs.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(inputs.python-versions) }}
+        pytest-run: ${{ fromJSON(inputs.pytest-runs) }}
+    env:
+      OS: ${{ inputs.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.5.0
+        if: ${{ inputs.dependency-manager == 'uv' }}
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: ${{ inputs.cache }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.5.0
+        if: ${{ inputs.dependency-manager != 'uv' }}
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: ${{ inputs.allow-prereleases }}
+          cache: ${{ inputs.cache }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+      - uses: fizyk/actions-reuse/.github/actions/uv-pytest@v5.5.0
+        if: ${{ inputs.dependency-manager == 'uv' }}
+        with:
+          pytest-opts: ${{ matrix.pytest-run.opts }} ${{ inputs.pytest_opts }}
+          data-file: .coverage.${{ matrix.pytest-run.name }}
+          output-file: coverage-${{ matrix.pytest-run.name }}.xml
+          coverage-process-start: ${{ inputs.coverage-process-start }}
+          env: ${{ inputs.env }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
+        if: ${{ inputs.dependency-manager != 'uv' }}
+        with:
+          pytest-opts: ${{ matrix.pytest-run.opts }} ${{ inputs.pytest_opts }}
+          data-file: .coverage.${{ matrix.pytest-run.name }}
+          output-file: coverage-${{ matrix.pytest-run.name }}.xml
+          coverage-process-start: ${{ inputs.coverage-process-start }}
+          env: ${{ inputs.env }}
+      - name: Upload coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.codecov_token }}
+          flags: unittests,${{ matrix.pytest-run.name }}
+          env_vars: OS,PYTHON
+          fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
+          files: coverage-${{ matrix.pytest-run.name }}.xml

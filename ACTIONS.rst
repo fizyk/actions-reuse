@@ -190,6 +190,64 @@ Example:
         cache: true
 
 
+uv-pytest
+---------
+
+Path: ``.github/actions/uv-pytest/action.yml``
+
+Run pytest under ``coverage run`` in an environment already prepared by
+``uv-setup``, then combine the data files and export the XML report.
+
+Use it instead of ``pytest --cov`` when the code under test is imported while
+pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
+starts measuring after those imports happened, so it reports every import time
+line of the plugin as missed. ``coverage run`` starts before pytest is imported
+at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
+hook starts coverage in xdist workers and other subprocesses whenever
+``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
+in ``pytest-opts`` - two coverage engines on one process only warn at each other.
+
+The coverage configuration file pointed at by ``coverage-process-start`` has to
+enable ``parallel``, otherwise workers overwrite each other's data.
+
+Coverage is combined and exported even when the tests failed.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - pytest-opts
+     - no
+     - ``""``
+   * - data-file
+     - no
+     - ``.coverage``
+   * - output-file
+     - no
+     - ``coverage.xml``
+   * - coverage-process-start
+     - no
+     - ``.coveragerc``
+   * - env
+     - no
+     - ``{}``
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.5.0
+      with:
+        python-version: "3.14"
+    - uses: fizyk/actions-reuse/.github/actions/uv-pytest@v5.5.0
+      with:
+        pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
+        data-file: .coverage.xdist
+        output-file: coverage-xdist.xml
+
+
 uv
 --
 
@@ -298,6 +356,64 @@ Example:
         python-version: "3.14"
         allow-prereleases: false
         cache: true
+
+
+pipenv-pytest
+-------------
+
+Path: ``.github/actions/pipenv-pytest/action.yml``
+
+Run pytest under ``coverage run`` in an environment already prepared by
+``pipenv-setup``, then combine the data files and export the XML report.
+
+Use it instead of ``pytest --cov`` when the code under test is imported while
+pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
+starts measuring after those imports happened, so it reports every import time
+line of the plugin as missed. ``coverage run`` starts before pytest is imported
+at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
+hook starts coverage in xdist workers and other subprocesses whenever
+``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
+in ``pytest-opts`` - two coverage engines on one process only warn at each other.
+
+The coverage configuration file pointed at by ``coverage-process-start`` has to
+enable ``parallel``, otherwise workers overwrite each other's data.
+
+Coverage is combined and exported even when the tests failed.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - pytest-opts
+     - no
+     - ``""``
+   * - data-file
+     - no
+     - ``.coverage``
+   * - output-file
+     - no
+     - ``coverage.xml``
+   * - coverage-process-start
+     - no
+     - ``.coveragerc``
+   * - env
+     - no
+     - ``{}``
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.5.0
+      with:
+        python-version: "3.14"
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
+      with:
+        pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
+        data-file: .coverage.xdist
+        output-file: coverage-xdist.xml
 
 
 pipenv

@@ -1,0 +1,66 @@
+name: 'pytest under coverage run'
+description: >-
+  Run pytest under `coverage run` in an existing pipenv environment, then combine
+  and export the coverage XML. Measures code imported at pytest startup - most
+  notably a pytest plugin under test - which pytest-cov's own `--cov` cannot
+  reach, because it starts measuring after entry point plugins are imported.
+inputs:
+  pytest-opts:
+    description: 'Options passed to pytest'
+    required: false
+    default: ''
+  data-file:
+    description: 'Coverage data file for this run (for example .coverage.serial)'
+    required: false
+    default: '.coverage'
+  output-file:
+    description: 'XML output filename'
+    required: false
+    default: 'coverage.xml'
+  coverage-process-start:
+    description: >-
+      Coverage configuration file subprocesses and xdist workers read
+      (.coveragerc, setup.cfg, tox.ini or pyproject.toml). It has to enable
+      `parallel`, otherwise workers overwrite each other's data.
+    required: false
+    default: '.coveragerc'
+  env:
+    description: >-
+      JSON object string of additional environment variables to set. Keys given
+      here win over the coverage variables this action sets.
+    required: false
+    default: '{}'
+runs:
+  using: "composite"
+  steps:
+    # COVERAGE_PROCESS_START is what pytest-cov's .pth hook keys off to start
+    # coverage in xdist workers and other subprocesses, so pytest-cov stays the
+    # mechanism measuring child processes while `coverage run` owns the parent.
+    # Merged into a step output rather than GITHUB_ENV, so the variables do not
+    # leak into unrelated steps of the calling job.
+    - id: coverage-env
+      shell: bash
+      env:
+        CALLER_ENV: ${{ inputs.env }}
+        COVERAGE_PROCESS_START: ${{ inputs.coverage-process-start }}
+        COVERAGE_FILE: ${{ inputs.data-file }}
+      run: |
+        caller_env="${CALLER_ENV:-}"
+        merged=$(jq -nc --argjson caller "${caller_env:-null}" '{
+          COVERAGE_PROCESS_START: env.COVERAGE_PROCESS_START,
+          COVERAGE_FILE: env.COVERAGE_FILE
+        } + ($caller // {})')
+        echo "merged=$merged" >> "$GITHUB_OUTPUT"
+    - name: Run pytest under coverage
+      uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0
+      with:
+        command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+        env: ${{ steps.coverage-env.outputs.merged }}
+    # Coverage of a failing run is still worth reporting, so combine and export
+    # unless the whole job was cancelled.
+    - name: Combine and export coverage
+      if: ${{ !cancelled() }}
+      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.5.0
+      with:
+        data-file: ${{ inputs.data-file }}
+        output-file: ${{ inputs.output-file }}
