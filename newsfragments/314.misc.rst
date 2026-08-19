@@ -1,0 +1,1 @@
+Add `rhysd/actionlint` linter to pre-commit and address its findings
