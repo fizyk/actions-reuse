@@ -29,11 +29,19 @@ updates:
     interval: weekly
     time: "04:00"
   open-pull-requests-limit: 5
-- package-ecosystem: pip
+- package-ecosystem: uv
   directory: "/"
   cooldown:
     default-days: 7
   schedule:
     interval: weekly
+    time: "04:05"
+  open-pull-requests-limit: 1
+- package-ecosystem: pre-commit
+  directory: "/"
+  schedule:
+    interval: daily
     time: "04:10"
   open-pull-requests-limit: 1
+  cooldown:
+    default-days: 7
