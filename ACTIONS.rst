@@ -236,6 +236,10 @@ Coverage is combined and exported even when the tests failed.
      - no
      - ``{}``
 
+``env`` is a JSON object string, as everywhere else here. Keys given in it
+override the ``COVERAGE_PROCESS_START`` and ``COVERAGE_FILE`` this action sets,
+so a caller can point them elsewhere.
+
 Example:
 
 .. code-block:: yaml
@@ -405,6 +409,10 @@ Coverage is combined and exported even when the tests failed.
    * - env
      - no
      - ``{}``
+
+``env`` is a JSON object string, as everywhere else here. Keys given in it
+override the ``COVERAGE_PROCESS_START`` and ``COVERAGE_FILE`` this action sets,
+so a caller can point them elsewhere.
 
 Example:
 
