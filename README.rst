@@ -143,15 +143,15 @@ Run pytest tests on python code
    * - fail_on_codecov_error
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
-   * - coverage-mode
-     - pytest-cov
-     - Engine measuring coverage: ``pytest-cov`` runs ``pytest --cov``, ``coverage-run`` runs pytest under ``coverage run``. See below.
+   * - coverage-run-mode
+     - false
+     - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
    * - pytest-runs
      - '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
-     - Jsonified list of pytest runs, each ``{"name", "opts"}``. Each one becomes its own job, coverage data file and Codecov upload flagged with its name. ``coverage-mode: coverage-run`` only.
+     - Jsonified list of pytest runs, each ``{"name", "opts"}``. Every run is crossed with ``python-versions``, so there is one matrix job per run and Python version, each producing its own coverage data file and its own Codecov upload flagged with the run name. ``coverage-run-mode`` only.
    * - coverage-process-start
      - .coveragerc
-     - Coverage configuration file xdist workers and subprocesses read. It has to enable ``parallel``. ``coverage-mode: coverage-run`` only.
+     - Coverage configuration file xdist workers and subprocesses read. It has to enable ``parallel``. ``coverage-run-mode`` only.
 
 
 .. list-table:: Configuration
@@ -180,7 +180,7 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
         uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v5.5.0
         with:
           dependency-manager: 'uv'
-          coverage-mode: 'coverage-run'
+          coverage-run-mode: true
         secrets:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
 

@@ -205,7 +205,9 @@ line of the plugin as missed. ``coverage run`` starts before pytest is imported
 at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
 hook starts coverage in xdist workers and other subprocesses whenever
 ``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
-in ``pytest-opts`` - two coverage engines on one process only warn at each other.
+in ``pytest-opts``: together with the ``COVERAGE_PROCESS_START`` this action sets,
+it puts two coverage engines on one process, which warns and can interfere with
+what gets collected.
 
 The coverage configuration file pointed at by ``coverage-process-start`` has to
 enable ``parallel``, otherwise workers overwrite each other's data.
@@ -373,7 +375,9 @@ line of the plugin as missed. ``coverage run`` starts before pytest is imported
 at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
 hook starts coverage in xdist workers and other subprocesses whenever
 ``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
-in ``pytest-opts`` - two coverage engines on one process only warn at each other.
+in ``pytest-opts``: together with the ``COVERAGE_PROCESS_START`` this action sets,
+it puts two coverage engines on one process, which warns and can interfere with
+what gets collected.
 
 The coverage configuration file pointed at by ``coverage-process-start`` has to
 enable ``parallel``, otherwise workers overwrite each other's data.

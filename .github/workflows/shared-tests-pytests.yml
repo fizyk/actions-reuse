@@ -47,27 +47,28 @@ on:
         default: 'pipenv'
         required: false
         type: string
-      coverage-mode:
+      coverage-run-mode:
         description: >-
-          Which engine measures coverage: pytest-cov (default, pytest --cov), or
-          coverage-run when the code under test is imported at pytest startup -
-          a pytest plugin - and pytest-cov would report its import time lines as
-          missed.
-        default: 'pytest-cov'
+          Measure coverage with `coverage run -m pytest` instead of
+          `pytest --cov`. Needed when the code under test is imported while
+          pytest starts up - a pytest plugin - because pytest-cov starts
+          measuring after that and reports its import time lines as missed.
+        default: false
         required: false
-        type: string
+        type: boolean
       pytest-runs:
         description: >-
-          JSON list of pytest runs, each {"name": ..., "opts": ...}. Every run
-          becomes its own job with its own coverage data file and Codecov
-          upload, flagged with its name. coverage-mode: coverage-run only.
+          JSON list of pytest runs, each {"name": ..., "opts": ...}. Runs are
+          crossed with python-versions into one matrix job per run and Python
+          version, each with its own coverage data file and its own Codecov
+          upload flagged with the run name. coverage-run-mode only.
         default: '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
         required: false
         type: string
       coverage-process-start:
         description: >-
           Coverage configuration file xdist workers and subprocesses read. It
-          has to enable `parallel`. coverage-mode: coverage-run only.
+          has to enable `parallel`. coverage-run-mode only.
         default: '.coveragerc'
         required: false
         type: string
@@ -78,7 +79,7 @@ on:
 
 jobs:
   pytests:
-    if: ${{ inputs.coverage-mode == 'pytest-cov' }}
+    if: ${{ !inputs.coverage-run-mode }}
     runs-on: ${{ inputs.os }}
     strategy:
       fail-fast: false
@@ -122,7 +123,7 @@ jobs:
   # .pth hook - it just is not the engine driving the parent process, so `--cov`
   # must not be passed here.
   pytests-coverage-run:
-    if: ${{ inputs.coverage-mode == 'coverage-run' }}
+    if: ${{ inputs.coverage-run-mode }}
     name: pytest ${{ matrix.pytest-run.name }} (${{ matrix.python-version }})
     runs-on: ${{ inputs.os }}
     strategy:
