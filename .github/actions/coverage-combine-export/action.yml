@@ -12,9 +12,8 @@ inputs:
 runs:
   using: composite
   steps:
-    # No glob: `coverage combine` finds this run's `<data-file>.*` files itself.
-    # A `<data-file>*` shell glob would also match `.coveragerc` and same-prefix
-    # data files belonging to other runs.
+    # No glob: `coverage combine` finds this run's `<data-file>.*` files itself,
+    # where `<data-file>*` would also match `.coveragerc` and other runs' files.
     - name: Combine coverage data
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0
       with:

@@ -15,32 +15,29 @@ inputs:
     default: 'coverage.xml'
   coverage-process-start:
     description: >-
-      Coverage configuration that child processes read. Set it only for a suite
-      that spawns any - xdist workers, subprocesses - and enable `parallel` and
-      `patch = subprocess` in it; ACTIONS.rst says why. Empty means a single
-      process, needing no configuration and nothing combined.
+      Coverage configuration child processes read. Set it only for a suite that
+      spawns them - xdist workers, subprocesses - with `parallel` and
+      `patch = subprocess` enabled; see ACTIONS.rst. Empty means a single process.
     default: ''
 runs:
   using: "composite"
   steps:
-    # Child processes get measured through COVERAGE_PROCESS_START, the parent
-    # through `coverage run` - and `--rcfile` so both read the same settings even
-    # when the configuration is not at a name coverage discovers on its own. Each
-    # process writes its own data file, hence the combine.
+    # `--rcfile` as well, so the parent reads the same settings even when the
+    # configuration is not at a name coverage discovers by itself.
     - name: Run pytest under coverage
       if: ${{ inputs.coverage-process-start != '' }}
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0
       with:
         command: python -m coverage run --rcfile=${{ inputs.coverage-process-start }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: '{"COVERAGE_PROCESS_START": "${{ inputs.coverage-process-start }}", "COVERAGE_FILE": "${{ inputs.data-file }}"}'
-    # A failing run's coverage is still worth reporting, hence !cancelled().
+    # Report coverage even when the tests failed.
     - name: Combine and export coverage
       if: ${{ !cancelled() && inputs.coverage-process-start != '' }}
       uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.5.0
       with:
         data-file: ${{ inputs.data-file }}
         output-file: ${{ inputs.output-file }}
-    # One process, one data file, nothing to combine.
+    # Single process: nothing to combine.
     - name: Run pytest under coverage
       if: ${{ inputs.coverage-process-start == '' }}
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0

@@ -49,19 +49,16 @@ on:
         type: string
       coverage-run-mode:
         description: >-
-          Measure coverage with `coverage run -m pytest` instead of
-          `pytest --cov`. Needed when the code under test is imported while
-          pytest starts up - a pytest plugin - because pytest-cov starts
-          measuring after that and reports its import time lines as missed.
+          Run pytest under `coverage run` instead of `pytest --cov`, which misses
+          code imported while pytest starts up - a pytest plugin under test.
         default: false
         required: false
         type: boolean
       coverage-process-start:
         description: >-
-          Coverage configuration file child processes read. Set it only for a
-          suite that spawns any - xdist workers, subprocesses - and have it
-          enable `parallel` and set `patch = subprocess`. Empty means a single
-          process, which needs no coverage configuration. coverage-run-mode only.
+          Coverage configuration child processes read; set it only for a suite
+          that spawns them, with `parallel` and `patch = subprocess` enabled.
+          See README. coverage-run-mode only.
         default: ''
         required: false
         type: string
@@ -110,10 +107,6 @@ jobs:
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
 
-  # `coverage run -m pytest` starts measuring before pytest imports entry point
-  # plugins, so a plugin under test gets its import time lines counted. `--cov`
-  # must not be passed here - that would put a second engine on the process.
-  #
   # One pytest run per job, deliberately. A project needing several - a serial
   # pass beside an xdist one - composes uv-pytest/pipenv-pytest as consecutive
   # steps in its own job, paying for setup once instead of once per run.
