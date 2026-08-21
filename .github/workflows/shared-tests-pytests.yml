@@ -151,7 +151,6 @@ jobs:
           data-file: .coverage
           output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
-          env: ${{ inputs.env }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
@@ -159,7 +158,6 @@ jobs:
           data-file: .coverage
           output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
-          env: ${{ inputs.env }}
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0

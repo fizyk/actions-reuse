@@ -1,116 +1,67 @@
 name: 'pytest under coverage run'
 description: >-
   Run pytest under `coverage run` in an existing uv environment and export the
-  coverage XML. Measures code imported at pytest startup - most notably a pytest
-  plugin under test - which pytest-cov's own `--cov` cannot reach, because it
-  starts measuring after entry point plugins are imported.
+  coverage XML. Unlike `pytest --cov`, this measures code imported while pytest
+  starts up - a pytest plugin under test.
 inputs:
   pytest-opts:
     description: 'Options passed to pytest'
-    required: false
     default: ''
   data-file:
-    description: 'Coverage data file for this run (for example .coverage.serial)'
-    required: false
+    description: 'Coverage data file for this run'
     default: '.coverage'
   output-file:
     description: 'XML output filename'
-    required: false
     default: 'coverage.xml'
   coverage-process-start:
     description: >-
-      Coverage configuration file child processes read, in any format coverage
-      accepts (.coveragerc, setup.cfg, tox.ini, pyproject.toml). Set it only for
-      a suite that spawns child processes - xdist workers, or code under test
-      starting subprocesses - and have it enable `parallel`, otherwise those
-      processes overwrite each other's data, and set `patch = subprocess`
-      (`patch = ["subprocess"]` in pyproject.toml), without which nothing
-      measures them at all on coverage older than 7.13. Leave it empty for a
-      single-process suite: there is then nothing to combine, and the run needs
-      no coverage configuration of its own.
-    required: false
+      Coverage configuration that child processes read. Set it only for a suite
+      that spawns any - xdist workers, subprocesses - and enable `parallel` and
+      `patch = subprocess` in it; ACTIONS.rst says why. Empty means a single
+      process, needing no configuration and nothing combined.
     default: ''
-  env:
-    description: >-
-      JSON object string of additional environment variables to set. It may not
-      contain COVERAGE_FILE or COVERAGE_PROCESS_START - those come from the
-      data-file and coverage-process-start inputs, and the step fails if they
-      appear here.
-    required: false
-    default: '{}'
 runs:
   using: "composite"
   steps:
-    # Two shapes, picked by coverage-process-start. Empty: one process, one data
-    # file, straight to XML. Set: COVERAGE_PROCESS_START starts coverage in every
-    # child process while `coverage run` owns the parent, each writes its own
-    # data file, and they are combined afterwards. Coverage honours that variable
-    # through a1_coverage.pth only from 7.13, and pytest-cov 7 dropped its own
-    # .pth, so below that `patch = subprocess` is all that is left - hence the
-    # contract asking for both.
-    # Kept in step outputs rather than GITHUB_ENV, so nothing leaks into the
-    # calling job's other steps.
-    - id: coverage-env
+    - id: coverage
       shell: bash
       env:
-        CALLER_ENV: ${{ inputs.env }}
-        PROCESS_START: ${{ inputs.coverage-process-start }}
+        CONFIG: ${{ inputs.coverage-process-start }}
         DATA_FILE: ${{ inputs.data-file }}
       run: |
-        caller_env="${CALLER_ENV:-}"
-        reserved=$(jq -nr --argjson caller "${caller_env:-null}" '($caller // {})
-          | keys_unsorted
-          | map(select(. == "COVERAGE_FILE" or . == "COVERAGE_PROCESS_START"))
-          | join(", ")')
-        if [ -n "$reserved" ]; then
-          echo "::error::env must not set $reserved - set the data-file and coverage-process-start inputs instead. Pointing COVERAGE_FILE somewhere else leaves the child processes writing data the combine step never sees."
-          exit 1
-        fi
-        # Absolute, because a test that changes the working directory would
-        # otherwise have its child processes resolve these against the new one.
-        # `pwd -W` gives a native path under the Windows runners' bash.
-        abspath() {
-          case "$1" in
-            /* | [A-Za-z]:[\\/]*) printf '%s\n' "$1" ;;
-            *) printf '%s/%s\n' "$(pwd -W 2>/dev/null || pwd)" "$1" ;;
-          esac
-        }
-        data=$(abspath "$DATA_FILE")
-        merged=$(jq -nc --argjson caller "${caller_env:-null}" '$caller // {}')
+        # Absolute, so a test that changes the working directory cannot make
+        # child processes miss the config or write data where the combine step
+        # will not look. `pwd -W` is the native form under Windows runners.
+        abs() { case $1 in /* | [A-Za-z]:[\\/]*) echo "$1" ;; *) echo "$(pwd -W 2>/dev/null || pwd)/$1" ;; esac; }
+        data=$(abs "$DATA_FILE")
         rcfile=""
-        children=false
-        if [ -n "$PROCESS_START" ]; then
-          if [ ! -f "$PROCESS_START" ]; then
-            echo "::error::coverage-process-start file '$PROCESS_START' does not exist. Child processes read it to pick up parallel and patch, and measure nothing at all without it."
-            exit 1
-          fi
-          config=$(abspath "$PROCESS_START")
+        child_env="{}"
+        if [ -n "$CONFIG" ]; then
+          [ -f "$CONFIG" ] || { echo "::error::coverage-process-start: no such file '$CONFIG'"; exit 1; }
+          config=$(abs "$CONFIG")
           rcfile="--rcfile=$config"
-          children=true
-          merged=$(jq -nc --argjson caller "${caller_env:-null}" \
-            --arg config "$config" --arg data "$data" \
-            '($caller // {}) + {COVERAGE_PROCESS_START: $config, COVERAGE_FILE: $data}')
+          child_env="{\"COVERAGE_PROCESS_START\": \"$config\", \"COVERAGE_FILE\": \"$data\"}"
         fi
         {
           echo "data-file=$data"
-          echo "rcfile-opt=$rcfile"
-          echo "children=$children"
-          echo "merged=$merged"
+          echo "rcfile=$rcfile"
+          echo "child-env=$child_env"
+          echo "children=${CONFIG:+true}"
         } >> "$GITHUB_OUTPUT"
     - name: Run pytest under coverage
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
-        command: python -m coverage run ${{ steps.coverage-env.outputs.rcfile-opt }} --data-file=${{ steps.coverage-env.outputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
-        env: ${{ steps.coverage-env.outputs.merged }}
-    # A failing run's coverage is still worth reporting.
+        command: python -m coverage run ${{ steps.coverage.outputs.rcfile }} --data-file=${{ steps.coverage.outputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+        env: ${{ steps.coverage.outputs.child-env }}
+    # A failing run's coverage is still worth reporting, hence !cancelled().
     - name: Combine and export coverage
-      if: ${{ !cancelled() && steps.coverage-env.outputs.children == 'true' }}
+      if: ${{ !cancelled() && steps.coverage.outputs.children == 'true' }}
       uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.5.0
       with:
-        data-file: ${{ steps.coverage-env.outputs.data-file }}
+        data-file: ${{ steps.coverage.outputs.data-file }}
         output-file: ${{ inputs.output-file }}
     - name: Export coverage
-      if: ${{ !cancelled() && steps.coverage-env.outputs.children != 'true' }}
+      if: ${{ !cancelled() && steps.coverage.outputs.children != 'true' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
-        command: python -m coverage xml --data-file=${{ steps.coverage-env.outputs.data-file }} -o ${{ inputs.output-file }}
+        command: python -m coverage xml --data-file=${{ steps.coverage.outputs.data-file }} -o ${{ inputs.output-file }}

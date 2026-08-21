@@ -277,16 +277,6 @@ Coverage is combined and exported even when the tests failed.
    * - coverage-process-start
      - no
      - ``""``
-   * - env
-     - no
-     - ``{}``
-
-``env`` is a JSON object string, as everywhere else here. It may not contain
-``COVERAGE_FILE`` or ``COVERAGE_PROCESS_START``; the step fails if it does.
-Those two follow from the ``data-file`` and ``coverage-process-start`` inputs,
-and pointing ``COVERAGE_FILE`` elsewhere would leave the child processes writing
-data files the combine step never looks at - losing their coverage while the
-run still passes.
 
 Example:
 
@@ -487,16 +477,6 @@ Coverage is combined and exported even when the tests failed.
    * - coverage-process-start
      - no
      - ``""``
-   * - env
-     - no
-     - ``{}``
-
-``env`` is a JSON object string, as everywhere else here. It may not contain
-``COVERAGE_FILE`` or ``COVERAGE_PROCESS_START``; the step fails if it does.
-Those two follow from the ``data-file`` and ``coverage-process-start`` inputs,
-and pointing ``COVERAGE_FILE`` elsewhere would leave the child processes writing
-data files the combine step never looks at - losing their coverage while the
-run still passes.
 
 Example:
 
