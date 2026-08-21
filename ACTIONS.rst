@@ -10,6 +10,12 @@ Path: ``.github/actions/coverage-combine-export/action.yml``
 
 Combine coverage files and export a single XML report.
 
+``coverage combine`` discovers the ``<data-file>.*`` files a parallel run wrote,
+so the run being combined has to have ``parallel`` enabled in its coverage
+configuration - without it there is nothing to combine and the step fails, which
+is the right answer, because xdist workers would have been overwriting each
+other's data anyway.
+
 .. list-table:: Inputs
    :header-rows: 1
 
@@ -39,6 +45,12 @@ coverage-combine-export-uv
 Path: ``.github/actions/coverage-combine-export-uv/action.yml``
 
 Combine coverage files and export a single XML report using uv.
+
+``coverage combine`` discovers the ``<data-file>.*`` files a parallel run wrote,
+so the run being combined has to have ``parallel`` enabled in its coverage
+configuration - without it there is nothing to combine and the step fails, which
+is the right answer, because xdist workers would have been overwriting each
+other's data anyway.
 
 .. list-table:: Inputs
    :header-rows: 1
@@ -202,21 +214,35 @@ Use it instead of ``pytest --cov`` when the code under test is imported while
 pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
 starts measuring after those imports happened, so it reports every import time
 line of the plugin as missed. ``coverage run`` starts before pytest is imported
-at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
-hook starts coverage in xdist workers and other subprocesses whenever
-``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
-in ``pytest-opts``: together with the ``COVERAGE_PROCESS_START`` this action sets,
-it puts two coverage engines on one process, which warns and can interfere with
-what gets collected.
+at all and sees them. Subprocesses and xdist workers stay measured because this
+action sets ``COVERAGE_PROCESS_START``, which starts coverage in every child
+process. Do not pass ``--cov`` in ``pytest-opts``:
+together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
+coverage engines on one process, which warns and can interfere with what gets
+collected.
 
 The coverage configuration file pointed at by ``coverage-process-start`` has to
-enable ``parallel``, otherwise workers overwrite each other's data.
+enable ``parallel``, otherwise workers overwrite each other's data, and set
+``patch = subprocess`` (``patch = ["subprocess"]`` in ``pyproject.toml``):
+
+.. code-block:: ini
+
+    [run]
+    parallel = true
+    patch = subprocess
+
+``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
+Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only
+since coverage 7.13, and ``pytest-cov`` dropped the ``.pth`` it used to ship in
+its 7.0 release. So on coverage 7.10.6 to 7.12 paired with ``pytest-cov`` 7 -
+a combination its own dependency floor allows - neither hook is installed, and
+without ``patch`` every subprocess and xdist worker goes unmeasured while the
+run still passes. Setting it is harmless on newer coverage.
 
 Use the action once per pytest run, giving each run its own ``data-file`` and
-``output-file``, and upload every resulting XML in a single Codecov step. The
-combine step globs ``<data-file>*``, so no ``data-file`` may be a prefix of
-another - ``.coverage.serial`` next to ``.coverage.xdist`` is fine, while
-``.coverage.x`` would swallow the latter's worker files.
+``output-file``, and upload every resulting XML in a single Codecov step. Runs do
+not interfere with each other: the combine step picks up only the
+``<data-file>.*`` files its own run wrote.
 
 Coverage is combined and exported even when the tests failed.
 
@@ -242,9 +268,12 @@ Coverage is combined and exported even when the tests failed.
      - no
      - ``{}``
 
-``env`` is a JSON object string, as everywhere else here. Keys given in it
-override the ``COVERAGE_PROCESS_START`` and ``COVERAGE_FILE`` this action sets,
-so a caller can point them elsewhere.
+``env`` is a JSON object string, as everywhere else here. It may not contain
+``COVERAGE_FILE`` or ``COVERAGE_PROCESS_START``; the step fails if it does.
+Those two follow from the ``data-file`` and ``coverage-process-start`` inputs,
+and pointing ``COVERAGE_FILE`` elsewhere would leave the child processes writing
+data files the combine step never looks at - losing their coverage while the
+run still passes.
 
 Example:
 
@@ -382,21 +411,35 @@ Use it instead of ``pytest --cov`` when the code under test is imported while
 pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
 starts measuring after those imports happened, so it reports every import time
 line of the plugin as missed. ``coverage run`` starts before pytest is imported
-at all and sees them. ``pytest-cov`` is still needed and still used: its ``.pth``
-hook starts coverage in xdist workers and other subprocesses whenever
-``COVERAGE_PROCESS_START`` is set, which this action sets. Do not pass ``--cov``
-in ``pytest-opts``: together with the ``COVERAGE_PROCESS_START`` this action sets,
-it puts two coverage engines on one process, which warns and can interfere with
-what gets collected.
+at all and sees them. Subprocesses and xdist workers stay measured because this
+action sets ``COVERAGE_PROCESS_START``, which starts coverage in every child
+process. Do not pass ``--cov`` in ``pytest-opts``:
+together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
+coverage engines on one process, which warns and can interfere with what gets
+collected.
 
 The coverage configuration file pointed at by ``coverage-process-start`` has to
-enable ``parallel``, otherwise workers overwrite each other's data.
+enable ``parallel``, otherwise workers overwrite each other's data, and set
+``patch = subprocess`` (``patch = ["subprocess"]`` in ``pyproject.toml``):
+
+.. code-block:: ini
+
+    [run]
+    parallel = true
+    patch = subprocess
+
+``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
+Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only
+since coverage 7.13, and ``pytest-cov`` dropped the ``.pth`` it used to ship in
+its 7.0 release. So on coverage 7.10.6 to 7.12 paired with ``pytest-cov`` 7 -
+a combination its own dependency floor allows - neither hook is installed, and
+without ``patch`` every subprocess and xdist worker goes unmeasured while the
+run still passes. Setting it is harmless on newer coverage.
 
 Use the action once per pytest run, giving each run its own ``data-file`` and
-``output-file``, and upload every resulting XML in a single Codecov step. The
-combine step globs ``<data-file>*``, so no ``data-file`` may be a prefix of
-another - ``.coverage.serial`` next to ``.coverage.xdist`` is fine, while
-``.coverage.x`` would swallow the latter's worker files.
+``output-file``, and upload every resulting XML in a single Codecov step. Runs do
+not interfere with each other: the combine step picks up only the
+``<data-file>.*`` files its own run wrote.
 
 Coverage is combined and exported even when the tests failed.
 
@@ -422,9 +465,12 @@ Coverage is combined and exported even when the tests failed.
      - no
      - ``{}``
 
-``env`` is a JSON object string, as everywhere else here. Keys given in it
-override the ``COVERAGE_PROCESS_START`` and ``COVERAGE_FILE`` this action sets,
-so a caller can point them elsewhere.
+``env`` is a JSON object string, as everywhere else here. It may not contain
+``COVERAGE_FILE`` or ``COVERAGE_PROCESS_START``; the step fails if it does.
+Those two follow from the ``data-file`` and ``coverage-process-start`` inputs,
+and pointing ``COVERAGE_FILE`` elsewhere would leave the child processes writing
+data files the combine step never looks at - losing their coverage while the
+run still passes.
 
 Example:
 

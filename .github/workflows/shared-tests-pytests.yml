@@ -108,16 +108,13 @@ jobs:
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
 
-  # `coverage run -m pytest` starts measuring before pytest imports any entry
-  # point plugin, so a plugin under test gets its import time lines counted.
-  # pytest-cov is still installed and still measures xdist workers through its
-  # .pth hook - it just is not the engine driving the parent process, so `--cov`
-  # must not be passed here.
+  # `coverage run -m pytest` starts measuring before pytest imports entry point
+  # plugins, so a plugin under test gets its import time lines counted. `--cov`
+  # must not be passed here - that would put a second engine on the process.
   #
   # One pytest run per job, deliberately. A project needing several - a serial
-  # pass next to an xdist one - composes the uv-pytest/pipenv-pytest actions as
-  # consecutive steps in its own job, paying for environment setup once instead
-  # of once per run.
+  # pass beside an xdist one - composes uv-pytest/pipenv-pytest as consecutive
+  # steps in its own job, paying for setup once instead of once per run.
   pytests-coverage-run:
     if: ${{ inputs.coverage-run-mode }}
     runs-on: ${{ inputs.os }}

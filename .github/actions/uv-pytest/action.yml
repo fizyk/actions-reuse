@@ -21,23 +21,29 @@ inputs:
     description: >-
       Coverage configuration file subprocesses and xdist workers read
       (.coveragerc, setup.cfg, tox.ini or pyproject.toml). It has to enable
-      `parallel`, otherwise workers overwrite each other's data.
+      `parallel`, otherwise workers overwrite each other's data, and to set
+      `patch = subprocess` (`patch = ["subprocess"]` in pyproject.toml), without
+      which nothing measures child processes on coverage older than 7.13.
     required: false
     default: '.coveragerc'
   env:
     description: >-
-      JSON object string of additional environment variables to set. Keys given
-      here win over the coverage variables this action sets.
+      JSON object string of additional environment variables to set. It may not
+      contain COVERAGE_FILE or COVERAGE_PROCESS_START - those come from the
+      data-file and coverage-process-start inputs, and the step fails if they
+      appear here.
     required: false
     default: '{}'
 runs:
   using: "composite"
   steps:
-    # COVERAGE_PROCESS_START is what pytest-cov's .pth hook keys off to start
-    # coverage in xdist workers and other subprocesses, so pytest-cov stays the
-    # mechanism measuring child processes while `coverage run` owns the parent.
-    # Merged into a step output rather than GITHUB_ENV, so the variables do not
-    # leak into unrelated steps of the calling job.
+    # COVERAGE_PROCESS_START starts coverage in xdist workers and subprocesses
+    # while `coverage run` owns the parent. Coverage honours it through
+    # a1_coverage.pth only from 7.13, and pytest-cov 7 dropped its own .pth, so
+    # below that `patch = subprocess` is all that is left - hence the contract
+    # on coverage-process-start asks for both.
+    # Kept in a step output rather than GITHUB_ENV, so it does not leak into the
+    # calling job's other steps.
     - id: coverage-env
       shell: bash
       env:
@@ -46,18 +52,25 @@ runs:
         COVERAGE_FILE: ${{ inputs.data-file }}
       run: |
         caller_env="${CALLER_ENV:-}"
-        merged=$(jq -nc --argjson caller "${caller_env:-null}" '{
+        reserved=$(jq -nr --argjson caller "${caller_env:-null}" '($caller // {})
+          | keys_unsorted
+          | map(select(. == "COVERAGE_FILE" or . == "COVERAGE_PROCESS_START"))
+          | join(", ")')
+        if [ -n "$reserved" ]; then
+          echo "::error::env must not set $reserved - set the data-file and coverage-process-start inputs instead. Pointing COVERAGE_FILE somewhere else leaves the child processes writing data the combine step never sees."
+          exit 1
+        fi
+        merged=$(jq -nc --argjson caller "${caller_env:-null}" '($caller // {}) + {
           COVERAGE_PROCESS_START: env.COVERAGE_PROCESS_START,
           COVERAGE_FILE: env.COVERAGE_FILE
-        } + ($caller // {})')
+        }')
         echo "merged=$merged" >> "$GITHUB_OUTPUT"
     - name: Run pytest under coverage
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
         command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: ${{ steps.coverage-env.outputs.merged }}
-    # Coverage of a failing run is still worth reporting, so combine and export
-    # unless the whole job was cancelled.
+    # A failing run's coverage is still worth reporting.
     - name: Combine and export coverage
       if: ${{ !cancelled() }}
       uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.5.0

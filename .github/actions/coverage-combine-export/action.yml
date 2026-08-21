@@ -12,10 +12,13 @@ inputs:
 runs:
   using: composite
   steps:
+    # No glob: `coverage combine` finds this run's `<data-file>.*` files itself.
+    # A `<data-file>*` shell glob would also match `.coveragerc` and same-prefix
+    # data files belonging to other runs.
     - name: Combine coverage data
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0
       with:
-        command: python -m coverage combine --data-file=${{ inputs.data-file }} ${{ inputs.data-file }}*
+        command: python -m coverage combine --data-file=${{ inputs.data-file }}
     - name: Export coverage XML
       uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.5.0
       with:

@@ -148,7 +148,7 @@ Run pytest tests on python code
      - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
    * - coverage-process-start
      - .coveragerc
-     - Coverage configuration file xdist workers and subprocesses read. It has to enable ``parallel``. ``coverage-run-mode`` only.
+     - Coverage configuration file read by xdist workers and subprocesses. It has to enable ``parallel`` and set ``patch = subprocess``. ``coverage-run-mode`` only.
 
 
 .. list-table:: Configuration
@@ -181,10 +181,12 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
         secrets:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
-``coverage run -m pytest`` starts before pytest is imported and sees those lines.
-``pytest-cov`` stays installed and keeps measuring xdist workers through its
-``.pth`` hook - it just no longer drives the parent process, so ``--cov`` must not
-be passed in ``pytest_opts``.
+``coverage run -m pytest`` starts before pytest is imported and sees those lines,
+while ``COVERAGE_PROCESS_START`` keeps xdist workers and subprocesses measured.
+``pytest-cov`` stays installed, it just no longer drives the parent process, so
+``--cov`` must not be passed in ``pytest_opts``. The coverage configuration named
+by ``coverage-process-start`` needs both ``parallel = true`` and
+``patch = subprocess``; see `ACTIONS.rst <ACTIONS.rst>`__ for why.
 
 This workflow runs pytest once per job. Projects needing steps in between - a
 database service to set up, a binary to detect - or several pytest runs per job -
