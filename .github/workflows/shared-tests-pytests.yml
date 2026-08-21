@@ -56,15 +56,6 @@ on:
         default: false
         required: false
         type: boolean
-      pytest-runs:
-        description: >-
-          JSON list of pytest runs, each {"name": ..., "opts": ...}. Runs are
-          crossed with python-versions into one matrix job per run and Python
-          version, each with its own coverage data file and its own Codecov
-          upload flagged with the run name. coverage-run-mode only.
-        default: '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
-        required: false
-        type: string
       coverage-process-start:
         description: >-
           Coverage configuration file xdist workers and subprocesses read. It
@@ -122,15 +113,18 @@ jobs:
   # pytest-cov is still installed and still measures xdist workers through its
   # .pth hook - it just is not the engine driving the parent process, so `--cov`
   # must not be passed here.
+  #
+  # One pytest run per job, deliberately. A project needing several - a serial
+  # pass next to an xdist one - composes the uv-pytest/pipenv-pytest actions as
+  # consecutive steps in its own job, paying for environment setup once instead
+  # of once per run.
   pytests-coverage-run:
     if: ${{ inputs.coverage-run-mode }}
-    name: pytest ${{ matrix.pytest-run.name }} (${{ matrix.python-version }})
     runs-on: ${{ inputs.os }}
     strategy:
       fail-fast: false
       matrix:
         python-version: ${{ fromJSON(inputs.python-versions) }}
-        pytest-run: ${{ fromJSON(inputs.pytest-runs) }}
     env:
       OS: ${{ inputs.os }}
       PYTHON: ${{ matrix.python-version }}
@@ -154,17 +148,17 @@ jobs:
       - uses: fizyk/actions-reuse/.github/actions/uv-pytest@v5.5.0
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
-          pytest-opts: ${{ matrix.pytest-run.opts }} ${{ inputs.pytest_opts }}
-          data-file: .coverage.${{ matrix.pytest-run.name }}
-          output-file: coverage-${{ matrix.pytest-run.name }}.xml
+          pytest-opts: -v ${{ inputs.pytest_opts }}
+          data-file: .coverage
+          output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
           env: ${{ inputs.env }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
-          pytest-opts: ${{ matrix.pytest-run.opts }} ${{ inputs.pytest_opts }}
-          data-file: .coverage.${{ matrix.pytest-run.name }}
-          output-file: coverage-${{ matrix.pytest-run.name }}.xml
+          pytest-opts: -v ${{ inputs.pytest_opts }}
+          data-file: .coverage
+          output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
           env: ${{ inputs.env }}
       - name: Upload coverage to Codecov
@@ -172,7 +166,7 @@ jobs:
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           token: ${{ secrets.codecov_token }}
-          flags: unittests,${{ matrix.pytest-run.name }}
+          flags: unittests
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
-          files: coverage-${{ matrix.pytest-run.name }}.xml
+          files: coverage.xml

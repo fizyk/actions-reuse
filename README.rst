@@ -146,9 +146,6 @@ Run pytest tests on python code
    * - coverage-run-mode
      - false
      - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
-   * - pytest-runs
-     - '[{"name": "serial", "opts": "-svv -p no:xdist"}, {"name": "xdist", "opts": "-n auto --dist loadgroup --max-worker-restart 0"}]'
-     - Jsonified list of pytest runs, each ``{"name", "opts"}``. Every run is crossed with ``python-versions``, so there is one matrix job per run and Python version, each producing its own coverage data file and its own Codecov upload flagged with the run name. ``coverage-run-mode`` only.
    * - coverage-process-start
      - .coveragerc
      - Coverage configuration file xdist workers and subprocesses read. It has to enable ``parallel``. ``coverage-run-mode`` only.
@@ -189,9 +186,11 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
 ``.pth`` hook - it just no longer drives the parent process, so ``--cov`` must not
 be passed in ``pytest_opts``.
 
-Projects needing steps in between - a database service to set up, a binary to
-detect - cannot use this workflow and should compose the
-``uv-pytest``/``pipenv-pytest`` composite actions in their own job instead. See
+This workflow runs pytest once per job. Projects needing steps in between - a
+database service to set up, a binary to detect - or several pytest runs per job -
+a serial pass next to an xdist one - should compose the
+``uv-pytest``/``pipenv-pytest`` composite actions in their own job instead, which
+pays for environment setup once rather than once per run. See
 `ACTIONS.rst <ACTIONS.rst>`__.
 
 diagrams

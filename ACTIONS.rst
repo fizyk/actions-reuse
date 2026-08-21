@@ -212,6 +212,12 @@ what gets collected.
 The coverage configuration file pointed at by ``coverage-process-start`` has to
 enable ``parallel``, otherwise workers overwrite each other's data.
 
+Use the action once per pytest run, giving each run its own ``data-file`` and
+``output-file``, and upload every resulting XML in a single Codecov step. The
+combine step globs ``<data-file>*``, so no ``data-file`` may be a prefix of
+another - ``.coverage.serial`` next to ``.coverage.xdist`` is fine, while
+``.coverage.x`` would swallow the latter's worker files.
+
 Coverage is combined and exported even when the tests failed.
 
 .. list-table:: Inputs
@@ -385,6 +391,12 @@ what gets collected.
 
 The coverage configuration file pointed at by ``coverage-process-start`` has to
 enable ``parallel``, otherwise workers overwrite each other's data.
+
+Use the action once per pytest run, giving each run its own ``data-file`` and
+``output-file``, and upload every resulting XML in a single Codecov step. The
+combine step globs ``<data-file>*``, so no ``data-file`` may be a prefix of
+another - ``.coverage.serial`` next to ``.coverage.xdist`` is fine, while
+``.coverage.x`` would swallow the latter's worker files.
 
 Coverage is combined and exported even when the tests failed.
 
