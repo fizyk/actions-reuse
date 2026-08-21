@@ -1,4 +1,4 @@
-Added ``uv-pytest`` and ``pipenv-pytest`` composite actions running pytest under
+Added ``uv-pytest-coverage`` and ``pipenv-pytest-coverage`` composite actions running pytest under
 ``coverage run``, and a ``coverage-run-mode`` option on the
 ``tests-pytests`` shared workflow. Both measure code imported while pytest starts
 up, which ``pytest --cov`` reports as missed - most notably a pytest plugin under

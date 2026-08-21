@@ -41,9 +41,9 @@ src = ".github/actions/pipenv/action.yml"
 [[file]]
 src = ".github/actions/uv/action.yml"
 [[file]]
-src = ".github/actions/uv-pytest/action.yml"
+src = ".github/actions/uv-pytest-coverage/action.yml"
 [[file]]
-src = ".github/actions/pipenv-pytest/action.yml"
+src = ".github/actions/pipenv-pytest-coverage/action.yml"
 [[file]]
 src = ".github/actions/coverage-combine-export/action.yml"
 [[file]]

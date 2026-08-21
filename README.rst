@@ -193,7 +193,7 @@ pass an absolute path there if the tests change the working directory.
 This workflow runs pytest once per job. Projects needing steps in between - a
 database service to set up, a binary to detect - or several pytest runs per job -
 a serial pass next to an xdist one - should compose the
-``uv-pytest``/``pipenv-pytest`` composite actions in their own job instead, which
+``uv-pytest-coverage``/``pipenv-pytest-coverage`` composite actions in their own job instead, which
 pays for environment setup once rather than once per run. See
 `ACTIONS.rst <ACTIONS.rst>`__.
 

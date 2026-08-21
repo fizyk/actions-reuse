@@ -19,9 +19,26 @@ inputs:
       spawns them - xdist workers, subprocesses - with `parallel` and
       `patch = subprocess` enabled; see ACTIONS.rst. Empty means a single process.
     default: ''
+  env:
+    description: >-
+      JSON object string of environment variables for the run. The coverage
+      variables this action sets are merged in and win over it.
+    default: '{}'
 runs:
   using: "composite"
   steps:
+    - id: coverage-env
+      if: ${{ inputs.coverage-process-start != '' }}
+      shell: bash
+      env:
+        CALLER_ENV: ${{ inputs.env }}
+        CONFIG: ${{ inputs.coverage-process-start }}
+        DATA_FILE: ${{ inputs.data-file }}
+      run: |
+        caller="${CALLER_ENV:-}"
+        merged=$(jq -nc --argjson caller "${caller:-null}" --arg c "$CONFIG" --arg d "$DATA_FILE" \
+          '($caller // {}) + {COVERAGE_PROCESS_START: $c, COVERAGE_FILE: $d}')
+        echo "merged=$merged" >> "$GITHUB_OUTPUT"
     # `--rcfile` as well, so the parent reads the same settings even when the
     # configuration is not at a name coverage discovers by itself.
     - name: Run pytest under coverage
@@ -29,7 +46,7 @@ runs:
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
         command: python -m coverage run --rcfile=${{ inputs.coverage-process-start }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
-        env: '{"COVERAGE_PROCESS_START": "${{ inputs.coverage-process-start }}", "COVERAGE_FILE": "${{ inputs.data-file }}"}'
+        env: ${{ steps.coverage-env.outputs.merged }}
     # Report coverage even when the tests failed.
     - name: Combine and export coverage
       if: ${{ !cancelled() && inputs.coverage-process-start != '' }}
@@ -43,6 +60,7 @@ runs:
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
         command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+        env: ${{ inputs.env }}
     - name: Export coverage
       if: ${{ !cancelled() && inputs.coverage-process-start == '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0

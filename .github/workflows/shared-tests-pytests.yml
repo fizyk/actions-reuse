@@ -108,7 +108,7 @@ jobs:
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
 
   # One pytest run per job, deliberately. A project needing several - a serial
-  # pass beside an xdist one - composes uv-pytest/pipenv-pytest as consecutive
+  # pass beside an xdist one - composes uv-pytest-coverage/pipenv-pytest-coverage as consecutive
   # steps in its own job, paying for setup once instead of once per run.
   pytests-coverage-run:
     if: ${{ inputs.coverage-run-mode }}
@@ -137,20 +137,22 @@ jobs:
           allow-prereleases: ${{ inputs.allow-prereleases }}
           cache: ${{ inputs.cache }}
           pipenv-install-options: ${{ inputs.pipenv-install-options }}
-      - uses: fizyk/actions-reuse/.github/actions/uv-pytest@v5.5.0
+      - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.5.0
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
           pytest-opts: -v ${{ inputs.pytest_opts }}
           data-file: .coverage
           output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
-      - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
+          env: ${{ inputs.env }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.5.0
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
           pytest-opts: -v ${{ inputs.pytest_opts }}
           data-file: .coverage
           output-file: coverage.xml
           coverage-process-start: ${{ inputs.coverage-process-start }}
+          env: ${{ inputs.env }}
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0

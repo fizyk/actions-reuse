@@ -202,10 +202,10 @@ Example:
         cache: true
 
 
-uv-pytest
----------
+uv-pytest-coverage
+------------------
 
-Path: ``.github/actions/uv-pytest/action.yml``
+Path: ``.github/actions/uv-pytest-coverage/action.yml``
 
 Run pytest under ``coverage run`` in an environment already prepared by
 ``uv-setup``, then export the XML report, combining the data files first when
@@ -280,6 +280,13 @@ Coverage is combined and exported even when the tests failed.
    * - coverage-process-start
      - no
      - ``""``
+   * - env
+     - no
+     - ``{}``
+
+``env`` is a JSON object string, as everywhere else here. The coverage variables
+the action sets are merged into it and win over it, so leave ``COVERAGE_FILE``
+and ``COVERAGE_PROCESS_START`` out.
 
 Example:
 
@@ -288,7 +295,7 @@ Example:
     - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.5.0
       with:
         python-version: "3.14"
-    - uses: fizyk/actions-reuse/.github/actions/uv-pytest@v5.5.0
+    - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.5.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
         data-file: .coverage.xdist
@@ -405,10 +412,10 @@ Example:
         cache: true
 
 
-pipenv-pytest
--------------
+pipenv-pytest-coverage
+----------------------
 
-Path: ``.github/actions/pipenv-pytest/action.yml``
+Path: ``.github/actions/pipenv-pytest-coverage/action.yml``
 
 Run pytest under ``coverage run`` in an environment already prepared by
 ``pipenv-setup``, then export the XML report, combining the data files first when
@@ -483,6 +490,13 @@ Coverage is combined and exported even when the tests failed.
    * - coverage-process-start
      - no
      - ``""``
+   * - env
+     - no
+     - ``{}``
+
+``env`` is a JSON object string, as everywhere else here. The coverage variables
+the action sets are merged into it and win over it, so leave ``COVERAGE_FILE``
+and ``COVERAGE_PROCESS_START`` out.
 
 Example:
 
@@ -491,7 +505,7 @@ Example:
     - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.5.0
       with:
         python-version: "3.14"
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest@v5.5.0
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.5.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
         data-file: .coverage.xdist
