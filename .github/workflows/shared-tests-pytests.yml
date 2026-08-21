@@ -47,6 +47,21 @@ on:
         default: 'pipenv'
         required: false
         type: string
+      coverage-run-mode:
+        description: >-
+          Run pytest under `coverage run` instead of `pytest --cov`, which misses
+          code imported while pytest starts up - a pytest plugin under test.
+        default: false
+        required: false
+        type: boolean
+      coverage-config:
+        description: >-
+          Coverage configuration for the run and its child processes; set it only
+          for a suite that spawns children, with `parallel` and
+          `patch = subprocess` enabled. See README. coverage-run-mode only.
+        default: ''
+        required: false
+        type: string
     secrets:
       codecov_token:
         description: 'Codecov token'
@@ -54,6 +69,7 @@ on:
 
 jobs:
   pytests:
+    if: ${{ !inputs.coverage-run-mode }}
     runs-on: ${{ inputs.os }}
     strategy:
       fail-fast: false
@@ -90,3 +106,56 @@ jobs:
           flags: unittests
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
+
+  pytests-coverage-run:
+    if: ${{ inputs.coverage-run-mode }}
+    runs-on: ${{ inputs.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(inputs.python-versions) }}
+    env:
+      OS: ${{ inputs.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.5.0
+        if: ${{ inputs.dependency-manager == 'uv' }}
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: ${{ inputs.cache }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.5.0
+        if: ${{ inputs.dependency-manager != 'uv' }}
+        with:
+          python-version: ${{ matrix.python-version }}
+          allow-prereleases: ${{ inputs.allow-prereleases }}
+          cache: ${{ inputs.cache }}
+          pipenv-install-options: ${{ inputs.pipenv-install-options }}
+      - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.5.0
+        if: ${{ inputs.dependency-manager == 'uv' }}
+        with:
+          pytest-opts: -v ${{ inputs.pytest_opts }}
+          data-file: .coverage
+          output-file: coverage.xml
+          coverage-config: ${{ inputs.coverage-config }}
+          env: ${{ inputs.env }}
+      - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.5.0
+        if: ${{ inputs.dependency-manager != 'uv' }}
+        with:
+          pytest-opts: -v ${{ inputs.pytest_opts }}
+          data-file: .coverage
+          output-file: coverage.xml
+          coverage-config: ${{ inputs.coverage-config }}
+          env: ${{ inputs.env }}
+      - name: Upload coverage to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        with:
+          token: ${{ secrets.codecov_token }}
+          flags: unittests
+          env_vars: OS,PYTHON
+          fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
+          files: coverage.xml

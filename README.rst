@@ -143,6 +143,12 @@ Run pytest tests on python code
    * - fail_on_codecov_error
      - false
      - Whether pipeline should fail if there would be an error on codecov side.
+   * - coverage-run-mode
+     - false
+     - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
+   * - coverage-config
+     -
+     - Coverage configuration read by the run and every child process it spawns. Set it only for a suite that spawns any - xdist workers, subprocesses - and have it enable ``parallel`` and set ``patch = subprocess``. Empty means a single process, needing no coverage configuration. ``coverage-run-mode`` only.
 
 
 .. list-table:: Configuration
@@ -154,6 +160,42 @@ Run pytest tests on python code
    * - codecov_token
      - no
      - Codecov token
+
+Testing a pytest plugin
++++++++++++++++++++++++
+
+``pytest --cov`` starts measuring coverage after pytest imported its entry point
+plugins, so for a project that *is* a pytest plugin every import time line of the
+plugin - imports, ``def``, ``class``, decorators, constants - is reported as
+missed. Rather than working around it in the test suite with ``-p no:myplugin``
+plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
+
+.. code-block:: yaml
+
+    jobs:
+      tests:
+        uses: fizyk/actions-reuse/.github/workflows/shared-tests-pytests.yml@v5.5.0
+        with:
+          dependency-manager: 'uv'
+          coverage-run-mode: true
+        secrets:
+          codecov_token: ${{ secrets.CODECOV_TOKEN }}
+
+``coverage run -m pytest`` starts before pytest is imported and sees those lines.
+``pytest-cov`` stays installed, it just no longer drives the parent process, so
+``--cov`` must not be passed in ``pytest_opts``. That is all a single-process
+suite needs. A suite that spawns child processes - xdist workers, or code under
+test starting subprocesses - additionally sets ``coverage-config`` to a
+coverage configuration enabling ``parallel`` and ``patch = subprocess``, so those
+processes are measured too; see `ACTIONS.rst <ACTIONS.rst>`__ for why both, and
+pass an absolute path there if the tests change the working directory.
+
+This workflow runs pytest once per job. Projects needing steps in between - a
+database service to set up, a binary to detect - or several pytest runs per job -
+a serial pass next to an xdist one - should compose the
+``uv-pytest-coverage``/``pipenv-pytest-coverage`` composite actions in their own job instead, which
+pays for environment setup once rather than once per run. See
+`ACTIONS.rst <ACTIONS.rst>`__.
 
 diagrams
 --------

@@ -1,0 +1,4 @@
+Stop globbing ``<data-file>*`` into ``coverage combine`` in
+``coverage-combine-export`` and ``coverage-combine-export-uv``, where it also
+matched ``.coveragerc`` and other runs' data files. Runs without ``parallel``
+enabled now fail there instead of reporting partial data.
