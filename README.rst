@@ -147,8 +147,8 @@ Run pytest tests on python code
      - false
      - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
    * - coverage-process-start
-     - .coveragerc
-     - Coverage configuration file read by xdist workers and subprocesses. It has to enable ``parallel`` and set ``patch = subprocess``. ``coverage-run-mode`` only.
+     -
+     - Coverage configuration file read by child processes. Set it only for a suite that spawns any - xdist workers, subprocesses - and have it enable ``parallel`` and set ``patch = subprocess``. Empty means a single process, needing no coverage configuration. ``coverage-run-mode`` only.
 
 
 .. list-table:: Configuration
@@ -181,12 +181,13 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
         secrets:
           codecov_token: ${{ secrets.CODECOV_TOKEN }}
 
-``coverage run -m pytest`` starts before pytest is imported and sees those lines,
-while ``COVERAGE_PROCESS_START`` keeps xdist workers and subprocesses measured.
+``coverage run -m pytest`` starts before pytest is imported and sees those lines.
 ``pytest-cov`` stays installed, it just no longer drives the parent process, so
-``--cov`` must not be passed in ``pytest_opts``. The coverage configuration named
-by ``coverage-process-start`` needs both ``parallel = true`` and
-``patch = subprocess``; see `ACTIONS.rst <ACTIONS.rst>`__ for why.
+``--cov`` must not be passed in ``pytest_opts``. That is all a single-process
+suite needs. A suite that spawns child processes - xdist workers, or code under
+test starting subprocesses - additionally sets ``coverage-process-start`` to a
+coverage configuration enabling ``parallel`` and ``patch = subprocess``, so those
+processes are measured too; see `ACTIONS.rst <ACTIONS.rst>`__ for why both.
 
 This workflow runs pytest once per job. Projects needing steps in between - a
 database service to set up, a binary to detect - or several pytest runs per job -

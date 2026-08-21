@@ -208,7 +208,8 @@ uv-pytest
 Path: ``.github/actions/uv-pytest/action.yml``
 
 Run pytest under ``coverage run`` in an environment already prepared by
-``uv-setup``, then combine the data files and export the XML report.
+``uv-setup``, then export the XML report, combining the data files first when
+the run spawned child processes.
 
 Use it instead of ``pytest --cov`` when the code under test is imported while
 pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
@@ -221,15 +222,27 @@ together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
 coverage engines on one process, which warns and can interfere with what gets
 collected.
 
-The coverage configuration file pointed at by ``coverage-process-start`` has to
-enable ``parallel``, otherwise workers overwrite each other's data, and set
-``patch = subprocess`` (``patch = ["subprocess"]`` in ``pyproject.toml``):
+A single-process suite needs nothing else: leave ``coverage-process-start``
+empty and the action runs pytest and writes the XML.
+
+A suite that spawns child processes - xdist workers, or code under test starting
+subprocesses - sets ``coverage-process-start`` to a coverage configuration that
+enables ``parallel`` and sets ``patch = subprocess``
+(``patch = ["subprocess"]`` in ``pyproject.toml``):
 
 .. code-block:: ini
 
     [run]
     parallel = true
     patch = subprocess
+
+Each process then writes its own data file and the action combines them before
+exporting. The file has to exist - the action fails if it does not, rather than
+letting child processes silently measure nothing - and both it and ``data-file``
+are resolved to absolute paths, so a test that changes the working directory
+cannot send child data somewhere the combine step will not look. The resolved
+config is also handed to the parent as ``coverage run --rcfile``, so parent and
+children never read different settings.
 
 ``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
 Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only
@@ -263,7 +276,7 @@ Coverage is combined and exported even when the tests failed.
      - ``coverage.xml``
    * - coverage-process-start
      - no
-     - ``.coveragerc``
+     - ``""``
    * - env
      - no
      - ``{}``
@@ -405,7 +418,8 @@ pipenv-pytest
 Path: ``.github/actions/pipenv-pytest/action.yml``
 
 Run pytest under ``coverage run`` in an environment already prepared by
-``pipenv-setup``, then combine the data files and export the XML report.
+``pipenv-setup``, then export the XML report, combining the data files first when
+the run spawned child processes.
 
 Use it instead of ``pytest --cov`` when the code under test is imported while
 pytest starts up - a pytest plugin loaded through an entry point. ``pytest-cov``
@@ -418,15 +432,27 @@ together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
 coverage engines on one process, which warns and can interfere with what gets
 collected.
 
-The coverage configuration file pointed at by ``coverage-process-start`` has to
-enable ``parallel``, otherwise workers overwrite each other's data, and set
-``patch = subprocess`` (``patch = ["subprocess"]`` in ``pyproject.toml``):
+A single-process suite needs nothing else: leave ``coverage-process-start``
+empty and the action runs pytest and writes the XML.
+
+A suite that spawns child processes - xdist workers, or code under test starting
+subprocesses - sets ``coverage-process-start`` to a coverage configuration that
+enables ``parallel`` and sets ``patch = subprocess``
+(``patch = ["subprocess"]`` in ``pyproject.toml``):
 
 .. code-block:: ini
 
     [run]
     parallel = true
     patch = subprocess
+
+Each process then writes its own data file and the action combines them before
+exporting. The file has to exist - the action fails if it does not, rather than
+letting child processes silently measure nothing - and both it and ``data-file``
+are resolved to absolute paths, so a test that changes the working directory
+cannot send child data somewhere the combine step will not look. The resolved
+config is also handed to the parent as ``coverage run --rcfile``, so parent and
+children never read different settings.
 
 ``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
 Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only
@@ -460,7 +486,7 @@ Coverage is combined and exported even when the tests failed.
      - ``coverage.xml``
    * - coverage-process-start
      - no
-     - ``.coveragerc``
+     - ``""``
    * - env
      - no
      - ``{}``

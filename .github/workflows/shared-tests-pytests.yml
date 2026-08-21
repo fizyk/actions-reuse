@@ -58,9 +58,11 @@ on:
         type: boolean
       coverage-process-start:
         description: >-
-          Coverage configuration file xdist workers and subprocesses read. It
-          has to enable `parallel`. coverage-run-mode only.
-        default: '.coveragerc'
+          Coverage configuration file child processes read. Set it only for a
+          suite that spawns any - xdist workers, subprocesses - and have it
+          enable `parallel` and set `patch = subprocess`. Empty means a single
+          process, which needs no coverage configuration. coverage-run-mode only.
+        default: ''
         required: false
         type: string
     secrets:
