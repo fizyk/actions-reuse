@@ -222,11 +222,11 @@ together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
 coverage engines on one process, which warns and can interfere with what gets
 collected.
 
-A single-process suite needs nothing else: leave ``coverage-process-start``
+A single-process suite needs nothing else: leave ``coverage-config``
 empty and the action runs pytest and writes the XML.
 
 A suite that spawns child processes - xdist workers, or code under test starting
-subprocesses - sets ``coverage-process-start`` to a coverage configuration that
+subprocesses - sets ``coverage-config`` to a coverage configuration that
 enables ``parallel`` and sets ``patch = subprocess``
 (``patch = ["subprocess"]`` in ``pyproject.toml``):
 
@@ -241,7 +241,7 @@ exporting. It is also passed to the parent as ``coverage run --rcfile``, so
 parent and children read the same settings even when the file is not at a name
 coverage discovers by itself.
 
-Pass ``coverage-process-start`` and ``data-file`` as absolute paths if the tests
+Pass ``coverage-config`` and ``data-file`` as absolute paths if the tests
 change the working directory - with ``tmp_path``, ``monkeypatch.chdir`` or the
 like. Child processes inherit that directory, and relative paths would have them
 look for the configuration, and write their data, somewhere the combine step
@@ -277,7 +277,7 @@ Coverage is combined and exported even when the tests failed.
    * - output-file
      - no
      - ``coverage.xml``
-   * - coverage-process-start
+   * - coverage-config
      - no
      - ``""``
    * - env
@@ -432,11 +432,11 @@ together with the ``COVERAGE_PROCESS_START`` this action sets, it puts two
 coverage engines on one process, which warns and can interfere with what gets
 collected.
 
-A single-process suite needs nothing else: leave ``coverage-process-start``
+A single-process suite needs nothing else: leave ``coverage-config``
 empty and the action runs pytest and writes the XML.
 
 A suite that spawns child processes - xdist workers, or code under test starting
-subprocesses - sets ``coverage-process-start`` to a coverage configuration that
+subprocesses - sets ``coverage-config`` to a coverage configuration that
 enables ``parallel`` and sets ``patch = subprocess``
 (``patch = ["subprocess"]`` in ``pyproject.toml``):
 
@@ -451,7 +451,7 @@ exporting. It is also passed to the parent as ``coverage run --rcfile``, so
 parent and children read the same settings even when the file is not at a name
 coverage discovers by itself.
 
-Pass ``coverage-process-start`` and ``data-file`` as absolute paths if the tests
+Pass ``coverage-config`` and ``data-file`` as absolute paths if the tests
 change the working directory - with ``tmp_path``, ``monkeypatch.chdir`` or the
 like. Child processes inherit that directory, and relative paths would have them
 look for the configuration, and write their data, somewhere the combine step
@@ -487,7 +487,7 @@ Coverage is combined and exported even when the tests failed.
    * - output-file
      - no
      - ``coverage.xml``
-   * - coverage-process-start
+   * - coverage-config
      - no
      - ``""``
    * - env

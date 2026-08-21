@@ -12,8 +12,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # No glob: `coverage combine` finds this run's `<data-file>.*` files itself,
-    # where `<data-file>*` would also match `.coveragerc` and other runs' files.
     - name: Combine coverage data
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:

@@ -54,11 +54,11 @@ on:
         default: false
         required: false
         type: boolean
-      coverage-process-start:
+      coverage-config:
         description: >-
-          Coverage configuration child processes read; set it only for a suite
-          that spawns them, with `parallel` and `patch = subprocess` enabled.
-          See README. coverage-run-mode only.
+          Coverage configuration for the run and its child processes; set it only
+          for a suite that spawns children, with `parallel` and
+          `patch = subprocess` enabled. See README. coverage-run-mode only.
         default: ''
         required: false
         type: string
@@ -107,9 +107,6 @@ jobs:
           env_vars: OS,PYTHON
           fail_ci_if_error: ${{ inputs.fail_on_codecov_error }}
 
-  # One pytest run per job, deliberately. A project needing several - a serial
-  # pass beside an xdist one - composes uv-pytest-coverage/pipenv-pytest-coverage as consecutive
-  # steps in its own job, paying for setup once instead of once per run.
   pytests-coverage-run:
     if: ${{ inputs.coverage-run-mode }}
     runs-on: ${{ inputs.os }}
@@ -143,7 +140,7 @@ jobs:
           pytest-opts: -v ${{ inputs.pytest_opts }}
           data-file: .coverage
           output-file: coverage.xml
-          coverage-process-start: ${{ inputs.coverage-process-start }}
+          coverage-config: ${{ inputs.coverage-config }}
           env: ${{ inputs.env }}
       - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.5.0
         if: ${{ inputs.dependency-manager != 'uv' }}
@@ -151,7 +148,7 @@ jobs:
           pytest-opts: -v ${{ inputs.pytest_opts }}
           data-file: .coverage
           output-file: coverage.xml
-          coverage-process-start: ${{ inputs.coverage-process-start }}
+          coverage-config: ${{ inputs.coverage-config }}
           env: ${{ inputs.env }}
       - name: Upload coverage to Codecov
         if: ${{ !cancelled() }}

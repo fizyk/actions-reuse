@@ -1,8 +1,4 @@
-``coverage-combine-export`` and ``coverage-combine-export-uv`` no longer pass a
-``<data-file>*`` shell glob to ``coverage combine``, letting coverage discover the
-``<data-file>.*`` files a parallel run wrote instead. The glob also matched a
-``.coveragerc`` next to the data files, which ``coverage combine`` counted as an
-errored file while still exiting successfully, and it swept in data files whose
-names merely started with the same characters. Runs whose coverage configuration
-does not enable ``parallel`` now fail in the combine step instead of silently
-reporting partial data.
+Stop globbing ``<data-file>*`` into ``coverage combine`` in
+``coverage-combine-export`` and ``coverage-combine-export-uv``, where it also
+matched ``.coveragerc`` and other runs' data files. Runs without ``parallel``
+enabled now fail there instead of reporting partial data.

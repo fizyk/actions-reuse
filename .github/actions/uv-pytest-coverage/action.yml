@@ -13,11 +13,12 @@ inputs:
   output-file:
     description: 'XML output filename'
     default: 'coverage.xml'
-  coverage-process-start:
+  coverage-config:
     description: >-
-      Coverage configuration child processes read. Set it only for a suite that
-      spawns them - xdist workers, subprocesses - with `parallel` and
-      `patch = subprocess` enabled; see ACTIONS.rst. Empty means a single process.
+      Coverage configuration, read by the parent run and every child process. Set
+      it only for a suite that spawns children - xdist workers, subprocesses -
+      with `parallel` and `patch = subprocess` enabled; see ACTIONS.rst. Empty
+      means a single process.
     default: ''
   env:
     description: >-
@@ -28,41 +29,41 @@ runs:
   using: "composite"
   steps:
     - id: coverage-env
-      if: ${{ inputs.coverage-process-start != '' }}
+      if: ${{ inputs.coverage-config != '' }}
       shell: bash
       env:
         CALLER_ENV: ${{ inputs.env }}
-        CONFIG: ${{ inputs.coverage-process-start }}
+        CONFIG: ${{ inputs.coverage-config }}
         DATA_FILE: ${{ inputs.data-file }}
       run: |
         caller="${CALLER_ENV:-}"
         merged=$(jq -nc --argjson caller "${caller:-null}" --arg c "$CONFIG" --arg d "$DATA_FILE" \
           '($caller // {}) + {COVERAGE_PROCESS_START: $c, COVERAGE_FILE: $d}')
         echo "merged=$merged" >> "$GITHUB_OUTPUT"
-    # `--rcfile` as well, so the parent reads the same settings even when the
+    # Pass `--rcfile` as well, so the parent reads the same settings even when the
     # configuration is not at a name coverage discovers by itself.
     - name: Run pytest under coverage
-      if: ${{ inputs.coverage-process-start != '' }}
+      if: ${{ inputs.coverage-config != '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
-        command: python -m coverage run --rcfile=${{ inputs.coverage-process-start }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+        command: python -m coverage run --rcfile=${{ inputs.coverage-config }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: ${{ steps.coverage-env.outputs.merged }}
     # Report coverage even when the tests failed.
     - name: Combine and export coverage
-      if: ${{ !cancelled() && inputs.coverage-process-start != '' }}
+      if: ${{ !cancelled() && inputs.coverage-config != '' }}
       uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.5.0
       with:
         data-file: ${{ inputs.data-file }}
         output-file: ${{ inputs.output-file }}
     # Single process: nothing to combine.
     - name: Run pytest under coverage
-      if: ${{ inputs.coverage-process-start == '' }}
+      if: ${{ inputs.coverage-config == '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
         command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: ${{ inputs.env }}
     - name: Export coverage
-      if: ${{ !cancelled() && inputs.coverage-process-start == '' }}
+      if: ${{ !cancelled() && inputs.coverage-config == '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
         command: python -m coverage xml --data-file=${{ inputs.data-file }} -o ${{ inputs.output-file }}

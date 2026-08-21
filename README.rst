@@ -146,9 +146,9 @@ Run pytest tests on python code
    * - coverage-run-mode
      - false
      - Run pytest under ``coverage run`` instead of ``pytest --cov``. See below.
-   * - coverage-process-start
+   * - coverage-config
      -
-     - Coverage configuration file read by child processes. Set it only for a suite that spawns any - xdist workers, subprocesses - and have it enable ``parallel`` and set ``patch = subprocess``. Empty means a single process, needing no coverage configuration. ``coverage-run-mode`` only.
+     - Coverage configuration read by the run and every child process it spawns. Set it only for a suite that spawns any - xdist workers, subprocesses - and have it enable ``parallel`` and set ``patch = subprocess``. Empty means a single process, needing no coverage configuration. ``coverage-run-mode`` only.
 
 
 .. list-table:: Configuration
@@ -185,7 +185,7 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
 ``pytest-cov`` stays installed, it just no longer drives the parent process, so
 ``--cov`` must not be passed in ``pytest_opts``. That is all a single-process
 suite needs. A suite that spawns child processes - xdist workers, or code under
-test starting subprocesses - additionally sets ``coverage-process-start`` to a
+test starting subprocesses - additionally sets ``coverage-config`` to a
 coverage configuration enabling ``parallel`` and ``patch = subprocess``, so those
 processes are measured too; see `ACTIONS.rst <ACTIONS.rst>`__ for why both, and
 pass an absolute path there if the tests change the working directory.
