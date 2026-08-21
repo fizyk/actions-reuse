@@ -23,45 +23,31 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - id: coverage
-      shell: bash
-      env:
-        CONFIG: ${{ inputs.coverage-process-start }}
-        DATA_FILE: ${{ inputs.data-file }}
-      run: |
-        # Absolute, so a test that changes the working directory cannot make
-        # child processes miss the config or write data where the combine step
-        # will not look. `pwd -W` is the native form under Windows runners.
-        abs() { case $1 in /* | [A-Za-z]:[\\/]*) echo "$1" ;; *) echo "$(pwd -W 2>/dev/null || pwd)/$1" ;; esac; }
-        data=$(abs "$DATA_FILE")
-        rcfile=""
-        child_env="{}"
-        if [ -n "$CONFIG" ]; then
-          [ -f "$CONFIG" ] || { echo "::error::coverage-process-start: no such file '$CONFIG'"; exit 1; }
-          config=$(abs "$CONFIG")
-          rcfile="--rcfile=$config"
-          child_env="{\"COVERAGE_PROCESS_START\": \"$config\", \"COVERAGE_FILE\": \"$data\"}"
-        fi
-        {
-          echo "data-file=$data"
-          echo "rcfile=$rcfile"
-          echo "child-env=$child_env"
-          echo "children=${CONFIG:+true}"
-        } >> "$GITHUB_OUTPUT"
+    # Child processes get measured through COVERAGE_PROCESS_START, the parent
+    # through `coverage run` - and `--rcfile` so both read the same settings even
+    # when the configuration is not at a name coverage discovers on its own. Each
+    # process writes its own data file, hence the combine.
     - name: Run pytest under coverage
+      if: ${{ inputs.coverage-process-start != '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
-        command: python -m coverage run ${{ steps.coverage.outputs.rcfile }} --data-file=${{ steps.coverage.outputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
-        env: ${{ steps.coverage.outputs.child-env }}
+        command: python -m coverage run --rcfile=${{ inputs.coverage-process-start }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+        env: '{"COVERAGE_PROCESS_START": "${{ inputs.coverage-process-start }}", "COVERAGE_FILE": "${{ inputs.data-file }}"}'
     # A failing run's coverage is still worth reporting, hence !cancelled().
     - name: Combine and export coverage
-      if: ${{ !cancelled() && steps.coverage.outputs.children == 'true' }}
+      if: ${{ !cancelled() && inputs.coverage-process-start != '' }}
       uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.5.0
       with:
-        data-file: ${{ steps.coverage.outputs.data-file }}
+        data-file: ${{ inputs.data-file }}
         output-file: ${{ inputs.output-file }}
-    - name: Export coverage
-      if: ${{ !cancelled() && steps.coverage.outputs.children != 'true' }}
+    # One process, one data file, nothing to combine.
+    - name: Run pytest under coverage
+      if: ${{ inputs.coverage-process-start == '' }}
       uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
       with:
-        command: python -m coverage xml --data-file=${{ steps.coverage.outputs.data-file }} -o ${{ inputs.output-file }}
+        command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
+    - name: Export coverage
+      if: ${{ !cancelled() && inputs.coverage-process-start == '' }}
+      uses: fizyk/actions-reuse/.github/actions/uv-run@v5.5.0
+      with:
+        command: python -m coverage xml --data-file=${{ inputs.data-file }} -o ${{ inputs.output-file }}

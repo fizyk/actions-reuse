@@ -237,12 +237,15 @@ enables ``parallel`` and sets ``patch = subprocess``
     patch = subprocess
 
 Each process then writes its own data file and the action combines them before
-exporting. The file has to exist - the action fails if it does not, rather than
-letting child processes silently measure nothing - and both it and ``data-file``
-are resolved to absolute paths, so a test that changes the working directory
-cannot send child data somewhere the combine step will not look. The resolved
-config is also handed to the parent as ``coverage run --rcfile``, so parent and
-children never read different settings.
+exporting. It is also passed to the parent as ``coverage run --rcfile``, so
+parent and children read the same settings even when the file is not at a name
+coverage discovers by itself.
+
+Pass ``coverage-process-start`` and ``data-file`` as absolute paths if the tests
+change the working directory - with ``tmp_path``, ``monkeypatch.chdir`` or the
+like. Child processes inherit that directory, and relative paths would have them
+look for the configuration, and write their data, somewhere the combine step
+never reads.
 
 ``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
 Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only
@@ -437,12 +440,15 @@ enables ``parallel`` and sets ``patch = subprocess``
     patch = subprocess
 
 Each process then writes its own data file and the action combines them before
-exporting. The file has to exist - the action fails if it does not, rather than
-letting child processes silently measure nothing - and both it and ``data-file``
-are resolved to absolute paths, so a test that changes the working directory
-cannot send child data somewhere the combine step will not look. The resolved
-config is also handed to the parent as ``coverage run --rcfile``, so parent and
-children never read different settings.
+exporting. It is also passed to the parent as ``coverage run --rcfile``, so
+parent and children read the same settings even when the file is not at a name
+coverage discovers by itself.
+
+Pass ``coverage-process-start`` and ``data-file`` as absolute paths if the tests
+change the working directory - with ``tmp_path``, ``monkeypatch.chdir`` or the
+like. Child processes inherit that directory, and relative paths would have them
+look for the configuration, and write their data, somewhere the combine step
+never reads.
 
 ``patch`` is what makes ``COVERAGE_PROCESS_START`` take effect on its own.
 Coverage ships an ``a1_coverage.pth`` hook that does the same job, but only

@@ -187,7 +187,8 @@ plus a ``pytest_plugins`` entry in ``conftest.py``, switch the engine:
 suite needs. A suite that spawns child processes - xdist workers, or code under
 test starting subprocesses - additionally sets ``coverage-process-start`` to a
 coverage configuration enabling ``parallel`` and ``patch = subprocess``, so those
-processes are measured too; see `ACTIONS.rst <ACTIONS.rst>`__ for why both.
+processes are measured too; see `ACTIONS.rst <ACTIONS.rst>`__ for why both, and
+pass an absolute path there if the tests change the working directory.
 
 This workflow runs pytest once per job. Projects needing steps in between - a
 database service to set up, a binary to detect - or several pytest runs per job -
