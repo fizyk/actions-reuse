@@ -3,6 +3,33 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.6.0 (2026-08-24)
+================================
+
+Features
+--------
+
+- Add ``uv-pytest-coverage`` and ``pipenv-pytest-coverage`` actions, and
+  ``coverage-run-mode`` on the ``tests-pytests`` workflow, running pytest under
+  ``coverage run`` so a plugin under test gets the lines it imports at startup
+  measured - which ``pytest --cov`` misses.
+
+
+Bugfixes
+--------
+
+- Stop globbing ``<data-file>*`` into ``coverage combine`` in
+  ``coverage-combine-export`` and ``coverage-combine-export-uv``, where it also
+  matched ``.coveragerc`` and other runs' data files. Runs without ``parallel``
+  enabled now fail there instead of reporting partial data.
+
+
+Misc
+----
+
+- `#314 <https:/github.com/fizyk/actions-reuse/issues/314>`__, `#334 <https:/github.com/fizyk/actions-reuse/issues/334>`__
+
+
 actions-reuse 5.5.0 (2026-08-17)
 ================================
 
