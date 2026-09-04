@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   pytest:
-    uses: ./.github/workflows/shared-tests-pytests.yml
+    uses: $/.github/workflows/shared-tests-pytests.yml
     with:
       dependency-manager: 'uv'
       python-versions: '["3.14"]'

@@ -9,6 +9,6 @@ permissions:
 
 jobs:
   pr-check:
-    uses: ./.github/workflows/shared-pr-check.yml
+    uses: $/.github/workflows/shared-pr-check.yml
     with:
       dependency-manager: 'uv'

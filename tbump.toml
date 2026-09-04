@@ -36,29 +36,6 @@ src = "README.rst"
 [[file]]
 src = "ACTIONS.rst"
 
-[[file]]
-src = ".github/actions/pipenv/action.yml"
-[[file]]
-src = ".github/actions/uv/action.yml"
-[[file]]
-src = ".github/actions/uv-pytest-coverage/action.yml"
-[[file]]
-src = ".github/actions/pipenv-pytest-coverage/action.yml"
-[[file]]
-src = ".github/actions/coverage-combine-export/action.yml"
-[[file]]
-src = ".github/actions/coverage-combine-export-uv/action.yml"
-[[file]]
-src = ".github/workflows/shared-pr-check.yml"
-[[file]]
-src = ".github/workflows/shared-pypi.yml"
-[[file]]
-src = ".github/workflows/shared-release.yml"
-[[file]]
-src = ".github/workflows/shared-release-schedule.yml"
-[[file]]
-src = ".github/workflows/shared-tests-pytests.yml"
-
 # You can specify a list of commands to
 # run after the files have been patched
 # and before the git commit is made

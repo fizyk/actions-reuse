@@ -7,5 +7,4 @@ rules:
         # hash-pinned: the hash would have to be known before the commit that
         # contains it exists.
         fizyk/actions-reuse: ref-pin
-        fizyk/actions-reuse/*: ref-pin
         "*": hash-pin

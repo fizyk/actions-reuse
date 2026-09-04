@@ -15,7 +15,7 @@ permissions: {}
 
 jobs:
   automerge:
-    uses: ./.github/workflows/shared-automerge.yml
+    uses: $/.github/workflows/shared-automerge.yml
     secrets:
       client_id: ${{ secrets.MERGE_APP_CLIENT_ID }}
       private_key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
