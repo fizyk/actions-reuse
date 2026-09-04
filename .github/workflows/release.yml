@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   release:
-    uses: ./.github/workflows/shared-release.yml
+    uses: $/.github/workflows/shared-release.yml
     with:
       version: ${{ inputs.version }}
       dependency-manager: 'uv'

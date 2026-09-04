@@ -44,26 +44,26 @@ runs:
     # configuration is not at a name coverage discovers by itself.
     - name: Run pytest under coverage
       if: ${{ inputs.coverage-config != '' }}
-      uses: fizyk/actions-reuse/.github/actions/uv-run@v5.6.0
+      uses: $/.github/actions/uv-run
       with:
         command: python -m coverage run --rcfile=${{ inputs.coverage-config }} --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: ${{ steps.coverage-env.outputs.merged }}
     # Report coverage even when the tests failed.
     - name: Combine and export coverage
       if: ${{ !cancelled() && inputs.coverage-config != '' }}
-      uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.6.0
+      uses: $/.github/actions/coverage-combine-export-uv
       with:
         data-file: ${{ inputs.data-file }}
         output-file: ${{ inputs.output-file }}
     # Single process: nothing to combine.
     - name: Run pytest under coverage
       if: ${{ inputs.coverage-config == '' }}
-      uses: fizyk/actions-reuse/.github/actions/uv-run@v5.6.0
+      uses: $/.github/actions/uv-run
       with:
         command: python -m coverage run --data-file=${{ inputs.data-file }} -m pytest ${{ inputs.pytest-opts }}
         env: ${{ inputs.env }}
     - name: Export coverage
       if: ${{ !cancelled() && inputs.coverage-config == '' }}
-      uses: fizyk/actions-reuse/.github/actions/uv-run@v5.6.0
+      uses: $/.github/actions/uv-run
       with:
         command: python -m coverage xml --data-file=${{ inputs.data-file }} -o ${{ inputs.output-file }}

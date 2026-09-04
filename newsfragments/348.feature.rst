@@ -1,0 +1,1 @@
+Use local action references for shared workflows and actions in this repository.

@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   schedule:
-    uses: ./.github/workflows/shared-release-schedule.yml
+    uses: $/.github/workflows/shared-release-schedule.yml
     with:
       dependency-manager: 'uv'
     secrets:
