@@ -1,4 +1,7 @@
 ---
+ci:
+  autofix_prs: false
+  autoupdate_schedule: quarterly
 
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
