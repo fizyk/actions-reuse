@@ -3,6 +3,21 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.7.0 (2026-09-07)
+================================
+
+Features
+--------
+
+- Use local action references for shared workflows and actions in this repository. (`#348 <https:/github.com/fizyk/actions-reuse/issues/348>`__)
+
+
+Misc
+----
+
+- `#343 <https:/github.com/fizyk/actions-reuse/issues/343>`__, `#348 <https:/github.com/fizyk/actions-reuse/issues/348>`__, `#351 <https:/github.com/fizyk/actions-reuse/issues/351>`__
+
+
 actions-reuse 5.6.0 (2026-08-24)
 ================================
 
