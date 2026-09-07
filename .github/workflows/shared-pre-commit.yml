@@ -11,18 +11,9 @@ on:
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-        with:
-          python-version: ${{ inputs.python-version }}
-      - name: Install pre-commit
-        id: pre-commit
-        run: uv tool install pre-commit && pre-commit install
-      - name: Run pre-commit
-        id: pre-commit-run
-        run: pre-commit run --hook-stage manual --all-files
+      - uses: j178/prek-action@5337cb91e0fa35a7ff31b9ca345126d8bbbcdf16 # v2.0.6s
