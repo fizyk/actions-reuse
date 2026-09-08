@@ -135,6 +135,46 @@ Example:
         minor-fragments: 'feature,break'
 
 
+mermaid-render
+--------------
+
+Path: ``.github/actions/mermaid-render/action.yml``
+
+Render every ``.mmd`` file in a directory to SVG. Used by the ``diagram`` workflow.
+
+The renderer is installed with ``npm ci`` from the ``package-lock.json`` committed
+next to the action, so no mermaid-cli release redraws a caller's diagrams by itself;
+dependabot's ``npm`` ecosystem raises the pin here. The lockfile sits beside the
+action because the job runs against the caller's checkout, which holds no Node
+manifest. ``node_modules`` lands under ``$GITHUB_ACTION_PATH``, so the only thing
+written into that checkout is the SVGs under ``svg-path``.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - mmd-path
+     - no
+     - ``docs``
+   * - svg-path
+     - no
+     - ``docs/images``
+   * - puppeteer-config
+     - no
+     - ``docs/puppeteer-config.json``
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/mermaid-render@v5.7.0
+      with:
+        mmd-path: docs
+        svg-path: docs/images
+
+
 uv-run
 ------
 

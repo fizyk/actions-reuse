@@ -217,7 +217,10 @@ diagrams
         uses: fizyk/actions-reuse/.github/workflows/shared-diagrams.yml@v5.7.0
 
 
-Generates svg images out of the mmd diagrams
+Generates svg images out of the mmd diagrams. The renderer is pinned by a lockfile
+next to the ``mermaid-render`` action this calls, so the SVGs move only with the
+diagram sources, that pin, or ``puppeteer_config`` - see
+`ACTIONS.rst <ACTIONS.rst>`__.
 
 .. list-table:: Configuration
    :header-rows: 1
