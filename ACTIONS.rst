@@ -237,7 +237,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
         allow-prereleases: false
         cache: true
 
@@ -381,7 +381,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
     - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.8.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
@@ -427,7 +427,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/uv@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
         allow-prereleases: false
         command: pytest
 
@@ -494,7 +494,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
         allow-prereleases: false
         cache: true
 
@@ -591,7 +591,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
     - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.8.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
@@ -637,7 +637,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
         allow-prereleases: false
         command: pytest
 
@@ -665,7 +665,7 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/python-build@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"
 
 
 uv-build
@@ -691,4 +691,4 @@ Example:
 
     - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.8.0
       with:
-        python-version: "3.14"
+        python-version: "3.15"

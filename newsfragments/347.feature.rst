@@ -1,0 +1,4 @@
+Updated default Python versions:
+
+* Window one to 3.11 - 3.15
+* Single one from 3.14 to 3.15
