@@ -22,7 +22,7 @@ if tbump is correctly configured according to new codebase.
      - default
      - note
    * - python-version
-     - 3.14
+     - 3.15
      - Python version to use in the workflow
    * - dependency-manager
      - pipenv
@@ -47,7 +47,7 @@ Checks Pull Request against manual enabled pre-commit hooks.
      - default
      - note
    * - python-version
-     - 3.14
+     - 3.15
      - Python version to use in the workflow
 
 To configure pre-commit hooks to be run with this workflow, add stages parameter:
@@ -82,7 +82,7 @@ pypi
      - false
      - Whether to upload built packages as pipeline artifacts or not
    * - python-version
-     - "3.14"
+     - "3.15"
      - Python version used to build the distributions
    * - dependency-manager
      - build
@@ -129,7 +129,7 @@ Run pytest tests on python code
      -
      - Additional pytest options
    * - python-versions
-     - '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+     - '["3.11", "3.12", "3.13", "3.14", "3.15"]'
      - List of python versions matrix to run tests on. It has to be jsonified list.
    * - allow-prereleases
      - true

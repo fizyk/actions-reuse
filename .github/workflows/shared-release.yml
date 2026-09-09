@@ -71,13 +71,13 @@ jobs:
       - uses: $/.github/actions/uv
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
-          python-version: "3.14"
+          python-version: "3.15"
           cache: true
           command: tbump ${{ inputs.version }} --non-interactive
       - uses: $/.github/actions/pipenv
         if: ${{ inputs.dependency-manager != 'uv' }}
         with:
-          python-version: "3.14"
+          python-version: "3.15"
           allow-prereleases: false
           cache: true
           command: tbump ${{ inputs.version }} --non-interactive

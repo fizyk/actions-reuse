@@ -12,7 +12,7 @@ inputs:
     default: ''
   python-version:
     description: 'Python version the planner runs on'
-    default: '3.14'
+    default: '3.15'
 outputs:
   should_release:
     description: 'Whether a release should be made'
