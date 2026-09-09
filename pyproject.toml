@@ -1,7 +1,7 @@
 [project]
 name = "actions-reuse"
 version = "0.0.0"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 
 [dependency-groups]
 # The one towncrier pin: the release-plan action installs this group, and nothing else.
@@ -13,7 +13,6 @@ dev = [
     "pytest-cov==7.1.0",
     "pyyaml==6.0.3",
     "tbump==6.11.0",
-    "tomli>=2.0 ; python_full_version < '3.11'",
     { include-group = "release-plan" },
 ]
 
