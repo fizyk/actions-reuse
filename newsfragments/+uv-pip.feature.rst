@@ -1,0 +1,1 @@
+Install pinned versions through the new ``uv-pip`` composite action, which calls ``uv pip install`` directly. ``uv-run`` with a ``pip install`` command installed into whichever interpreter owned the ``pip`` on ``PATH``, since uv seeds no ``pip`` into the environments it creates.

@@ -242,6 +242,53 @@ Example:
         cache: true
 
 
+uv-pip
+------
+
+Path: ``.github/actions/uv-pip/action.yml``
+
+Install packages into the environment ``uv-setup`` prepared, using
+``uv pip install`` - to override locked versions, such as the oldest supported
+dependencies.
+
+Prefer it to ``uv-run`` with a ``pip install`` command. uv does not seed ``pip``
+into the environments it creates, so ``uv run pip`` finds whatever ``pip`` sits
+on ``PATH`` and installs into that interpreter instead of the project
+environment - without failing, wherever such a ``pip`` exists.
+
+Set ``UV_NO_SYNC`` for the job as well, or the next ``uv run`` re-syncs from the
+lockfile and reverts what was installed here; the action warns when it is unset.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - default
+   * - requirements
+     - no
+     - ``""``
+   * - packages
+     - no
+     - ``""``
+
+At least one of the two is required. ``packages`` is split on whitespace and
+needs no shell quoting of its own, so a single specifier must not contain
+spaces: write ``elasticsearch<9``, not ``elasticsearch < 9``.
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.7.0
+      with:
+        requirements: oldest/requirements.txt
+
+    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.7.0
+      with:
+        packages: elasticsearch<9
+
+
 uv-pytest-coverage
 ------------------
 

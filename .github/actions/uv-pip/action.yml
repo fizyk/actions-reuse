@@ -1,0 +1,44 @@
+name: 'uv pip install'
+description: >-
+  Install packages into the environment `uv-setup` prepared, to override locked
+  versions - the oldest supported dependencies, say.
+  Or something that should not land in lockfile.
+inputs:
+  requirements:
+    description: 'Requirements file to install from, passed to `uv pip install -r`.'
+    required: false
+    default: ''
+  packages:
+    description: 'Requirement specifiers to install, separated by whitespace.'
+    required: false
+    default: ''
+runs:
+  using: "composite"
+  steps:
+    - name: Install packages with uv pip
+      shell: bash
+      env:
+        REQUIREMENTS: ${{ inputs.requirements }}
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        if [ -z "$REQUIREMENTS" ] && [ -z "$PACKAGES" ]; then
+          echo "::error::uv-pip needs 'requirements', 'packages', or both."
+          exit 1
+        fi
+        if [ -z "${UV_NO_SYNC:-}" ]; then
+          echo "::warning::UV_NO_SYNC is not set for this job, so a later \`uv run\` re-syncs from the lockfile and reverts these versions."
+        fi
+        args=()
+        if [ -n "$REQUIREMENTS" ]; then
+          args+=(-r "$REQUIREMENTS")
+        fi
+        if [ -n "$PACKAGES" ]; then
+          # Split the specifier list on whitespace, with globbing off so a
+          # marker or extra is never expanded against the working tree.
+          set -f
+          # shellcheck disable=SC2206
+          specs=( $PACKAGES )
+          set +f
+          args+=("${specs[@]}")
+        fi
+        uv pip install "${args[@]}"
