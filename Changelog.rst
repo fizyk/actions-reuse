@@ -3,6 +3,23 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.8.0 (2026-09-14)
+================================
+
+Features
+--------
+
+- Render mermaid diagrams with a lockfile-pinned mermaid-cli, through the new ``mermaid-render`` composite action. (`#323 <https:/github.com/fizyk/actions-reuse/issues/323>`__)
+- Replace pre-commit with prek as pre-commit runner (`#356 <https:/github.com/fizyk/actions-reuse/issues/356>`__)
+- Install pinned versions through the new ``uv-pip`` composite action, which calls ``uv pip install`` directly. ``uv-run`` with a ``pip install`` command installed into whichever interpreter owned the ``pip`` on ``PATH``, since uv seeds no ``pip`` into the environments it creates.
+
+
+Misc
+----
+
+- `#356 <https:/github.com/fizyk/actions-reuse/issues/356>`__
+
+
 actions-reuse 5.7.0 (2026-09-07)
 ================================
 
