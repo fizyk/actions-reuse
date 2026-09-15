@@ -1,0 +1,5 @@
+Merged ``towncrier``, ``tbump`` and ``rstcheck`` configuration into ``pyproject.toml``,
+removing ``towncrier.toml``, ``tbump.toml`` and ``.rstcheck.cfg``.
+Added the ``pyproject-fmt`` pre-commit hook to keep ``pyproject.toml`` formatted.
+``project.version`` now carries the real version instead of ``0.0.0``, and ``tbump``
+keeps it in sync on release.
