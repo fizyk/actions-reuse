@@ -4,7 +4,7 @@ requires-python = ">=3.11"
 
 [[package]]
 name = "actions-reuse"
-version = "0.0.0"
+version = "5.8.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]

@@ -9,15 +9,15 @@ actions-reuse 5.8.0 (2026-09-14)
 Features
 --------
 
-- Render mermaid diagrams with a lockfile-pinned mermaid-cli, through the new ``mermaid-render`` composite action. (`#323 <https:/github.com/fizyk/actions-reuse/issues/323>`__)
-- Replace pre-commit with prek as pre-commit runner (`#356 <https:/github.com/fizyk/actions-reuse/issues/356>`__)
+- Render mermaid diagrams with a lockfile-pinned mermaid-cli, through the new ``mermaid-render`` composite action. (`#323 <https://github.com/fizyk/actions-reuse/issues/323>`__)
+- Replace pre-commit with prek as pre-commit runner (`#356 <https://github.com/fizyk/actions-reuse/issues/356>`__)
 - Install pinned versions through the new ``uv-pip`` composite action, which calls ``uv pip install`` directly. ``uv-run`` with a ``pip install`` command installed into whichever interpreter owned the ``pip`` on ``PATH``, since uv seeds no ``pip`` into the environments it creates.
 
 
 Misc
 ----
 
-- `#356 <https:/github.com/fizyk/actions-reuse/issues/356>`__
+- `#356 <https://github.com/fizyk/actions-reuse/issues/356>`__
 
 
 actions-reuse 5.7.0 (2026-09-07)
@@ -26,13 +26,13 @@ actions-reuse 5.7.0 (2026-09-07)
 Features
 --------
 
-- Use local action references for shared workflows and actions in this repository. (`#348 <https:/github.com/fizyk/actions-reuse/issues/348>`__)
+- Use local action references for shared workflows and actions in this repository. (`#348 <https://github.com/fizyk/actions-reuse/issues/348>`__)
 
 
 Misc
 ----
 
-- `#343 <https:/github.com/fizyk/actions-reuse/issues/343>`__, `#348 <https:/github.com/fizyk/actions-reuse/issues/348>`__, `#351 <https:/github.com/fizyk/actions-reuse/issues/351>`__
+- `#343 <https://github.com/fizyk/actions-reuse/issues/343>`__, `#348 <https://github.com/fizyk/actions-reuse/issues/348>`__, `#351 <https://github.com/fizyk/actions-reuse/issues/351>`__
 
 
 actions-reuse 5.6.0 (2026-08-24)
@@ -59,7 +59,7 @@ Bugfixes
 Misc
 ----
 
-- `#314 <https:/github.com/fizyk/actions-reuse/issues/314>`__, `#334 <https:/github.com/fizyk/actions-reuse/issues/334>`__
+- `#314 <https://github.com/fizyk/actions-reuse/issues/314>`__, `#334 <https://github.com/fizyk/actions-reuse/issues/334>`__
 
 
 actions-reuse 5.5.0 (2026-08-17)
@@ -69,7 +69,7 @@ Features
 --------
 
 - Audit the workflows and composite actions with `zizmor <https://docs.zizmor.sh/>`__ on every pre-commit run.
-  Its ``unpinned-uses`` policy allows tag references into ``fizyk/actions-reuse`` itself - a hash pin cannot name the commit that carries it - and requires a hash everywhere else; every other suppression sits inline next to the code it excuses. (`#313 <https:/github.com/fizyk/actions-reuse/issues/313>`__)
+  Its ``unpinned-uses`` policy allows tag references into ``fizyk/actions-reuse`` itself - a hash pin cannot name the commit that carries it - and requires a hash everywhere else; every other suppression sits inline next to the code it excuses. (`#313 <https://github.com/fizyk/actions-reuse/issues/313>`__)
 - Mint ``shared-release``'s app token with just *Contents: write*, *Workflows: write* and *Metadata: read* instead of the whole installation's permissions, and declare ``permissions`` on the workflows in this repository.
   The release caller only needs ``contents: read`` now, as the bump commit and the tag have always been pushed with the app token; the documented snippet was updated accordingly.
   Inputs that name a path, a Python version or a step output reach their shell through the environment rather than through template expansion; the ``command`` and install-option inputs stay expanded, as callers rely on shell syntax inside them.
@@ -87,7 +87,7 @@ Deprecations and Removals
 Misc
 ----
 
-- `#330 <https:/github.com/fizyk/actions-reuse/issues/330>`__
+- `#330 <https://github.com/fizyk/actions-reuse/issues/330>`__
 
 
 actions-reuse 5.4.1 (2026-08-13)
@@ -103,7 +103,7 @@ Features
 --------
 
 - Move ``shared-release-schedule``'s version planning into the new ``release-plan`` composite action, which asks towncrier what a newsfragment is instead of imitating it with globs.
-  The fragments directory and the fragment types come from the repository's own towncrier configuration, and every name towncrier accepts counts - custom types, sections, markdown, the counter form and extension-less fragments alike. (`#316 <https:/github.com/fizyk/actions-reuse/issues/316>`__)
+  The fragments directory and the fragment types come from the repository's own towncrier configuration, and every name towncrier accepts counts - custom types, sections, markdown, the counter form and extension-less fragments alike. (`#316 <https://github.com/fizyk/actions-reuse/issues/316>`__)
 - Make ``shared-release-schedule`` bump levels configurable through ``minor-fragments`` and ``major-fragments``, both taking their previous behaviour as defaults.
   Previously only ``feature`` raised the minor and nothing raised the major, so a ``break`` fragment released as a patch. On a pre-1.0 project list the breaking type under ``minor-fragments`` and leave ``major-fragments`` empty.
 - Support triggering ``shared-automerge`` on ``pull_request_target``, which is now the preferred trigger.
@@ -218,7 +218,7 @@ actions-reuse 5.2.1 (2026-06-08)
 Bugfixes
 --------
 
-- Secure all non-release checkouts by setting `persist-credentials: false`. (`#290 <https:/github.com/fizyk/actions-reuse/issues/290>`__)
+- Secure all non-release checkouts by setting `persist-credentials: false`. (`#290 <https://github.com/fizyk/actions-reuse/issues/290>`__)
 
 
 actions-reuse 5.2.0 (2026-06-01)
@@ -233,8 +233,8 @@ Features
 Bugfixes
 --------
 
-- Pin all GitHub Actions references to commit SHAs (supply-chain hardening) (`#288 <https:/github.com/fizyk/actions-reuse/issues/288>`__)
-- Replaced deprecated `tibdex/github-app-token` usage with `actions/create-github-app-token`. (`#291 <https:/github.com/fizyk/actions-reuse/issues/291>`__)
+- Pin all GitHub Actions references to commit SHAs (supply-chain hardening) (`#288 <https://github.com/fizyk/actions-reuse/issues/288>`__)
+- Replaced deprecated `tibdex/github-app-token` usage with `actions/create-github-app-token`. (`#291 <https://github.com/fizyk/actions-reuse/issues/291>`__)
 
 
 actions-reuse 5.1.2 (2026-05-22)
@@ -543,7 +543,7 @@ Features
 Misc
 ----
 
-- `#173 <https:/github.com/fizyk/actions-reuse/issues/173>`__
+- `#173 <https://github.com/fizyk/actions-reuse/issues/173>`__
 
 
 2.4.6 (2024-05-08)
@@ -552,7 +552,7 @@ Misc
 Misc
 ----
 
-- `#172 <https:/github.com/fizyk/actions-reuse/issues/172>`__
+- `#172 <https://github.com/fizyk/actions-reuse/issues/172>`__
 
 
 2.4.5 (2024-05-08)
@@ -561,7 +561,7 @@ Misc
 Misc
 ----
 
-- `#171 <https:/github.com/fizyk/actions-reuse/issues/171>`__
+- `#171 <https://github.com/fizyk/actions-reuse/issues/171>`__
 
 
 2.4.4 (2024-03-15)
@@ -570,7 +570,7 @@ Misc
 Misc
 ----
 
-- `#160 <https:/github.com/fizyk/actions-reuse/issues/160>`__
+- `#160 <https://github.com/fizyk/actions-reuse/issues/160>`__
 
 
 2.4.3 (2024-03-15)
@@ -585,7 +585,7 @@ No significant changes.
 Features
 --------
 
-- Ability to make caching optional (`#140 <https:/github.com/fizyk/actions-reuse/issues/140>`__)
+- Ability to make caching optional (`#140 <https://github.com/fizyk/actions-reuse/issues/140>`__)
 
 
 2.4.1 (2023-10-23)
@@ -594,7 +594,7 @@ Features
 Bugfixes
 --------
 
-- If PKG_CONFIG_PATH is set, then work around setup-python and extend it with original value. (`#139 <https:/github.com/fizyk/actions-reuse/issues/139>`__)
+- If PKG_CONFIG_PATH is set, then work around setup-python and extend it with original value. (`#139 <https://github.com/fizyk/actions-reuse/issues/139>`__)
 
 
 2.4.0 (2023-10-03)
@@ -603,7 +603,7 @@ Bugfixes
 Features
 --------
 
-- Use Python 3.12 by default, drop 3.7 for default set of python versions. (`#138 <https:/github.com/fizyk/actions-reuse/issues/138>`__)
+- Use Python 3.12 by default, drop 3.7 for default set of python versions. (`#138 <https://github.com/fizyk/actions-reuse/issues/138>`__)
 
 
 2.3.2 (2023-09-11)
@@ -612,7 +612,7 @@ Features
 Misc
 ----
 
-- `#137 <https:/github.com/fizyk/actions-reuse/issues/137>`__
+- `#137 <https://github.com/fizyk/actions-reuse/issues/137>`__
 
 
 2.3.1 (2023-09-08)
@@ -621,7 +621,7 @@ Misc
 Bugfixes
 --------
 
-- fix pipenv caching - use Pipfile for dependency cache not Pipfile.lock which might not be present (`#133 <https:/github.com/fizyk/actions-reuse/issues/133>`__)
+- fix pipenv caching - use Pipfile for dependency cache not Pipfile.lock which might not be present (`#133 <https://github.com/fizyk/actions-reuse/issues/133>`__)
 
 
 2.3.0 (2023-09-08)
@@ -630,11 +630,11 @@ Bugfixes
 Features
 --------
 
-- Store Pipfile.lock as an artifact if it's not versioned. (`#128 <https:/github.com/fizyk/actions-reuse/issues/128>`__)
-- Cache pipenv dependencies (`#129 <https:/github.com/fizyk/actions-reuse/issues/129>`__)
+- Store Pipfile.lock as an artifact if it's not versioned. (`#128 <https://github.com/fizyk/actions-reuse/issues/128>`__)
+- Cache pipenv dependencies (`#129 <https://github.com/fizyk/actions-reuse/issues/129>`__)
 - Cache `Pipfile.lock` if it's not versioned in git -
   this will help provide reproducible builds, and allows
-  to remove `--skip-lock` flags from pipenv install commands.. (`#129 <https:/github.com/fizyk/actions-reuse/issues/129>`__)
+  to remove `--skip-lock` flags from pipenv install commands.. (`#129 <https://github.com/fizyk/actions-reuse/issues/129>`__)
 
 
 2.2.1 (2023-07-12)
@@ -643,7 +643,7 @@ Features
 Bugfixes
 --------
 
-- Trigger rstcheck on rstcheck flag not rst one. (`#123 <https:/github.com/fizyk/actions-reuse/issues/123>`__)
+- Trigger rstcheck on rstcheck flag not rst one. (`#123 <https://github.com/fizyk/actions-reuse/issues/123>`__)
 
 
 2.2.0 (2023-07-12)
@@ -652,13 +652,13 @@ Bugfixes
 Features
 --------
 
-- Added support for rstcheck rst linter (`#120 <https:/github.com/fizyk/actions-reuse/issues/120>`__)
+- Added support for rstcheck rst linter (`#120 <https://github.com/fizyk/actions-reuse/issues/120>`__)
 
 
 Misc
 ----
 
-- `#117 <https:/github.com/fizyk/actions-reuse/issues/117>`__
+- `#117 <https://github.com/fizyk/actions-reuse/issues/117>`__
 
 
 2.1.2 (2023-05-20)

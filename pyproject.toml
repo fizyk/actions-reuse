@@ -1,13 +1,9 @@
 [project]
 name = "actions-reuse"
-version = "0.0.0"
+version = "5.8.0"
 requires-python = ">=3.11"
 
 [dependency-groups]
-# The one towncrier pin: the release-plan action installs this group, and nothing else.
-release-plan = [
-    "towncrier==25.8.0",
-]
 dev = [
     "pytest==9.1.1",
     "pytest-cov==7.1.0",
@@ -15,13 +11,69 @@ dev = [
     "tbump==6.11.0",
     { include-group = "release-plan" },
 ]
+# The one towncrier pin: the release-plan action installs this group, and nothing else.
+release-plan = [
+    "towncrier==25.8.0",
+]
+
+[tool.pyproject-fmt]
+column_width = 120
+indent = 4
+keep_full_version = true
+generate_python_version_classifiers = false
+table_format = "long"
+sub_table_spacing = "\n"
 
 [tool.pytest]
-testpaths = ["tests"]
-pythonpath = [".github/actions/release-plan"]
-
-[tool.coverage.run]
-source = [".github/actions/release-plan"]
+pythonpath = [ ".github/actions/release-plan" ]
+testpaths = [ "tests" ]
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.coverage.run]
+source = [ ".github/actions/release-plan" ]
+
+[[tool.tbump.before_commit]]
+name = "Build changelog"
+cmd = "uv run towncrier build --version {new_version} --yes"
+
+[[tool.tbump.field]]
+name = "extra"
+default = ""
+
+[[tool.tbump.file]]
+src = "README.rst"
+
+[[tool.tbump.file]]
+src = "ACTIONS.rst"
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
+search = 'version = "{current_version}"'
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[tool.tbump.version]
+current = "5.8.0"
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  (\-
+    (?P<extra>.+)
+  )?
+  '''
+
+[tool.towncrier]
+directory = "newsfragments"
+filename = "Changelog.rst"
+issue_format = "`#{issue} <https://github.com/fizyk/actions-reuse/issues/{issue}>`__"
+single_file = true
+
+[tool.rstcheck]
+report_level = "warning"
