@@ -28,11 +28,11 @@ sub_table_spacing = "\n"
 pythonpath = [ ".github/actions/release-plan" ]
 testpaths = [ "tests" ]
 
-[tool.coverage.report]
-show_missing = true
-
 [tool.coverage.run]
 source = [ ".github/actions/release-plan" ]
+
+[tool.coverage.report]
+show_missing = true
 
 [[tool.tbump.before_commit]]
 name = "Build changelog"
