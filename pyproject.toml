@@ -13,7 +13,7 @@ dev = [
 ]
 # The one towncrier pin: the release-plan action installs this group, and nothing else.
 release-plan = [
-    "towncrier==25.8.0",
+    "towncrier==26.9.0",
 ]
 
 [tool.pyproject-fmt]
