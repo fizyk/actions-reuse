@@ -15,6 +15,7 @@ permissions: {}
 
 jobs:
   automerge:
+    cache-mode: none
     uses: $/.github/workflows/shared-automerge.yml
     secrets:
       client_id: ${{ secrets.MERGE_APP_CLIENT_ID }}
