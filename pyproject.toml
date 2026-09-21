@@ -1,6 +1,6 @@
 [project]
 name = "actions-reuse"
-version = "5.8.0"
+version = "5.9.0"
 requires-python = ">=3.11"
 
 [dependency-groups]
@@ -57,7 +57,7 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "5.8.0"
+current = "5.9.0"
 regex = '''
   (?P<major>\d+)
   \.

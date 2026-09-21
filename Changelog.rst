@@ -3,6 +3,24 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.9.0 (2026-09-21)
+================================
+
+Features
+--------
+
+- Updated default Python versions:
+
+  * Window one to 3.11 - 3.15
+  * Single one from 3.14 to 3.15 (`#347 <https://github.com/fizyk/actions-reuse/issues/347>`__)
+
+
+Misc
+----
+
+- `#338 <https://github.com/fizyk/actions-reuse/issues/338>`__, `#366 <https://github.com/fizyk/actions-reuse/issues/366>`__
+
+
 actions-reuse 5.8.0 (2026-09-14)
 ================================
 
