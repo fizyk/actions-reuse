@@ -1,0 +1,1 @@
+Grant the shared-automerge app token ``workflows: write``, so auto-merge no longer gets disabled with ``workflow_policy_update_error`` when a pull request changing ``.github/workflows/`` is behind its base branch (e.g. the second of two dependabot GitHub Actions bumps). The GitHub App installation must grant the Workflows permission, or minting the token fails.
