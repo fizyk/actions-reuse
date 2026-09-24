@@ -1,1 +1,0 @@
-Grant the shared-automerge app token ``workflows: write``, so auto-merge can merge pull requests that change files under ``.github/workflows/`` (such as dependabot GitHub Actions bumps) instead of being disabled with ``workflow_policy_update_error``.

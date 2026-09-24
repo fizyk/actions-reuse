@@ -32,9 +32,11 @@ jobs:
           private-key: ${{ secrets.private_key }}
           permission-pull-requests: write
           permission-contents: write
-          # Auto-merge merges with the credentials that armed it, and GitHub
-          # rejects a merge that touches .github/workflows/ without this, so
-          # dependabot github_actions bumps would be silently disarmed.
+          # Auto-merge merges with the credentials that armed it. When a pull
+          # request touching .github/workflows/ is behind its base, the merge
+          # commit carries workflow content found in neither parent, and
+          # GitHub disarms auto-merge unless the merger can write workflows.
+          # Two dependabot github_actions bumps landing together hit this.
           permission-workflows: write
           permission-metadata: read
       # Arms GitHub's native auto-merge rather than merging immediately.
