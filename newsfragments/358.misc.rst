@@ -1,0 +1,1 @@
+Pin the prek version the shared pre-commit workflow installs, and let Renovate update it - dependabot cannot see action inputs.

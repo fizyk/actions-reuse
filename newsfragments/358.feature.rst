@@ -1,0 +1,1 @@
+Arm auto-merge on non-major renovate pull requests in ``shared-automerge``. The calling repository's renovate config has to add ``"commitBody": "Update-Type: {{updateType}}"``, since that is what the update type is read from.

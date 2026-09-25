@@ -92,6 +92,21 @@ jobs:
                     ;;
                 esac
                 ;;
+              app/renovate)
+                # Renovate writes no update metadata of its own, so the
+                # calling repository's renovate config has to add it with
+                # `"commitBody": "Update-Type: {{updateType}}"`. Only update
+                # types known not to be majors are armed, which also skips
+                # pull requests missing the trailer.
+                update_type=$(sed -n 's/^Update-Type: //p' <<<"$body" | tail -n 1)
+                case "$update_type" in
+                  minor|patch|digest|pin|pinDigest|lockFileMaintenance) ;;
+                  *)
+                    echo "Pull request #$number is a '${update_type:-unknown}' update, skipping."
+                    continue
+                    ;;
+                esac
+                ;;
               app/pre-commit-ci) ;;
               *)
                 echo "Pull request #$number was created by $author, skipping."
@@ -103,7 +118,7 @@ jobs:
             # merge-me-action's `reviews(last: 1, states: APPROVED)` check.
             # Without this a repository requiring approvals would arm
             # auto-merge and then wait forever, since nothing else reviews
-            # dependabot and pre-commit.ci pull requests.
+            # dependabot, renovate and pre-commit.ci pull requests.
             if [ "$approvals" -eq 0 ]; then
               echo "Approving pull request #$number."
               gh pr review --approve "$number"

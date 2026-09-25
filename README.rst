@@ -256,7 +256,7 @@ automerge
       automerge:
         uses: fizyk/actions-reuse/.github/workflows/shared-automerge.yml@v5.9.0
 
-Arms `GitHub's native auto-merge <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request>`_ on dependabot and pre-commit.ci pull requests, using
+Arms `GitHub's native auto-merge <https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/automatically-merging-a-pull-request>`_ on dependabot, renovate and pre-commit.ci pull requests, using
 `actions/create-github-app-token <https://github.com/actions/create-github-app-token>`_ to generate a short-lived github app token with enough permissions to enable it.
 
 Mind that dependabot pull requests are treated as 3rd party pull requests, hence default GITHUB_TOKEN will only have read permissions.
@@ -267,7 +267,15 @@ Requires Github application to run!
 
     gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true
 
-Major version bumps are left alone; patch and minor bumps are armed. Pull requests with no approving review are approved first, so repositories requiring approvals keep merging dependency updates while still holding human pull requests.
+Major version bumps are left alone; patch and minor bumps are armed. Renovate records nothing about the update in its commits, so renovate pull requests are armed only when the calling repository's renovate config adds the update type to the commit body:
+
+.. code-block:: json
+
+    {
+      "commitBody": "Update-Type: {{updateType}}"
+    }
+
+Of those, ``minor``, ``patch``, ``digest``, ``pin``, ``pinDigest`` and ``lockFileMaintenance`` updates are armed; anything else, or a missing ``Update-Type``, is skipped. Only the hosted Renovate app (``app/renovate``) is recognised. Pull requests with no approving review are approved first, so repositories requiring approvals keep merging dependency updates while still holding human pull requests.
 
 Prefer ``pull_request_target``: arming is a one-shot action, and GitHub merges once the last required check reports, whichever API it reports through. It arms as the pull request opens, which assumes required status checks are configured. ``workflow_run`` and ``check_suite`` completion also work, but run the job once per finished check. On any other event the job is skipped.
 
