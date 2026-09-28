@@ -3,6 +3,27 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.10.0 (2026-09-28)
+=================================
+
+Features
+--------
+
+- Arm auto-merge on non-major renovate pull requests in ``shared-automerge``. The calling repository's renovate config has to add ``"commitBody": "Update-Type: {{updateType}}"``, since that is what the update type is read from. (`#358 <https://github.com/fizyk/actions-reuse/issues/358>`__)
+
+
+Bugfixes
+--------
+
+- Grant the shared-automerge app token ``workflows: write``, so auto-merge no longer gets disabled with ``workflow_policy_update_error`` when a pull request changing ``.github/workflows/`` is behind its base branch (e.g. the second of two dependabot GitHub Actions bumps). The GitHub App installation must grant the Workflows permission, or minting the token fails. (`#372 <https://github.com/fizyk/actions-reuse/issues/372>`__)
+
+
+Misc
+----
+
+- `#358 <https://github.com/fizyk/actions-reuse/issues/358>`__, `#371 <https://github.com/fizyk/actions-reuse/issues/371>`__
+
+
 actions-reuse 5.9.0 (2026-09-21)
 ================================
 
