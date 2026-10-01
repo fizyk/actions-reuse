@@ -71,6 +71,7 @@ jobs:
             author=$(jq -r '.author.login' <<<"$information")
             head=$(jq -r '.headRefOid' <<<"$information")
             state=$(jq -r '.state' <<<"$information")
+            headline=$(jq -r '.commits[-1].messageHeadline // ""' <<<"$information")
             body=$(jq -r '.commits[-1].messageBody // ""' <<<"$information")
             approvals=$(jq -r '[.reviews[] | select(.state == "APPROVED")] | length' <<<"$information")
             armed=$(jq -r 'if .autoMergeRequest == null then "" else "yes" end' <<<"$information")
@@ -85,10 +86,45 @@ jobs:
                 # Equivalent of merge-me-action's DEPENDABOT_MINOR preset,
                 # read from the metadata dependabot writes into the commit
                 # message rather than parsed out of the pull request title.
+                # Only update types known not to be majors are armed.
+                dependencies=$(grep -c '^- dependency-name:' <<<"$body" || true)
                 case "$body" in
-                  *version-update:semver-major*)
-                    echo "Pull request #$number is a major version bump, skipping."
-                    continue
+                  *version-update:*)
+                    # A grouped update lists one entry per dependency, so
+                    # every entry has to be a minor or patch: one major among
+                    # them, or an entry without an update type, skips the
+                    # whole pull request.
+                    update_types=$(grep -o 'version-update:[a-z-]*' <<<"$body")
+                    disallowed=$(grep -cvx -e 'version-update:semver-minor' -e 'version-update:semver-patch' <<<"$update_types" || true)
+                    if [ "$disallowed" -ne 0 ] || [ "$(wc -l <<<"$update_types")" -ne "$dependencies" ]; then
+                      echo "Pull request #$number is not solely minor or patch version bumps, skipping."
+                      continue
+                    fi
+                    ;;
+                  *)
+                    # Dependabot leaves `update-type` out of security updates,
+                    # so fall back to the versions in the commit headline:
+                    # `Bump <name> from <old> to <new>[ in <directory>]`.
+                    # Anything that does not read cleanly as a single
+                    # dependency moving between plain dotted versions is
+                    # skipped, so a major bump fixing an advisory cannot slip
+                    # through.
+                    pattern='^Bump .+ from v?([0-9]+(\.[0-9]+)*) to v?([0-9]+(\.[0-9]+)*)( in .+)?$'
+                    if [ "$dependencies" -ne 1 ] || ! [[ "$headline" =~ $pattern ]]; then
+                      echo "Pull request #$number has no update type and no versions to compare, skipping."
+                      continue
+                    fi
+                    old=${BASH_REMATCH[1]}
+                    new=${BASH_REMATCH[3]}
+                    IFS=. read -r old_major old_minor _ <<<"$old"
+                    IFS=. read -r new_major new_minor _ <<<"$new"
+                    # Before 1.0 a minor bump is the breaking one, so there
+                    # the minor has to hold as well.
+                    if [ "$old_major" != "$new_major" ] \
+                      || { [ "$old_major" = 0 ] && [ "${old_minor:-0}" != "${new_minor:-0}" ]; }; then
+                      echo "Pull request #$number bumps $old to $new, a major version bump, skipping."
+                      continue
+                    fi
                     ;;
                 esac
                 ;;

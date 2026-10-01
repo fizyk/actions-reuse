@@ -267,7 +267,7 @@ Requires Github application to run!
 
     gh api -X PATCH repos/OWNER/REPO -F allow_auto_merge=true
 
-Major version bumps are left alone; patch and minor bumps are armed. Renovate records nothing about the update in its commits, so renovate pull requests are armed only when the calling repository's renovate config adds the update type to the commit body:
+Major version bumps are left alone; patch and minor bumps are armed. Dependabot pull requests are armed only when their commit records ``version-update:semver-minor`` or ``version-update:semver-patch``; security updates, which dependabot writes without an ``update-type``, are judged by the ``from <old> to <new>`` versions in the commit headline instead: they are armed only for a single dependency moving between plain dotted versions with the same major version (and the same minor version before 1.0), and skipped otherwise. Renovate records nothing about the update in its commits, so renovate pull requests are armed only when the calling repository's renovate config adds the update type to the commit body:
 
 .. code-block:: json
 
