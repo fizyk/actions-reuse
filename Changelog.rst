@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.10.1 (2026-10-05)
+=================================
+
+Bugfixes
+--------
+
+- Arm auto-merge on dependabot pull requests only when the commit records a ``semver-minor`` or ``semver-patch`` update type. Security updates carry no ``update-type``, so major bumps fixing an advisory slipped past the major-version check and were merged; those now fall back to the versions in the commit headline and are armed only for a single dependency whose major version (and minor version, before 1.0) stays the same. (`#377 <https://github.com/fizyk/actions-reuse/issues/377>`__)
+
+
 actions-reuse 5.10.0 (2026-09-28)
 =================================
 
