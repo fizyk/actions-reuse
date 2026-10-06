@@ -1,0 +1,1 @@
+Skip renovate pull requests in ``shared-pr-check``.
