@@ -41,12 +41,12 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - uses: $/.github/actions/uv
-        if: ${{ inputs.dependency-manager == 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
+        if: ${{ inputs.dependency-manager == 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]","renovate[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
           command: towncrier check --compare-with origin/${{ github.base_ref }}
       - uses: $/.github/actions/pipenv
-        if: ${{ inputs.dependency-manager != 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]"]'), github.actor) }}
+        if: ${{ inputs.dependency-manager != 'uv' && !contains(fromJSON('["dependabot[bot]","pre-commit-ci[bot]","renovate[bot]"]'), github.actor) }}
         with:
           python-version: ${{ inputs.python-version }}
           allow-prereleases: false
