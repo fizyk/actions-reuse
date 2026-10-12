@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.10.2 (2026-10-12)
+=================================
+
+Bugfixes
+--------
+
+- Skip renovate pull requests in ``shared-pr-check``.
+
+
 actions-reuse 5.10.1 (2026-10-05)
 =================================
 
