@@ -1,0 +1,1 @@
+Read dependabot versions from the commit body in ``shared-automerge`` when the commit headline was shortened, so pre-commit hook updates get auto-merged.
