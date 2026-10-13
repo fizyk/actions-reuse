@@ -102,15 +102,24 @@ jobs:
                     fi
                     ;;
                   *)
-                    # Dependabot leaves `update-type` out of security updates,
-                    # so fall back to the versions in the commit headline:
+                    # Dependabot leaves `update-type` out of security updates
+                    # and pre-commit updates, so fall back to the versions in
+                    # the commit headline:
                     # `Bump <name> from <old> to <new>[ in <directory>]`.
+                    # A long dependency name (pre-commit names hooks by their
+                    # repository URL) gets the headline cut down to
+                    # `Bump <name>`, so then read the versions from the body's
+                    # `Bumps [<name>](<url>) from <old> to <new>.` line instead.
                     # Anything that does not read cleanly as a single
                     # dependency moving between plain dotted versions is
                     # skipped, so a major bump fixing an advisory cannot slip
                     # through.
-                    pattern='^Bump .+ from v?([0-9]+(\.[0-9]+)*) to v?([0-9]+(\.[0-9]+)*)( in .+)?$'
-                    if [ "$dependencies" -ne 1 ] || ! [[ "$headline" =~ $pattern ]]; then
+                    version='v?([0-9]+(\.[0-9]+)*)'
+                    pattern="^Bump .+ from $version to $version( in .+)?\$"
+                    body_pattern="^Bumps \[[^]]+\]\([^)]+\) from $version to $version\.\$"
+                    bumps=$(grep -m 1 '^Bumps ' <<<"$body" || true)
+                    if [ "$dependencies" -ne 1 ] \
+                      || ! { [[ "$headline" =~ $pattern ]] || [[ "$bumps" =~ $body_pattern ]]; }; then
                       echo "Pull request #$number has no update type and no versions to compare, skipping."
                       continue
                     fi
