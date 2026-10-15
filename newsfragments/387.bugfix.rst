@@ -1,0 +1,1 @@
+Update mermaid-render's mermaid-cli with renovate, as dependabot cannot open pull requests changing npm files under ``.github``.

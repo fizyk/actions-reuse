@@ -15,7 +15,8 @@
     }
   ],
   "enabledManagers": [
-    "custom.regex"
+    "custom.regex",
+    "npm"
   ],
   "extends": [
     "config:recommended"
