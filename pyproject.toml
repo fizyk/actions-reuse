@@ -25,11 +25,11 @@ table_format = "long"
 sub_table_spacing = "\n"
 
 [tool.pytest]
-pythonpath = [ ".github/actions/release-plan" ]
+pythonpath = [ ".github/actions/automerge", ".github/actions/release-plan" ]
 testpaths = [ "tests" ]
 
 [tool.coverage.run]
-source = [ ".github/actions/release-plan" ]
+source = [ ".github/actions/automerge", ".github/actions/release-plan" ]
 
 [tool.coverage.report]
 show_missing = true
