@@ -4,7 +4,7 @@ import pytest
 
 import automerge.github
 
-from support import FakeGh
+from fakes import FakeGh
 
 
 @pytest.fixture

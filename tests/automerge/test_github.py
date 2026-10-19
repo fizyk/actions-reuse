@@ -5,7 +5,7 @@ import subprocess
 import pytest
 
 from automerge import github
-from support import pull
+from builders import pull
 
 
 def test_view(fake_gh) -> None:

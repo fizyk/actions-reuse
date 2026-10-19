@@ -1,28 +1,4 @@
-"""Real commit messages, builders for made-up ones, and a stand-in for ``gh``."""
-
-import json
-import subprocess
-
-
-def dependabot_body(*entries: str, bumps: str = "") -> str:
-    """A dependabot commit body: the prose, then one metadata entry per dependency."""
-    return (
-        f"{bumps}\n"
-        "- [Release notes](https://example.com/releases)\n"
-        "\n"
-        "---\n"
-        "updated-dependencies:\n" + "".join(entries) + "...\n"
-        "\n"
-        "Signed-off-by: dependabot[bot] <support@github.com>"
-    )
-
-
-def entry(name: str, version: str, update_type: str | None = None) -> str:
-    text = f"- dependency-name: {name}\n  dependency-version: {version}\n  dependency-type: direct:production\n"
-    if update_type is not None:
-        text += f"  update-type: version-update:{update_type}\n"
-    return text
-
+"""Real commit messages, copied from the pull requests named above each."""
 
 # fizyk/pyramid_fullauth#999: a security update, so no update-type.
 URLLIB3_HEADLINE = "Bump urllib3 from 2.7.0 to 2.8.0"
@@ -95,45 +71,3 @@ SETUP_UV_BODY = (
     )
     + "...\n\nSigned-off-by: dependabot[bot] <support@github.com>"
 )
-
-
-class FakeGh:
-    """Answers ``gh pr view`` from a table and records every other call."""
-
-    def __init__(self, pulls: dict[int, dict], fail: tuple[str, ...] = ()) -> None:
-        self.pulls = pulls
-        self.fail = fail
-        self.calls: list[tuple[str, ...]] = []
-
-    def __call__(self, args, check, capture_output, text):
-        assert args[0] == "gh" and check and capture_output and text
-        args = tuple(args[1:])
-        if args[:2] == ("pr", "view"):
-            return subprocess.CompletedProcess(args, 0, stdout=json.dumps(self.pulls[int(args[2])]), stderr="")
-        self.calls.append(args)
-        if args[:2] == self.fail:
-            raise subprocess.CalledProcessError(1, ("gh", *args), stderr="GraphQL: nope\n")
-        return subprocess.CompletedProcess(args, 0, stdout="", stderr="")
-
-
-def pull(
-    author: str = "app/dependabot",
-    headline: str = URLLIB3_HEADLINE,
-    body: str = URLLIB3_BODY,
-    state: str = "OPEN",
-    reviews: tuple[str, ...] = (),
-    armed: bool = False,
-    head: str = "abc123",
-) -> dict:
-    """What ``gh pr view --json`` returns for a pull request."""
-    return {
-        "author": {"login": author},
-        "state": state,
-        "commits": [
-            {"messageHeadline": "an older commit", "messageBody": ""},
-            {"messageHeadline": headline, "messageBody": body},
-        ],
-        "reviews": [{"state": review} for review in reviews],
-        "autoMergeRequest": {"enabledAt": "2026-10-16T00:00:00Z"} if armed else None,
-        "headRefOid": head,
-    }

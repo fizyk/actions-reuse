@@ -3,7 +3,8 @@
 import pytest
 
 from automerge.cli import main, parse_args, parse_numbers, process
-from support import OAUTHLIB_BODY, OAUTHLIB_HEADLINE, pull
+from builders import pull
+from commit_messages import OAUTHLIB_BODY, OAUTHLIB_HEADLINE
 
 
 @pytest.mark.parametrize(

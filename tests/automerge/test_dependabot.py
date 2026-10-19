@@ -3,7 +3,8 @@
 import pytest
 
 from automerge.dependabot import decide, is_major_bump, read_versions
-from support import (
+from builders import dependabot_body, entry
+from commit_messages import (
     OAUTHLIB_BODY,
     OAUTHLIB_HEADLINE,
     SETUP_UV_BODY,
@@ -12,8 +13,6 @@ from support import (
     URLLIB3_HEADLINE,
     ZIZMOR_BODY,
     ZIZMOR_HEADLINE,
-    dependabot_body,
-    entry,
 )
 
 

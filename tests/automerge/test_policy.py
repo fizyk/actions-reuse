@@ -5,7 +5,7 @@ import pytest
 from automerge import dependabot, renovate
 from automerge.decision import Decision
 from automerge.policy import decide
-from support import OAUTHLIB_BODY, OAUTHLIB_HEADLINE, URLLIB3_BODY, URLLIB3_HEADLINE
+from commit_messages import OAUTHLIB_BODY, OAUTHLIB_HEADLINE, URLLIB3_BODY, URLLIB3_HEADLINE
 
 
 @pytest.mark.parametrize(
