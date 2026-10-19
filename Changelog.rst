@@ -3,6 +3,16 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.10.3 (2026-10-19)
+=================================
+
+Bugfixes
+--------
+
+- Update mermaid-render's mermaid-cli with renovate, as dependabot cannot open pull requests changing npm files under ``.github``. (`#387 <https://github.com/fizyk/actions-reuse/issues/387>`__)
+- Read dependabot versions from the commit body in ``shared-automerge`` when the commit headline was shortened, so pre-commit hook updates get auto-merged.
+
+
 actions-reuse 5.10.2 (2026-10-12)
 =================================
 
