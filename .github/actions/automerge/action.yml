@@ -24,8 +24,9 @@ runs:
         GH_REPO: ${{ github.repository }}
         PULL_REQUESTS: ${{ inputs.pull-requests }}
         PYTHON_VERSION: ${{ inputs.python-version }}
-      # Standard library only, so there is no project to install.
+      # Standard library only, so there is no project to install. The package
+      # sits next to this file, so the action's directory goes on the path.
       run: |
-        uv run --no-project \
+        PYTHONPATH="$GITHUB_ACTION_PATH" uv run --no-project \
           --python "$PYTHON_VERSION" \
-          python "$GITHUB_ACTION_PATH/automerge.py"
+          python -m automerge

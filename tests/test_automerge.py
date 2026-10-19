@@ -1,6 +1,7 @@
 """Tests for the arming rules behind the ``automerge`` composite action."""
 
 import json
+import runpy
 import subprocess
 
 from pathlib import Path
@@ -9,6 +10,7 @@ import pytest
 import yaml
 
 import automerge
+import automerge.github
 
 from automerge import Decision, decide, main, parse_numbers
 
@@ -318,7 +320,7 @@ def pull(
 def fake_gh(monkeypatch: pytest.MonkeyPatch):
     def install(pulls: dict[int, dict], **kwargs) -> FakeGh:
         fake = FakeGh(pulls, **kwargs)
-        monkeypatch.setattr(automerge.subprocess, "run", fake)
+        monkeypatch.setattr(automerge.github.subprocess, "run", fake)
         return fake
 
     return install
@@ -417,11 +419,20 @@ def test_main_fails_when_gh_fails(fake_gh, capsys) -> None:
 # The wiring between the workflow, the action and this suite.
 
 
-def test_the_script_ships_next_to_the_action() -> None:
-    """``$GITHUB_ACTION_PATH`` is what makes the script reachable at all."""
-    assert Path(automerge.__file__).resolve().parent == ACTION.parent
+def test_the_package_ships_next_to_the_action() -> None:
+    """``$GITHUB_ACTION_PATH`` on the path is what makes the package importable at all."""
+    assert Path(automerge.__file__).resolve().parent.parent == ACTION.parent
     (step,) = [step for step in yaml.safe_load(ACTION.read_text())["runs"]["steps"] if "run" in step]
-    assert '"$GITHUB_ACTION_PATH/automerge.py"' in step["run"]
+    assert 'PYTHONPATH="$GITHUB_ACTION_PATH"' in step["run"]
+    assert "python -m automerge" in step["run"]
+
+
+def test_the_package_runs_as_a_module(monkeypatch: pytest.MonkeyPatch) -> None:
+    """What ``python -m automerge`` does: an empty input is a successful no-op."""
+    monkeypatch.setenv("PULL_REQUESTS", "")
+    with pytest.raises(SystemExit) as exit_info:
+        runpy.run_module("automerge", run_name="__main__")
+    assert exit_info.value.code == 0
 
 
 def test_the_workflow_calls_the_action() -> None:
