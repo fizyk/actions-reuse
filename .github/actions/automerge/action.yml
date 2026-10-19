@@ -25,8 +25,9 @@ runs:
         PULL_REQUESTS: ${{ inputs.pull-requests }}
         PYTHON_VERSION: ${{ inputs.python-version }}
       # Standard library only, so there is no project to install. The package
-      # sits next to this file, so the action's directory goes on the path.
+      # sits next to this file, so the action's directory goes on the path. The
+      # input reaches the shell through the environment, never interpolated.
       run: |
         PYTHONPATH="$GITHUB_ACTION_PATH" uv run --no-project \
           --python "$PYTHON_VERSION" \
-          python -m automerge
+          python -m automerge -- "$PULL_REQUESTS"

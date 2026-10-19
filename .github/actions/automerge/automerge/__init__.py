@@ -16,11 +16,11 @@ Standard library only: the action runs it without installing anything.
 - ``policy``: which author gets judged by which rules.
 - ``dependabot``, ``renovate``: the rules themselves, pure functions of a commit message.
 - ``github``: the ``gh`` calls.
-- ``cli``: reads the action's input and walks each pull request through the above.
+- ``cli``: reads the pull request numbers from the command line and walks each pull request through the above.
 """
 
-from automerge.cli import main, parse_numbers, process
+from automerge.cli import main, parse_args, parse_numbers, process
 from automerge.decision import Decision
 from automerge.policy import decide
 
-__all__ = ["Decision", "decide", "main", "parse_numbers", "process"]
+__all__ = ["Decision", "decide", "main", "parse_args", "parse_numbers", "process"]

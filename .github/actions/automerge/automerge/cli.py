@@ -1,10 +1,10 @@
-"""The action's entry point: read its input and walk each pull request through."""
+"""The entry point: read pull request numbers from the command line and walk each one through."""
 
+import argparse
 import json
-import os
 import subprocess
 
-from collections.abc import Iterable
+from collections.abc import Sequence
 
 from automerge import github
 from automerge.policy import decide
@@ -67,10 +67,22 @@ def process(number: int) -> None:
     github.arm(number, information["headRefOid"])
 
 
-def main(numbers: Iterable[int] | None = None) -> int:
+def parse_args(argv: Sequence[str] | None = None) -> list[int]:
+    """The pull request numbers given on the command line, each argument read by ``parse_numbers``."""
+    parser = argparse.ArgumentParser(prog="python -m automerge", description=__doc__)
+    parser.add_argument(
+        "pull_requests",
+        nargs="*",
+        metavar="PULL_REQUESTS",
+        help="a pull request number, whitespace-separated numbers, or a JSON list of pull request objects",
+    )
+    args = parser.parse_args(argv)
+    return [number for spec in args.pull_requests for number in parse_numbers(spec)]
+
+
+def main(argv: Sequence[str] | None = None) -> int:
     """Process every pull request; the first failing ``gh`` call fails the run, as ``set -e`` did."""
-    if numbers is None:
-        numbers = parse_numbers(os.environ.get("PULL_REQUESTS", ""))
+    numbers = parse_args(argv)
     try:
         for number in numbers:
             process(number)
