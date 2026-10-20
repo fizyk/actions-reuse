@@ -186,7 +186,12 @@ def test_decide(headline: str, body: str, arm: bool) -> None:
         (
             "Update x requirement from * to *",
             dependabot_body(entry("x", "1.3.0")),
-            "has no range and version to compare, skipping.",
+            "has no version constraint in * to compare, skipping.",
+        ),
+        (
+            "Update x requirement from <1.3 to <1.4",
+            dependabot_body(entry("x", "1.4.0rc1")),
+            "has no plain dependency-version to compare, skipping.",
         ),
     ],
 )
@@ -266,6 +271,14 @@ def test_is_major_bump(old: str, new: str, major: bool) -> None:
         ("1.2.*", 1),
         (">=1.0,!=3.0", 1),
         ("v1.2", 1),
+        # A pre-release or build suffix belongs to its version, numbers and all.
+        ("1.0.0-beta.2 <1.1.0", 1),
+        (">=1.0.0b2,<1.1", 1),
+        (">=1.0.post1,<1.1", 1),
+        ("1.0.0+build.7", 1),
+        # Alternatives allow the newest major of any of them.
+        ("^1.2.0 || ^2.0.0", 2),
+        ("^1.2.0 || ^2.0.0-rc.1", 2),
         ("*", None),
         ("", None),
     ],

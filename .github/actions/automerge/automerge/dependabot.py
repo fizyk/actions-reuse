@@ -22,8 +22,11 @@ REQUIREMENT_RE = re.compile(r"Update .+ requirement from (.+) to .+")
 DEPENDENCY_VERSION_RE = re.compile(r"^  dependency-version: (.*)$", re.MULTILINE)
 PLAIN_VERSION_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
 # One constraint of a range, in any of the ecosystems' spellings: `>=1.2`, `<2`, `^1.2`,
-# `~=1.2`, `1.2.*`, `== 1.2.3`.
-CONSTRAINT_RE = re.compile(r"(<=|>=|==|~=|!=|<|>|\^|~|=)?\s*v?([0-9]+(?:\.[0-9]+)*)")
+# `~=1.2`, `1.2.*`, `== 1.2.3`. A pre-release or build suffix (`-beta.2`, `b2`, `+build.7`)
+# is consumed with its version, so its numbers are not read as constraints of their own.
+CONSTRAINT_RE = re.compile(
+    r"(<=|>=|==|~=|!=|<|>|\^|~|=)?\s*v?([0-9]+(?:\.[0-9]+)*)(?:[-+][0-9A-Za-z.+-]*|\.?[A-Za-z][0-9A-Za-z.+-]*)?"
+)
 
 
 def decide(headline: str, body: str) -> Decision:
@@ -46,13 +49,15 @@ def decide(headline: str, body: str) -> Decision:
         if dependencies != 1:
             return Decision(False, "does not update exactly one requirement, skipping.")
         requirement = read_requirement(headline, body)
-        old_major = range_major(requirement[0]) if requirement is not None else None
-        if requirement is None or old_major is None:
-            return Decision(False, "has no range and version to compare, skipping.")
-        old_range, new = requirement
-        if _major_minor(new)[0] != old_major:
-            return Decision(False, f"widens {old_range} to permit {new}, a new major version, skipping.")
-        return Decision(True, f"widens {old_range} to permit {new}, not a new major version.")
+        if requirement is None:
+            return Decision(False, "has no plain dependency-version to compare, skipping.")
+        old_range, new_version = requirement
+        old_major = range_major(old_range)
+        if old_major is None:
+            return Decision(False, f"has no version constraint in {old_range} to compare, skipping.")
+        if range_major(new_version) != old_major:
+            return Decision(False, f"widens {old_range} to permit {new_version}, a new major version, skipping.")
+        return Decision(True, f"widens {old_range} to permit {new_version}, not a new major version.")
 
     # Dependabot leaves `update-type` out of security updates and pre-commit updates,
     # so fall back to the versions in the commit headline. A long dependency name
@@ -63,10 +68,10 @@ def decide(headline: str, body: str) -> Decision:
     versions = read_versions(headline, body) if dependencies == 1 else None
     if versions is None:
         return Decision(False, "has no update type and no versions to compare, skipping.")
-    old, new = versions
-    if is_major_bump(old, new):
-        return Decision(False, f"bumps {old} to {new}, a major version bump, skipping.")
-    return Decision(True, f"bumps {old} to {new}, not a major version bump.")
+    old_version, new_version = versions
+    if is_major_bump(old_version, new_version):
+        return Decision(False, f"bumps {old_version} to {new_version}, a major version bump, skipping.")
+    return Decision(True, f"bumps {old_version} to {new_version}, not a major version bump.")
 
 
 def read_requirement(headline: str, body: str) -> tuple[str, str] | None:
