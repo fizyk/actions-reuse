@@ -182,11 +182,16 @@ def test_decide(headline: str, body: str, arm: bool) -> None:
             dependabot_body(entry("pytest", "9.0.0")),
             "widens <9,>=8.4 to permit 9.0.0, a new major version, skipping.",
         ),
+        (
+            "Update x requirement from >=1,<3,!=2.* to >=1,<4",
+            dependabot_body(entry("x", "2.0.0")),
+            "widens >=1,<3,!=2.* to permit 2.0.0, a new major version, skipping.",
+        ),
         ("Update x requirement from <1.3 to <1.4", "", "does not update exactly one requirement, skipping."),
         (
             "Update x requirement from * to *",
             dependabot_body(entry("x", "1.3.0")),
-            "has no version constraint in * to compare, skipping.",
+            "has a range * that does not read cleanly, skipping.",
         ),
         (
             "Update x requirement from <1.3 to <1.4",
@@ -270,6 +275,19 @@ def test_is_major_bump(old: str, new: str, major: bool) -> None:
         ("== 1.2.3", 1),
         ("1.2.*", 1),
         (">=1.0,!=3.0", 1),
+        # Only a prefix exclusion of a whole major rules that major out.
+        (">=1,<3,!=2.*", 1),
+        (">=1,<3,!=2.1.*", 2),
+        (">=1,<3,!=2.0", 2),
+        ("<1,!=0.*", None),
+        (">=1.2, <2", 1),
+        ("~> 1.2", 1),
+        ("1.x", 1),
+        # Syntax not known to read correctly gives no major at all.
+        ("1.2 - 2.3", None),
+        ("^1.2 | ^2.0", None),
+        (">=1.2;python_version<'3.12'", None),
+        ("latest", None),
         ("v1.2", 1),
         # A pre-release or build suffix belongs to its version, numbers and all.
         ("1.0.0-beta.2 <1.1.0", 1),
