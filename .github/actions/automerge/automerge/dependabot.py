@@ -21,16 +21,14 @@ UPDATE_TYPE_RE = re.compile(r"version-update:[a-z-]*")
 REQUIREMENT_RE = re.compile(r"Update .+ requirement from (.+) to .+")
 DEPENDENCY_VERSION_RE = re.compile(r"^  dependency-version: (.*)$", re.MULTILINE)
 PLAIN_VERSION_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
-# One constraint of a Python range: `>=1.2`, `<2`, `~=1.2`, `1.2.*`, `== 1.2.3`, or a bare
-# version. A pre-release or build suffix (`-beta.2`, `b2`, `+build.7`) is consumed with its
-# version, so its numbers are not read as constraints of their own. Other ecosystems'
-# operators, such as `^` or `~>`, are left out until there is a range of theirs to read.
+# One constraint of a Python range (`>=1.2`, `~=1.2`, `!=2.*`, a bare version), its
+# pre-release or build suffix included so the suffix's numbers are not read as versions.
 CONSTRAINT = (
     r"(<=|>=|==|~=|!=|<|>)?\s*v?([0-9]+(?:\.[0-9]+)*)(\.\*)?"
     r"(?:[-+][0-9A-Za-z.+-]*|\.?[A-Za-z][0-9A-Za-z.+-]*)?"
 )
 CONSTRAINT_RE = re.compile(CONSTRAINT)
-# A whole range: constraints joined by commas, and nothing else.
+# Constraints joined by commas, and nothing else.
 RANGE_RE = re.compile(rf"\s*{CONSTRAINT}(?:\s*,\s*{CONSTRAINT})*\s*")
 
 
@@ -46,10 +44,8 @@ def decide(headline: str, body: str) -> Decision:
             return Decision(False, "is not solely minor or patch version bumps, skipping.")
         return Decision(True, "is solely minor or patch version bumps.")
 
-    # Widening a requirement range is not a version update, so dependabot writes no
-    # `update-type` for it either, and its headline carries ranges, not versions.
-    # Judge it by the newest version it now permits, armed when the old range already
-    # allowed that version's major.
+    # A widened requirement range carries no `update-type`: armed when the old range
+    # already allowed the major of the newest version it now permits.
     if REQUIREMENT_RE.fullmatch(headline) is not None:
         if dependencies != 1:
             return Decision(False, "does not update exactly one requirement, skipping.")
@@ -80,11 +76,7 @@ def decide(headline: str, body: str) -> Decision:
 
 
 def read_requirement(headline: str, body: str) -> tuple[str, str] | None:
-    """The old range of a requirement update and the newest version it now permits.
-
-    The range comes from the headline, the version from the metadata's
-    ``dependency-version``, which has to be a plain dotted version.
-    """
+    """The old range of a requirement update and its plain ``dependency-version``."""
     match = REQUIREMENT_RE.fullmatch(headline)
     versions = DEPENDENCY_VERSION_RE.findall(body)
     new = versions[0].strip() if versions else ""
@@ -94,17 +86,11 @@ def read_requirement(headline: str, body: str) -> tuple[str, str] | None:
 
 
 def range_major(requirement: str) -> int | None:
-    """The newest major version *requirement* allows, or ``None`` when it does not read cleanly.
+    """The newest major version *requirement* allows, or ``None`` if it allows none.
 
-    Any syntax not known to read correctly, such as another ecosystem's ``^1.2`` or
-    alternatives joined by ``||``, gives ``None`` rather than a guess, so a misread range
-    cannot arm a major. Every constraint has to hold at once: ``>`` and ``>=`` only
-    raise the floor, every other operator caps the major at its own: ``~=1.2``,
-    ``==1.2.3`` and ``1.2.*`` all stay within 1.
-    An exclusive bound on a bare major, such as ``<2`` or ``<2.0.0``, stops below that
-    major, so it allows the one before. ``!=`` excludes rather than allows: only a
-    prefix exclusion of a whole major, such as ``!=2.*``, rules that major out, so the
-    newest one steps down past it. A range that allows nothing gives ``None``.
+    Any syntax beyond Python's, such as ``^1.2`` or ``||``, gives ``None`` too, rather
+    than a guess. ``>`` and ``>=`` raise the floor; other operators cap the major, ``<2``
+    below 2. Only ``!=2.*`` rules a whole major out.
     """
     if not RANGE_RE.fullmatch(requirement):
         return None
