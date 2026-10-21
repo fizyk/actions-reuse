@@ -120,7 +120,7 @@ from commit_messages import (
             "Update left-pad requirement from ^1.2.0 to ^2.0.0",
             dependabot_body(entry("left-pad", "2.0.0")),
             False,
-            id="requirement-caret-major",
+            id="requirement-unsupported-operator",
         ),
         pytest.param(
             "Update left-pad requirement from ~=1.2 to ~=1.3",
@@ -181,6 +181,11 @@ def test_decide(headline: str, body: str, arm: bool) -> None:
             "Update pytest requirement from <9,>=8.4 to >=8.4,<10",
             dependabot_body(entry("pytest", "9.0.0")),
             "widens <9,>=8.4 to permit 9.0.0, a new major version, skipping.",
+        ),
+        (
+            "Update x requirement from ~=1.2,<3 to >=1.2,<4",
+            dependabot_body(entry("x", "2.0.0")),
+            "widens ~=1.2,<3 to permit 2.0.0, a new major version, skipping.",
         ),
         (
             "Update x requirement from >=1,<3,!=2.* to >=1,<4",
@@ -270,7 +275,6 @@ def test_is_major_bump(old: str, new: str, major: bool) -> None:
         ("<2.0.0", 1),
         ("<2.1", 2),
         ("<=2", 2),
-        ("^1.2.0", 1),
         ("~=1.2", 1),
         ("== 1.2.3", 1),
         ("1.2.*", 1),
@@ -280,23 +284,27 @@ def test_is_major_bump(old: str, new: str, major: bool) -> None:
         (">=1,<3,!=2.1.*", 2),
         (">=1,<3,!=2.0", 2),
         ("<1,!=0.*", None),
+        # Constraints joined by a comma all hold at once.
+        ("~=1.2,<3", 1),
+        ("==1.2.3,<5", 1),
+        (">=3,<2", None),
+        (">=2,<3,!=2.*", None),
         (">=1.2, <2", 1),
-        ("~> 1.2", 1),
-        ("1.x", 1),
-        # Syntax not known to read correctly gives no major at all.
+        # Syntax not known to read correctly, other ecosystems' included, gives no major.
+        ("^1.2.0", None),
+        ("~> 1.2", None),
+        ("1.0.0-beta.2 <1.1.0", None),
         ("1.2 - 2.3", None),
         ("^1.2 | ^2.0", None),
+        ("^1.2.0 || ^2.0.0", None),
         (">=1.2;python_version<'3.12'", None),
         ("latest", None),
         ("v1.2", 1),
         # A pre-release or build suffix belongs to its version, numbers and all.
-        ("1.0.0-beta.2 <1.1.0", 1),
+        (">=1.0.0-beta.2,<1.1.0", 1),
         (">=1.0.0b2,<1.1", 1),
         (">=1.0.post1,<1.1", 1),
         ("1.0.0+build.7", 1),
-        # Alternatives allow the newest major of any of them.
-        ("^1.2.0 || ^2.0.0", 2),
-        ("^1.2.0 || ^2.0.0-rc.1", 2),
         ("*", None),
         ("", None),
     ],

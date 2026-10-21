@@ -21,17 +21,17 @@ UPDATE_TYPE_RE = re.compile(r"version-update:[a-z-]*")
 REQUIREMENT_RE = re.compile(r"Update .+ requirement from (.+) to .+")
 DEPENDENCY_VERSION_RE = re.compile(r"^  dependency-version: (.*)$", re.MULTILINE)
 PLAIN_VERSION_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
-# One constraint of a range, in any of the ecosystems' spellings: `>=1.2`, `<2`, `^1.2`,
-# `~=1.2`, `~> 1.2`, `1.2.*`, `== 1.2.3`. A pre-release or build suffix (`-beta.2`, `b2`,
-# `+build.7`) is consumed with its version, so its numbers are not read as constraints of
-# their own.
+# One constraint of a Python range: `>=1.2`, `<2`, `~=1.2`, `1.2.*`, `== 1.2.3`, or a bare
+# version. A pre-release or build suffix (`-beta.2`, `b2`, `+build.7`) is consumed with its
+# version, so its numbers are not read as constraints of their own. Other ecosystems'
+# operators, such as `^` or `~>`, are left out until there is a range of theirs to read.
 CONSTRAINT = (
-    r"(<=|>=|==|~=|~>|!=|<|>|\^|~|=)?\s*v?([0-9]+(?:\.[0-9]+)*)(\.\*)?"
+    r"(<=|>=|==|~=|!=|<|>)?\s*v?([0-9]+(?:\.[0-9]+)*)(\.\*)?"
     r"(?:[-+][0-9A-Za-z.+-]*|\.?[A-Za-z][0-9A-Za-z.+-]*)?"
 )
 CONSTRAINT_RE = re.compile(CONSTRAINT)
-# A whole range: constraints joined by commas, whitespace or `||`, and nothing else.
-RANGE_RE = re.compile(rf"\s*{CONSTRAINT}(?:\s*(?:,|\|\|)?\s*{CONSTRAINT})*\s*")
+# A whole range: constraints joined by commas, and nothing else.
+RANGE_RE = re.compile(rf"\s*{CONSTRAINT}(?:\s*,\s*{CONSTRAINT})*\s*")
 
 
 def decide(headline: str, body: str) -> Decision:
@@ -96,27 +96,35 @@ def read_requirement(headline: str, body: str) -> tuple[str, str] | None:
 def range_major(requirement: str) -> int | None:
     """The newest major version *requirement* allows, or ``None`` when it does not read cleanly.
 
-    Any syntax not known to read correctly, such as a hyphen range ``1.2 - 2.3``, gives
-    ``None`` rather than a guess, so a misread range cannot arm a major. An exclusive upper bound on a bare major, such as ``<2`` or ``<2.0.0``, stops below
-    that major, so it allows the one before. ``!=`` excludes rather than allows: only a
+    Any syntax not known to read correctly, such as another ecosystem's ``^1.2`` or
+    alternatives joined by ``||``, gives ``None`` rather than a guess, so a misread range
+    cannot arm a major. Every constraint has to hold at once: ``>`` and ``>=`` only
+    raise the floor, every other operator caps the major at its own: ``~=1.2``,
+    ``==1.2.3`` and ``1.2.*`` all stay within 1.
+    An exclusive bound on a bare major, such as ``<2`` or ``<2.0.0``, stops below that
+    major, so it allows the one before. ``!=`` excludes rather than allows: only a
     prefix exclusion of a whole major, such as ``!=2.*``, rules that major out, so the
-    newest one steps down past it.
+    newest one steps down past it. A range that allows nothing gives ``None``.
     """
     if not RANGE_RE.fullmatch(requirement):
         return None
-    majors = []
+    floors = []
+    caps = []
     excluded = set()
     for operator, version, wildcard in CONSTRAINT_RE.findall(requirement):
         major, *rest = (int(part) for part in version.split("."))
         if operator == "!=":
             if wildcard and not rest:
                 excluded.add(major)
-            continue
-        majors.append(major - 1 if operator == "<" and not any(rest) else major)
-    newest = max(majors, default=None)
-    while newest is not None and newest in excluded:
-        newest = newest - 1 if newest > 0 else None
-    return newest
+        elif operator in {">", ">="}:
+            floors.append(major)
+        else:
+            caps.append(major - 1 if operator == "<" and not any(rest) else major)
+    floor = max(floors, default=0)
+    newest = min(caps, default=floor)
+    while newest in excluded:
+        newest -= 1
+    return newest if newest >= floor else None
 
 
 def read_versions(headline: str, body: str) -> tuple[str, str] | None:
