@@ -4,9 +4,12 @@ Read from the metadata dependabot writes into the commit message rather than par
 of the pull request title. Only update types known not to be majors are armed.
 """
 
+import logging
 import re
 
 from automerge.decision import Decision
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_TYPES = frozenset({"version-update:semver-minor", "version-update:semver-patch"})
 
@@ -18,9 +21,7 @@ BUMPS_RE = re.compile(rf"Bumps \[[^]]+\]\([^)]+\) from {VERSION} to {VERSION}\."
 DEPENDENCY_RE = re.compile(r"^- dependency-name:", re.MULTILINE)
 UPDATE_TYPE_RE = re.compile(r"version-update:[a-z-]*")
 # `Update <name> requirement from <old range> to <new range>[ in <directory>]`
-REQUIREMENT_RE = re.compile(r"Update .+ requirement from (.+) to .+")
-DEPENDENCY_VERSION_RE = re.compile(r"^  dependency-version: (.*)$", re.MULTILINE)
-PLAIN_VERSION_RE = re.compile(r"[0-9]+(?:\.[0-9]+)*")
+REQUIREMENT_RE = re.compile(r"Update .+ requirement from (.+) to (.+?)(?: in /.*)?")
 # One constraint of a Python range (`>=1.2`, `~=1.2`, `!=2.*`, a bare version), its
 # pre-release or build suffix included so the suffix's numbers are not read as versions.
 CONSTRAINT = (
@@ -44,21 +45,21 @@ def decide(headline: str, body: str) -> Decision:
             return Decision(False, "is not solely minor or patch version bumps, skipping.")
         return Decision(True, "is solely minor or patch version bumps.")
 
-    # A widened requirement range carries no `update-type`: armed when the old range
-    # already allowed the major of the newest version it now permits.
-    if REQUIREMENT_RE.fullmatch(headline) is not None:
+    version_ranges = read_version_ranges(headline)
+    if version_ranges is not None:
+        logger.debug("No update-type, judging %r as a requirement range update.", headline)
         if dependencies != 1:
             return Decision(False, "does not update exactly one requirement, skipping.")
-        requirement = read_requirement(headline, body)
-        if requirement is None:
-            return Decision(False, "has no plain dependency-version to compare, skipping.")
-        old_range, new_version = requirement
-        old_major = range_major(old_range)
-        if old_major is None:
-            return Decision(False, f"has a range {old_range} that does not read cleanly, skipping.")
-        if range_major(new_version) != old_major:
-            return Decision(False, f"widens {old_range} to permit {new_version}, a new major version, skipping.")
-        return Decision(True, f"widens {old_range} to permit {new_version}, not a new major version.")
+        old_version_range, new_version_range = version_ranges
+        old_major_version = extract_latest_major_from_range(old_version_range)
+        new_major_version = extract_latest_major_from_range(new_version_range)
+        logger.debug("Newest major allowed: %s before, %s after.", old_major_version, new_major_version)
+        if old_major_version is None or new_major_version is None:
+            unreadable = old_version_range if old_major_version is None else new_version_range
+            return Decision(False, f"has a range {unreadable} that does not read cleanly, skipping.")
+        if new_major_version != old_major_version:
+            return Decision(False, f"widens {old_version_range} to {new_version_range}, a new major version, skipping.")
+        return Decision(True, f"widens {old_version_range} to {new_version_range}, not a new major version.")
 
     # Dependabot leaves `update-type` out of security updates and pre-commit updates,
     # so fall back to the versions in the commit headline. A long dependency name
@@ -75,29 +76,28 @@ def decide(headline: str, body: str) -> Decision:
     return Decision(True, f"bumps {old_version} to {new_version}, not a major version bump.")
 
 
-def read_requirement(headline: str, body: str) -> tuple[str, str] | None:
-    """The old range of a requirement update and its plain ``dependency-version``."""
+def read_version_ranges(headline: str) -> tuple[str, str] | None:
+    """The old and new ranges of a requirement update, without any directory suffix."""
     match = REQUIREMENT_RE.fullmatch(headline)
-    versions = DEPENDENCY_VERSION_RE.findall(body)
-    new = versions[0].strip() if versions else ""
-    if match is None or not PLAIN_VERSION_RE.fullmatch(new):
+    if match is None:
         return None
-    return match.group(1), new
+    return match.group(1), match.group(2)
 
 
-def range_major(requirement: str) -> int | None:
-    """The newest major version *requirement* allows, or ``None`` if it allows none.
+def extract_latest_major_from_range(version_range: str) -> int | None:
+    """The newest major version *version_range* allows, or ``None`` if it allows none.
 
     Any syntax beyond Python's, such as ``^1.2`` or ``||``, gives ``None`` too, rather
     than a guess. ``>`` and ``>=`` raise the floor; other operators cap the major, ``<2``
     below 2. Only ``!=2.*`` rules a whole major out.
     """
-    if not RANGE_RE.fullmatch(requirement):
+    if not RANGE_RE.fullmatch(version_range):
+        logger.debug("Range %r is not comma-joined Python constraints.", version_range)
         return None
     floors = []
     caps = []
     excluded = set()
-    for operator, version, wildcard in CONSTRAINT_RE.findall(requirement):
+    for operator, version, wildcard in CONSTRAINT_RE.findall(version_range):
         major, *rest = (int(part) for part in version.split("."))
         if operator == "!=":
             if wildcard and not rest:
@@ -106,6 +106,7 @@ def range_major(requirement: str) -> int | None:
             floors.append(major)
         else:
             caps.append(major - 1 if operator == "<" and not any(rest) else major)
+    logger.debug("Range %r: floors %s, caps %s, excluded majors %s.", version_range, floors, caps, excluded)
     floor = max(floors, default=0)
     newest = min(caps, default=floor)
     while newest in excluded:
