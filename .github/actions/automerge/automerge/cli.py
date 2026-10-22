@@ -2,13 +2,24 @@
 
 import argparse
 import json
-import logging
+import logging.config
 import subprocess
 
 from collections.abc import Sequence
 
 from automerge import github
 from automerge.policy import decide
+
+# `::debug::` lines, which a run shows only with debug logging enabled.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"github-debug": {"format": "::debug::%(message)s"}},
+    "handlers": {
+        "github-debug": {"class": "logging.StreamHandler", "formatter": "github-debug", "stream": "ext://sys.stdout"}
+    },
+    "loggers": {"automerge": {"handlers": ["github-debug"], "level": "DEBUG"}},
+}
 
 
 def parse_numbers(spec: str) -> list[int]:
@@ -81,20 +92,10 @@ def parse_args(argv: Sequence[str] | None = None) -> list[int]:
     return [number for spec in args.pull_requests for number in parse_numbers(spec)]
 
 
-class GitHubDebugHandler(logging.Handler):
-    """Print records as ``::debug::`` lines, which a run shows only with debug logging enabled."""
-
-    def emit(self, record: logging.LogRecord) -> None:
-        print(f"::debug::{self.format(record)}")
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     """Process every pull request; the first failing ``gh`` call fails the run, as ``set -e`` did."""
     numbers = parse_args(argv)
-    logger = logging.getLogger("automerge")
-    if not logger.handlers:
-        logger.addHandler(GitHubDebugHandler())
-        logger.setLevel(logging.DEBUG)
+    logging.config.dictConfig(LOGGING)
     try:
         for number in numbers:
             process(number)
