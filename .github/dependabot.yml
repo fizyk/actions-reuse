@@ -29,6 +29,18 @@ updates:
     interval: weekly
     time: "04:00"
   open-pull-requests-limit: 5
+- package-ecosystem: npm
+  directory: "/"
+  groups:
+    mermaid-cli:
+      patterns:
+      - "@mermaid-js/mermaid-cli"
+  cooldown:
+    default-days: 7
+  schedule:
+    interval: weekly
+    time: "04:15"
+  open-pull-requests-limit: 1
 - package-ecosystem: uv
   directory: "/"
   cooldown:
