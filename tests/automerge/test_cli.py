@@ -3,7 +3,7 @@
 import pytest
 
 from automerge.cli import main, parse_args, parse_numbers, process
-from builders import pull
+from builders import dependabot_body, entry, pull
 from commit_messages import OAUTHLIB_BODY, OAUTHLIB_HEADLINE
 
 
@@ -146,3 +146,9 @@ def test_main_fails_when_gh_fails(fake_gh, capsys) -> None:
     assert gh.calls[-1][-1] == "7"
     out = capsys.readouterr().out
     assert "::error::gh pr merge --auto --merge --match-head-commit abc123 7 failed: GraphQL: nope" in out
+
+
+def test_main_prints_debug_logs(fake_gh, capsys) -> None:
+    fake_gh({7: pull(headline="Update x requirement from ^1.2 to ^1.3", body=dependabot_body(entry("x", "1.3.0")))})
+    assert main(["7"]) == 0
+    assert "::debug::Range '^1.2' is not comma-joined Python constraints." in capsys.readouterr().out

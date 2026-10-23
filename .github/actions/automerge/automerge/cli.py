@@ -2,12 +2,24 @@
 
 import argparse
 import json
+import logging.config
 import subprocess
 
 from collections.abc import Sequence
 
 from automerge import github
 from automerge.policy import decide
+
+# `::debug::` lines, which a run shows only with debug logging enabled.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"github-debug": {"format": "::debug::%(message)s"}},
+    "handlers": {
+        "github-debug": {"class": "logging.StreamHandler", "formatter": "github-debug", "stream": "ext://sys.stdout"}
+    },
+    "loggers": {"automerge": {"handlers": ["github-debug"], "level": "DEBUG"}},
+}
 
 
 def parse_numbers(spec: str) -> list[int]:
@@ -83,6 +95,7 @@ def parse_args(argv: Sequence[str] | None = None) -> list[int]:
 def main(argv: Sequence[str] | None = None) -> int:
     """Process every pull request; the first failing ``gh`` call fails the run, as ``set -e`` did."""
     numbers = parse_args(argv)
+    logging.config.dictConfig(LOGGING)
     try:
         for number in numbers:
             process(number)

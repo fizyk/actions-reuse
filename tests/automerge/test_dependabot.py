@@ -1,8 +1,16 @@
 """Tests for ``automerge.dependabot``, against real commit messages where there are some."""
 
+import logging
+
 import pytest
 
-from automerge.dependabot import decide, is_major_bump, read_versions
+from automerge.dependabot import (
+    decide,
+    extract_latest_major_from_range,
+    is_major_bump,
+    read_version_ranges,
+    read_versions,
+)
 from builders import dependabot_body, entry
 from commit_messages import (
     OAUTHLIB_BODY,
@@ -11,6 +19,8 @@ from commit_messages import (
     SETUP_UV_HEADLINE,
     URLLIB3_BODY,
     URLLIB3_HEADLINE,
+    UV_BUILD_BODY,
+    UV_BUILD_HEADLINE,
     ZIZMOR_BODY,
     ZIZMOR_HEADLINE,
 )
@@ -101,6 +111,55 @@ from commit_messages import (
             id="shortened-headline-without-versions",
         ),
         pytest.param("Bump left-pad from 1.0.0 to 1.0.1", "", False, id="no-metadata"),
+        pytest.param(UV_BUILD_HEADLINE, UV_BUILD_BODY, True, id="requirement-0.x-minor"),
+        pytest.param(
+            "Update sphinx requirement from <8.2,>=8.1 to >=8.1,<8.3 in /docs",
+            dependabot_body(entry("sphinx", "8.2.0")),
+            True,
+            id="requirement-directory-suffix",
+        ),
+        pytest.param(
+            "Update pytest requirement from <9,>=8.4 to >=8.4,<10",
+            dependabot_body(entry("pytest", "9.0.0")),
+            False,
+            id="requirement-major",
+        ),
+        pytest.param(
+            "Update left-pad requirement from ^1.2.0 to ^2.0.0",
+            dependabot_body(entry("left-pad", "2.0.0")),
+            False,
+            id="requirement-unsupported-operator",
+        ),
+        pytest.param(
+            "Update left-pad requirement from ~=1.2 to ~=1.3",
+            dependabot_body(entry("left-pad", "1.3.0")),
+            True,
+            id="requirement-compatible-minor",
+        ),
+        pytest.param(
+            "Update left-pad requirement from <2 to <2.1",
+            dependabot_body(entry("left-pad", "2.0.1")),
+            False,
+            id="requirement-exclusive-bound-into-a-new-major",
+        ),
+        pytest.param(
+            "Update left-pad requirement from <1.3,>=1.2 to ^1.4",
+            dependabot_body(entry("left-pad", "1.4.0")),
+            False,
+            id="requirement-unreadable-new-range",
+        ),
+        pytest.param(
+            "Update left-pad requirement from <1.3,>=1.2 to >=1.2,<1.4",
+            "",
+            False,
+            id="requirement-no-metadata",
+        ),
+        pytest.param(
+            "Update left-pad requirement from <1.3,>=1.2 to >=1.2,<1.4",
+            dependabot_body(entry("left-pad", "1.3.0"), entry("right-pad", "1.3.0")),
+            False,
+            id="requirement-several-dependencies",
+        ),
     ],
 )
 def test_decide(headline: str, body: str, arm: bool) -> None:
@@ -125,6 +184,33 @@ def test_decide(headline: str, body: str, arm: bool) -> None:
             "is not solely minor or patch version bumps, skipping.",
         ),
         ("Bump x", "", "has no update type and no versions to compare, skipping."),
+        (UV_BUILD_HEADLINE, UV_BUILD_BODY, "widens <0.13,>=0.12 to >=0.12,<0.14, not a new major version."),
+        (
+            "Update pytest requirement from <9,>=8.4 to >=8.4,<10",
+            dependabot_body(entry("pytest", "9.0.0")),
+            "widens <9,>=8.4 to >=8.4,<10, a new major version, skipping.",
+        ),
+        (
+            "Update x requirement from ~=1.2,<3 to >=1.2,<4",
+            dependabot_body(entry("x", "2.0.0")),
+            "widens ~=1.2,<3 to >=1.2,<4, a new major version, skipping.",
+        ),
+        (
+            "Update x requirement from >=1,<3,!=2.* to >=1,<4",
+            dependabot_body(entry("x", "2.0.0")),
+            "widens >=1,<3,!=2.* to >=1,<4, a new major version, skipping.",
+        ),
+        ("Update x requirement from <1.3 to <1.4", "", "does not update exactly one requirement, skipping."),
+        (
+            "Update x requirement from * to *",
+            dependabot_body(entry("x", "1.3.0")),
+            "has a range * that does not read cleanly, skipping.",
+        ),
+        (
+            "Update x requirement from <1.3 to ^1.4",
+            dependabot_body(entry("x", "1.4.0")),
+            "has a range ^1.4 that does not read cleanly, skipping.",
+        ),
     ],
 )
 def test_decide_reason(headline: str, body: str, reason: str) -> None:
@@ -152,6 +238,18 @@ def test_read_versions(headline: str, body: str, versions: tuple[str, str] | Non
 
 
 @pytest.mark.parametrize(
+    ("headline", "version_ranges"),
+    [
+        (UV_BUILD_HEADLINE, ("<0.13,>=0.12", ">=0.12,<0.14")),
+        ("Update sphinx requirement from <8.2,>=8.1 to >=8.1,<8.3 in /docs", ("<8.2,>=8.1", ">=8.1,<8.3")),
+        ("Bump x from 1.0 to 1.1", None),
+    ],
+)
+def test_read_version_ranges(headline: str, version_ranges: tuple[str, str] | None) -> None:
+    assert read_version_ranges(headline) == version_ranges
+
+
+@pytest.mark.parametrize(
     ("old", "new", "major"),
     [
         ("1.2.3", "1.2.4", False),
@@ -168,3 +266,68 @@ def test_read_versions(headline: str, body: str, versions: tuple[str, str] | Non
 def test_is_major_bump(old: str, new: str, major: bool) -> None:
     """Before 1.0 the minor version is the breaking one; a missing minor reads as 0."""
     assert is_major_bump(old, new) is major
+
+
+@pytest.mark.parametrize(
+    ("requirement", "major"),
+    [
+        ("<0.13,>=0.12", 0),
+        (">=8.4,<10", 9),
+        ("<2", 1),
+        ("<2.0.0", 1),
+        ("<2.1", 2),
+        ("<=2", 2),
+        ("~=1.2", 1),
+        ("== 1.2.3", 1),
+        ("1.2.*", 1),
+        (">=1.0,!=3.0", 1),
+        # Only a prefix exclusion of a whole major rules that major out.
+        (">=1,<3,!=2.*", 1),
+        (">=1,<3,!=2.1.*", 2),
+        (">=1,<3,!=2.0", 2),
+        ("<1,!=0.*", None),
+        # Constraints joined by a comma all hold at once.
+        ("~=1.2,<3", 1),
+        ("==1.2.3,<5", 1),
+        (">=3,<2", None),
+        (">=2,<3,!=2.*", None),
+        (">=1.2, <2", 1),
+        # Syntax not known to read correctly, other ecosystems' included, gives no major.
+        ("^1.2.0", None),
+        ("~> 1.2", None),
+        ("1.0.0-beta.2 <1.1.0", None),
+        ("1.2 - 2.3", None),
+        ("^1.2 | ^2.0", None),
+        ("^1.2.0 || ^2.0.0", None),
+        (">=1.2;python_version<'3.12'", None),
+        ("latest", None),
+        ("v1.2", 1),
+        # A pre-release or build suffix belongs to its version, numbers and all.
+        (">=1.0.0-beta.2,<1.1.0", 1),
+        (">=1.0.0b2,<1.1", 1),
+        (">=1.0.post1,<1.1", 1),
+        ("1.0.0+build.7", 1),
+        ("*", None),
+        ("", None),
+    ],
+)
+def test_extract_latest_major_from_range(requirement: str, major: int | None) -> None:
+    """An exclusive bound on a bare major allows the major before it; ``!=`` allows nothing."""
+    assert extract_latest_major_from_range(requirement) == major
+
+
+def test_decide_logs_the_requirement_reading(caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level(logging.DEBUG, logger="automerge.dependabot"):
+        decide("Update x requirement from >=1,<3,!=2.* to >=1,<4", dependabot_body(entry("x", "2.0.0")))
+    assert caplog.messages == [
+        "No update-type, judging 'Update x requirement from >=1,<3,!=2.* to >=1,<4' as a requirement range update.",
+        "Range '>=1,<3,!=2.*': floors [1], caps [2], excluded majors {2}.",
+        "Range '>=1,<4': floors [1], caps [3], excluded majors set().",
+        "Newest major allowed: 1 before, 3 after.",
+    ]
+
+
+def test_range_logs_why_it_does_not_read(caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level(logging.DEBUG, logger="automerge.dependabot"):
+        assert extract_latest_major_from_range("^1.2") is None
+    assert caplog.messages == ["Range '^1.2' is not comma-joined Python constraints."]

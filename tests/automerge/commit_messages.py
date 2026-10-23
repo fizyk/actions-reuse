@@ -71,3 +71,20 @@ SETUP_UV_BODY = (
     )
     + "...\n\nSigned-off-by: dependabot[bot] <support@github.com>"
 )
+
+# fizyk/port-for#496: a requirement range widened, so no update-type and no versions.
+UV_BUILD_HEADLINE = "Update uv-build requirement from <0.13,>=0.12 to >=0.12,<0.14"
+UV_BUILD_BODY = """\
+Updates the requirements on [uv-build](https://github.com/astral-sh/uv) to permit the latest version.
+- [Release notes](https://github.com/astral-sh/uv/releases)
+- [Changelog](https://github.com/astral-sh/uv/blob/main/CHANGELOG.md)
+- [Commits](https://github.com/astral-sh/uv/compare/0.12.0...0.13.0)
+
+---
+updated-dependencies:
+- dependency-name: uv-build
+  dependency-version: 0.13.0
+  dependency-type: direct:development
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>"""
