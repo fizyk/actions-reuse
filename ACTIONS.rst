@@ -143,11 +143,12 @@ Path: ``.github/actions/mermaid-render/action.yml``
 Render every ``.mmd`` file in a directory to SVG. Used by the ``diagram`` workflow.
 
 The renderer is installed with ``npm ci`` from the ``package-lock.json`` committed
-next to the action, so no mermaid-cli release redraws a caller's diagrams by itself;
-dependabot's ``npm`` ecosystem raises the pin here. The lockfile sits beside the
-action because the job runs against the caller's checkout, which holds no Node
-manifest. ``node_modules`` lands under ``$GITHUB_ACTION_PATH``, so the only thing
-written into that checkout is the SVGs under ``svg-path``.
+at this repository's root, so no mermaid-cli release redraws a caller's diagrams by
+itself; dependabot's ``npm`` ecosystem raises the pin there. The lockfile ships with
+this repository because the job runs against the caller's checkout, which holds no
+Node manifest, and sits outside ``.github`` because dependabot cannot open npm pull
+requests there. ``node_modules`` lands beside that lockfile, so the only thing
+written into the caller's checkout is the SVGs under ``svg-path``.
 
 .. list-table:: Inputs
    :header-rows: 1
