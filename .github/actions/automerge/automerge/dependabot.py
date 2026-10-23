@@ -89,7 +89,8 @@ def extract_latest_major_from_range(version_range: str) -> int | None:
 
     Any syntax beyond Python's, such as ``^1.2`` or ``||``, gives ``None`` too, rather
     than a guess. ``>`` and ``>=`` raise the floor; other operators cap the major, ``<2``
-    below 2. Only ``!=2.*`` rules a whole major out.
+    below 2. Only ``!=2.*`` rules a whole major out. With no cap, the floor stands in, so a
+    raised minimum (``>=7`` to ``>=8``) reads as a new major.
     """
     if not RANGE_RE.fullmatch(version_range):
         logger.debug("Range %r is not comma-joined Python constraints.", version_range)
