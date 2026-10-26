@@ -3,6 +3,28 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.11.0 (2026-10-26)
+=================================
+
+Features
+--------
+
+- Auto-merge dependabot requirement range updates in ``shared-automerge`` unless they permit a new major version.
+
+
+Bugfixes
+--------
+
+- Move mermaid-render's npm lockfile to the repository root and update it with dependabot again, which can open npm pull requests, security updates included, outside ``.github``.
+- Skip ``towncrier check`` in ``shared-pr-check`` based on who opened the pull request rather than on the actor of the run, so pull requests opened by ``dependabot[bot]``, ``pre-commit-ci[bot]`` or ``renovate[bot]`` that get extra commits from ``github-actions[bot]`` (like rendered diagrams) no longer fail, while all other pull requests always need a newsfragment, even after a bot pushes to them.
+
+
+Misc
+----
+
+- `#378 <https://github.com/fizyk/actions-reuse/issues/378>`__
+
+
 actions-reuse 5.10.3 (2026-10-19)
 =================================
 

@@ -33,7 +33,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export@v5.11.0
       with:
         data-file: .coverage.serial
         output-file: coverage.xml
@@ -69,7 +69,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/coverage-combine-export-uv@v5.11.0
       with:
         data-file: .coverage.serial
         output-file: coverage.xml
@@ -130,7 +130,7 @@ Example:
 .. code-block:: yaml
 
     - id: plan
-      uses: fizyk/actions-reuse/.github/actions/release-plan@v5.10.3
+      uses: fizyk/actions-reuse/.github/actions/release-plan@v5.11.0
       with:
         minor-fragments: 'feature,break'
 
@@ -170,7 +170,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/mermaid-render@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/mermaid-render@v5.11.0
       with:
         mmd-path: docs
         svg-path: docs/images
@@ -200,7 +200,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-run@v5.11.0
       with:
         command: pytest -q
         env: '{"PYTEST_ADDOPTS":"-ra"}'
@@ -236,7 +236,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.11.0
       with:
         python-version: "3.15"
         allow-prereleases: false
@@ -281,11 +281,11 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.11.0
       with:
         requirements: oldest/requirements.txt
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-pip@v5.11.0
       with:
         packages: elasticsearch<9
 
@@ -380,10 +380,10 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-setup@v5.11.0
       with:
         python-version: "3.15"
-    - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-pytest-coverage@v5.11.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
         data-file: .coverage.xdist
@@ -426,7 +426,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv@v5.11.0
       with:
         python-version: "3.15"
         allow-prereleases: false
@@ -457,7 +457,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-run@v5.11.0
       with:
         command: pytest -q
         env: '{"PYTEST_ADDOPTS":"-ra"}'
@@ -493,7 +493,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.11.0
       with:
         python-version: "3.15"
         allow-prereleases: false
@@ -590,10 +590,10 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-setup@v5.11.0
       with:
         python-version: "3.15"
-    - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/pipenv-pytest-coverage@v5.11.0
       with:
         pytest-opts: -n auto --dist loadgroup --max-worker-restart 0
         data-file: .coverage.xdist
@@ -636,7 +636,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/pipenv@v5.11.0
       with:
         python-version: "3.15"
         allow-prereleases: false
@@ -664,7 +664,7 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/python-build@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/python-build@v5.11.0
       with:
         python-version: "3.15"
 
@@ -690,6 +690,6 @@ Example:
 
 .. code-block:: yaml
 
-    - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.10.3
+    - uses: fizyk/actions-reuse/.github/actions/uv-build@v5.11.0
       with:
         python-version: "3.15"

@@ -1,1 +1,0 @@
-Move the ``shared-automerge`` arming rules into a tested ``automerge`` Python action.
