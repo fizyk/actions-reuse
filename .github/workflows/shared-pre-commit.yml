@@ -16,7 +16,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
-      - uses: j178/prek-action@1382ad72dea72f9d53832f2bcb65b3e87a947204 # v2.0.6
+      - uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v2.0.6
         with:
           # renovate: datasource=github-releases depName=j178/prek extractVersion=^v(?<version>.+)$
           prek-version: "0.5.7"
