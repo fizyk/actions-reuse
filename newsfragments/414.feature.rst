@@ -1,0 +1,1 @@
+- Add an ``apt-install`` composite action, and an ``apt-packages`` input to ``shared-tests-pytests`` using it to install system packages before the tests on Linux runners.

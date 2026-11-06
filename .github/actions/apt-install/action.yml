@@ -1,0 +1,25 @@
+name: 'apt-get install'
+description: 'Install system packages with apt-get on a Linux runner.'
+inputs:
+  packages:
+    description: 'Packages to install, separated by whitespace.'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Install packages with apt-get
+      shell: bash
+      env:
+        PACKAGES: ${{ inputs.packages }}
+      run: |
+        if [ "$RUNNER_OS" != "Linux" ]; then
+          echo "::error::apt-install needs a Linux runner, but this one runs $RUNNER_OS. Use it only in a job running on Linux."
+          exit 1
+        fi
+        read -ra packages <<< "$PACKAGES"
+        if [ "${#packages[@]}" -eq 0 ]; then
+          echo "::error::apt-install needs at least one package in 'packages'."
+          exit 1
+        fi
+        sudo apt-get update
+        sudo apt-get install --yes --no-install-recommends "${packages[@]}"
