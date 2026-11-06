@@ -32,6 +32,13 @@ on:
         default: 'ubuntu-latest'
         required: false
         type: string
+      apt-packages:
+        description: >-
+          Space-separated list of system packages to install with apt-get before
+          the tests. Linux runners only.
+        default: ''
+        required: false
+        type: string
       fail_on_codecov_error:
         description: 'Whether pipeline should fail if there would be an error on codecov side.'
         default: false
@@ -83,6 +90,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: $/.github/actions/apt-install
+        if: ${{ inputs.apt-packages != '' }}
+        with:
+          packages: ${{ inputs.apt-packages }}
       - uses: $/.github/actions/uv
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:
@@ -122,6 +133,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - uses: $/.github/actions/apt-install
+        if: ${{ inputs.apt-packages != '' }}
+        with:
+          packages: ${{ inputs.apt-packages }}
       - uses: $/.github/actions/uv-setup
         if: ${{ inputs.dependency-manager == 'uv' }}
         with:

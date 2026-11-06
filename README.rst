@@ -137,6 +137,9 @@ Run pytest tests on python code
    * - os
      - ubuntu-latest
      - Operating system tests are running on
+   * - apt-packages
+     -
+     - Space-separated list of system packages to install with ``apt-get`` before the tests. Linux runners only; a non-empty list on any other runner fails the job, so pass it only in the call whose ``os`` is Linux.
    * - env
      - {}
      - JSON object string of environment variables to set

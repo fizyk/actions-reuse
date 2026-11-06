@@ -176,6 +176,34 @@ Example:
         svg-path: docs/images
 
 
+apt-install
+-----------
+
+Path: ``.github/actions/apt-install/action.yml``
+
+Install system packages with ``apt-get`` - a library the tests load, say. Linux
+runners only: on any other runner the step fails rather than doing nothing, so
+use it only in a job running on Linux.
+
+.. list-table:: Inputs
+   :header-rows: 1
+
+   * - input
+     - required
+     - note
+   * - packages
+     - yes
+     - Packages to install, separated by whitespace
+
+Example:
+
+.. code-block:: yaml
+
+    - uses: fizyk/actions-reuse/.github/actions/apt-install@v5.11.1
+      with:
+        packages: libegl1 libxkbcommon0
+
+
 uv-run
 ------
 
