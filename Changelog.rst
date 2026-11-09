@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.12.0 (2026-11-09)
+=================================
+
+Features
+--------
+
+- - Add an ``apt-install`` composite action, and an ``apt-packages`` input to ``shared-tests-pytests`` using it to install system packages before the tests on Linux runners. (`#414 <https://github.com/fizyk/actions-reuse/issues/414>`__)
+
+
 actions-reuse 5.11.1 (2026-11-02)
 =================================
 
