@@ -1,0 +1,1 @@
+Auto-merge minor and patch dependabot pre-commit updates in ``shared-automerge`` when the commit headline has a conventional-commit prefix such as ``build(deps):``, or when the ``Bumps`` line carries on with a sentence after the versions.
