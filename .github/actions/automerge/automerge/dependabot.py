@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 ALLOWED_TYPES = frozenset({"version-update:semver-minor", "version-update:semver-patch"})
 
 VERSION = r"v?([0-9]+(?:\.[0-9]+)*)"
-# `Bump <name> from <old> to <new>[ in <directory>]`
-HEADLINE_RE = re.compile(rf"Bump .+ from {VERSION} to {VERSION}(?: in .+)?")
-# `Bumps [<name>](<url>) from <old> to <new>.`
-BUMPS_RE = re.compile(rf"Bumps \[[^]]+\]\([^)]+\) from {VERSION} to {VERSION}\.")
+# `[<type>[(<scope>)][!]: ]Bump <name> from <old> to <new>[ in <directory>]`
+HEADLINE_RE = re.compile(rf"(?:\w+(?:\([^)]*\))?!?: )?Bump .+ from {VERSION} to {VERSION}(?: in .+)?")
+# `Bumps [<name>](<url>) from <old> to <new>.[ <more sentences>]`
+BUMPS_RE = re.compile(rf"Bumps \[[^]]+\]\([^)]+\) from {VERSION} to {VERSION}\.(?: .*)?")
 DEPENDENCY_RE = re.compile(r"^- dependency-name:", re.MULTILINE)
 UPDATE_TYPE_RE = re.compile(r"version-update:[a-z-]*")
 # `Update <name> requirement from <old range> to <new range>[ in <directory>]`

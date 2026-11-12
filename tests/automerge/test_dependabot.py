@@ -23,6 +23,8 @@ from commit_messages import (
     UV_BUILD_HEADLINE,
     ZIZMOR_BODY,
     ZIZMOR_HEADLINE,
+    ZIZMOR_PREFIXED_BODY,
+    ZIZMOR_PREFIXED_HEADLINE,
 )
 
 
@@ -77,6 +79,15 @@ from commit_messages import (
             id="pre-commit-v-prefix",
         ),
         pytest.param(ZIZMOR_HEADLINE, ZIZMOR_BODY, True, id="pre-commit-shortened-headline"),
+        pytest.param(
+            ZIZMOR_PREFIXED_HEADLINE, ZIZMOR_PREFIXED_BODY, True, id="pre-commit-bumps-line-with-more-sentences"
+        ),
+        pytest.param(
+            "build(deps): Bump pytest from 8.4.0 to 9.0.0",
+            dependabot_body(entry("pytest", "9.0.0")),
+            False,
+            id="conventional-commit-prefix-major",
+        ),
         pytest.param(
             "Bump sphinx from 8.1.0 to 8.2.0 in /docs",
             dependabot_body(entry("sphinx", "8.2.0")),
@@ -172,6 +183,7 @@ def test_decide(headline: str, body: str, arm: bool) -> None:
         (URLLIB3_HEADLINE, URLLIB3_BODY, "bumps 2.7.0 to 2.8.0, not a major version bump."),
         (OAUTHLIB_HEADLINE, OAUTHLIB_BODY, "bumps 3.3.1 to 4.0.0, a major version bump, skipping."),
         (ZIZMOR_HEADLINE, ZIZMOR_BODY, "bumps 1.30.0 to 1.30.1, not a major version bump."),
+        (ZIZMOR_PREFIXED_HEADLINE, ZIZMOR_PREFIXED_BODY, "bumps 1.31.1 to 1.32.0, not a major version bump."),
         (
             "Bump sphinx from 8.1.0 to 8.2.0 in /docs",
             dependabot_body(entry("sphinx", "8.2.0")),
@@ -224,10 +236,18 @@ def test_decide_reason(headline: str, body: str, reason: str) -> None:
         (URLLIB3_HEADLINE, URLLIB3_BODY, ("2.7.0", "2.8.0")),
         ("Bump sphinx from 8.1.0 to 8.2.0 in /docs", "", ("8.1.0", "8.2.0")),
         ("Bump hook from v0.16.7 to 0.16.8", "", ("0.16.7", "0.16.8")),
+        # A conventional-commit prefix comes before `Bump`.
+        ("build(deps): Bump x from 1.0 to 1.1", "", ("1.0", "1.1")),
+        ("chore: Bump x from 1.0 to 1.1 in /docs", "", ("1.0", "1.1")),
+        ("feat(deps)!: Bump x from 1.0 to 2.0", "", ("1.0", "2.0")),
+        ("build(deps): Bump x", "", None),
         # The headline is cut short, so the body's `Bumps` line is read instead.
         (ZIZMOR_HEADLINE, ZIZMOR_BODY, ("1.30.0", "1.30.1")),
         # Only the first `Bumps` line counts.
         ("Bump x", "Bumps [x](u) from 1.0 to 1.1.\nBumps [x](u) from 1.0 to 2.0.", ("1.0", "1.1")),
+        # The release note may add sentences after the versions.
+        (ZIZMOR_PREFIXED_HEADLINE, ZIZMOR_PREFIXED_BODY, ("1.31.1", "1.32.0")),
+        ("Bump x", "Bumps [x](u) from 1.0 to 1.1.0rc1. More.", None),
         ("Bump x from 1.0.0 to 1.1.0rc1", "", None),
         ("Bump x", "", None),
         ("Bump x", "Bumps [x](u) from 1.0 to 1.1", None),

@@ -51,6 +51,25 @@ updated-dependencies:
 
 Signed-off-by: dependabot[bot] <support@github.com>"""
 
+# dbfixtures/pytest-redis#1123: a conventional-commit prefix on a shortened headline, and
+# a `Bumps` line that carries on past the versions.
+ZIZMOR_PREFIXED_HEADLINE = "build(deps): Bump https://github.com/zizmorcore/zizmor-pre-commit"
+ZIZMOR_PREFIXED_BODY = """\
+Bumps [https://github.com/zizmorcore/zizmor-pre-commit](https://github.com/zizmorcore/zizmor-pre-commit) \
+from v1.31.1 to 1.32.0. This release includes the previously tagged commit.
+- [Release notes](https://github.com/zizmorcore/zizmor-pre-commit/releases)
+- [Commits](https://github.com/zizmorcore/zizmor-pre-commit/compare/\
+c92afdf2c6ca336aaa8f39e2bd8d48f62dbd8e1f...06a39750ec31860bb44f2acf67182c40016cd1e7)
+
+---
+updated-dependencies:
+- dependency-name: https://github.com/zizmorcore/zizmor-pre-commit
+  dependency-version: 1.32.0
+  dependency-type: direct:production
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>"""
+
 # fizyk/actions-reuse#392: one grouped action bump across four directories.
 SETUP_UV_HEADLINE = "Bump the setup-uv group across 4 directories with 1 update"
 SETUP_UV_BODY = (
