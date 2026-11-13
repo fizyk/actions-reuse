@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@mermaid-js/mermaid-cli": "12.0.0"
+    "@mermaid-js/mermaid-cli": "12.2.0"
   },
   "description": "Node dependencies of the actions-reuse composite actions",
   "name": "actions-reuse",
