@@ -3,6 +3,15 @@ Changelog
 
 .. towncrier release notes start
 
+actions-reuse 5.12.1 (2026-11-16)
+=================================
+
+Bugfixes
+--------
+
+- Auto-merge minor and patch dependabot pre-commit updates in ``shared-automerge`` when the commit headline has a conventional-commit prefix such as ``build(deps):``, or when the ``Bumps`` line carries on with a sentence after the versions. (`#421 <https://github.com/fizyk/actions-reuse/issues/421>`__)
+
+
 actions-reuse 5.12.0 (2026-11-09)
 =================================
 
